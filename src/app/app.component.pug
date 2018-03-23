@@ -1,4 +1,26 @@
-<!--The content below is only a placeholder and can be replaced.-->
-div(style="text-align:center")
-  h1 Welcome to {{ title }}!
+nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
+  a.navbar-brand(
+    href="http://www.williamrobertfunk.com",
+    target="_blank")
+    img(src="assets/images/logo.png")
+  button.navbar-toggler(
+    type="button",
+    data-toggle="collapse",
+    data-target="#navbarNavDropdown",
+    aria-controls="navbarNavDropdown",
+    aria-expanded="false",
+    aria-label="Toggle navigation")
+    span.navbar-toggler-icon
+  .collapse.navbar-collapse(id="navbarNavDropdown")
+    ul.navbar-nav
+      li.nav-item.active
+        a.nav-link(href="#") Live View
+          span.sr-only (current)
+      li.nav-item
+        a.nav-link(href="#") Trading History
+      li.nav-item
+        a.nav-link(href="#") Profit Portfolio
+      li.nav-item
+        a.nav-link(href="#") Cryptobot Controls
+div.page
 

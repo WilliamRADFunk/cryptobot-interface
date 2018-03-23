@@ -45,5 +45,5 @@ testem.log
 Thumbs.db
 
 # To enforce the tracking of the pug files rather than html
-/**/*.html
-/**/*.css
+src/**/*.html
+src/**/*.css
