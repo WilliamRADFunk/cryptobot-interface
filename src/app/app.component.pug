@@ -1,9 +1,10 @@
 nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
-  a.navbar-brand(
+  a.navbar-brand.breather-right-x2(
     href="http://www.williamrobertfunk.com",
     target="_blank")
     img(src="assets/images/logo.png")
   button.navbar-toggler(
+    (click)="toggleCollapseState()",
     type="button",
     data-toggle="collapse",
     data-target="#navbarNavDropdown",
@@ -11,9 +12,11 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
     aria-expanded="false",
     aria-label="Toggle navigation")
     span.navbar-toggler-icon
-  .collapse.navbar-collapse(id="navbarNavDropdown")
-    ul.navbar-nav
-      li.nav-item.breather-left.breather-right(routerLinkActive="active")
+  .collapse.navbar-collapse(
+    id="navbarNavDropdown",
+    [ngClass]="{'show': showState}")
+    ul.navbar-nav((click)="mobileCollapseState()")
+      li.nav-item.breather-right(routerLinkActive="active")
         a.nav-link(routerLink="/live-view") Live View
           span.sr-only (current)
       li.nav-item.breather-right(routerLinkActive="active")
