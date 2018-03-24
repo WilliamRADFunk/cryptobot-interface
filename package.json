@@ -8,7 +8,7 @@
     "ng": "ng",
     "prebuild": "npm run pug-it",
     "build": "run-s lint test build:ng",
-    "build:ng": "ng build --prod",
+    "build:ng": "ng build --prod --base-href=/applications/cryptobot-interface/",
     "pug-it": "pug src",
     "pug-it:w": "pug src -P -w",
     "server": "ng serve --open",
