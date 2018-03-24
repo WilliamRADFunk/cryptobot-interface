@@ -13,14 +13,15 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
     span.navbar-toggler-icon
   .collapse.navbar-collapse(id="navbarNavDropdown")
     ul.navbar-nav
-      li.nav-item.active
-        a.nav-link(href="#") Live View
+      li.nav-item.breather-left.breather-right(routerLinkActive="active")
+        a.nav-link(routerLink="/live-view") Live View
           span.sr-only (current)
-      li.nav-item
-        a.nav-link(href="#") Trading History
-      li.nav-item
-        a.nav-link(href="#") Profit Portfolio
-      li.nav-item
-        a.nav-link(href="#") Cryptobot Controls
+      li.nav-item.breather-right(routerLinkActive="active")
+        a.nav-link(routerLink="/trading-history") Trading History
+      li.nav-item.breather-right(routerLinkActive="active")
+        a.nav-link(routerLink="/profit-portfolio") Profit Portfolio
+      li.nav-item(routerLinkActive="active")
+        a.nav-link(routerLink="/cryptobot-controls") Cryptobot Controls
 div.page
+  router-outlet
 

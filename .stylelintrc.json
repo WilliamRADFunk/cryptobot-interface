@@ -4,6 +4,7 @@
     ],
     "extends": "stylelint-config-sass-guidelines",
     "rules": {
+        "selector-max-compound-selectors": 4,
         "selector-max-id": 2,
         "selector-no-qualifying-type": null,
         "value-no-vendor-prefix": null
