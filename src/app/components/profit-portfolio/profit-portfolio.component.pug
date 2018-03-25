@@ -1,8 +1,6 @@
 .row
   .col-12.col-sm-12.col-md-12.col-lg-2
-    app-side-panel(
-      (changedPathState)="changePathState($event)",
-      [pathState]="pathState")
+    app-side-panel([pathState]="pathState")
   .col-12.col-sm-12.col-md-12.col-lg-9(style="height: 100%;")
     .row
       .col-12.col-sm-12.col-md-12.col-lg-12(style="height: 60px;")
