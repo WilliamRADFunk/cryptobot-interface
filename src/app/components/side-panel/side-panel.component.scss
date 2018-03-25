@@ -1,0 +1,63 @@
+.spacer-bottom {
+  margin-bottom: 20px;
+}
+
+.sub-nav {
+  background-repeat: no-repeat;
+  background-position: 5px 5px;
+  background-size: 98px;
+  color: #000;
+  height: 118px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 118px;
+
+  &.active {
+    background-color: #597eaa;
+    border: 3px solid #ffc000;
+    color: #fff;
+    font-weight: bold;
+    text-decoration: underline;
+    text-decoration-color: #ffc000;
+  }
+
+  &:hover {
+    background-color: #597eaa;
+    color: #fff;
+    font-weight: bold;
+  }
+}
+
+@media only screen and (max-width: 1048px) {
+  .sub-nav {
+    background-size: 98px;
+    height: 113px;
+    width: 113px;
+
+    &.active {
+      border-width: 2px;
+    }
+  }
+}
+
+@media only screen and (max-width: 815px) {
+  .sub-nav {
+    background-size: 88px;
+    height: 103px;
+    width: 103px;
+  }
+}
+
+@media only screen and (max-width: 520px) {
+  .sub-nav {
+    background-size: 68px;
+    font-size: 13px;
+    height: 80px;
+    width: 80px;
+    white-space: nowrap;
+
+    &.active {
+      border-width: 2px;
+    }
+  }
+}
