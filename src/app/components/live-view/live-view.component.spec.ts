@@ -6,6 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChartModule } from 'angular-highcharts';
 
 import { LiveViewComponent } from './live-view.component';
+import { GdaxDataService } from '../../services/gdax-data.service';
 
 describe('LiveViewComponent', () => {
   let component: LiveViewComponent;
@@ -33,6 +34,18 @@ describe('LiveViewComponent', () => {
         {
           provide: Router,
           useClass: class { navigate: {} = jasmine.createSpy('navigate'); }
+        },
+        {
+          provide: GdaxDataService,
+          useValue: {
+            getLatestGdaxData: () => {
+              return {
+                subscribe: (fn) => {
+                  fn([1, 2, 3, 4, 5, 6]);
+                }
+              };
+            }
+          }
         }
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ChartModule, Chart } from 'angular-highcharts';
+import { ChartModule } from 'angular-highcharts';
 
 import { CryptobotControlsComponent } from './cryptobot-controls.component';
 

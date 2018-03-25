@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChartModule } from 'angular-highcharts';
@@ -12,6 +13,7 @@ import { ProfitPortfolioComponent } from './components/profit-portfolio/profit-p
 import { CryptobotControlsComponent } from './components/cryptobot-controls/cryptobot-controls.component';
 import { AppRoutingModule } from './app-routing.module';
 import { SidePanelComponent } from './components/side-panel/side-panel.component';
+import { GdaxDataService } from './services/gdax-data.service';
 
 @NgModule({
   declarations: [
@@ -25,12 +27,13 @@ import { SidePanelComponent } from './components/side-panel/side-panel.component
   imports: [
     BrowserModule,
     FormsModule,
+    HttpClientModule,
     NgbModule.forRoot(),
     ChartModule,
     AppRoutingModule
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-  providers: [],
+  providers: [ GdaxDataService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
