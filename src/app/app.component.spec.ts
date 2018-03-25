@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, async, fakeAsync, tick } from '@angular/core/testing';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -21,4 +21,24 @@ describe('AppComponent', () => {
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
   }));
+  describe('mobileCollapseState', () => {
+    it('should change showState to false', fakeAsync(() => {
+      const fixture = TestBed.createComponent(AppComponent);
+      const app = fixture.debugElement.componentInstance;
+      app.mobileCollapseState();
+      expect(app.showState).toBe(false);
+    }));
+  });
+  describe('toggleCollapseState', () => {
+    it('should toggle showState', fakeAsync(() => {
+      const fixture = TestBed.createComponent(AppComponent);
+      const app = fixture.debugElement.componentInstance;
+      app.toggleCollapseState();
+      tick(300);
+      expect(app.showState).toBe(true);
+      app.toggleCollapseState();
+      tick(300);
+      expect(app.showState).toBe(false);
+    }));
+  });
 });
