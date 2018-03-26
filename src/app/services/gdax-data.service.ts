@@ -50,10 +50,4 @@ export class GdaxDataService {
       .set('end', this.endDate.toISOString());
     return this.http.get<any>(`https://api.gdax.com/products/${this.currency}/candles`, {headers, params});
   }
-
-  refreshData() {
-    this.getLatestGdaxData().subscribe(data => {
-      this.chartData.next(data);
-    });
-  }
 }
