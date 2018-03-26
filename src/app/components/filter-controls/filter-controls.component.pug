@@ -32,7 +32,7 @@
               ngbDatepicker,
               [ngClass]="{'invalid-input': isInvalid}",
               [(ngModel)]="sDate",
-              (ngModelChange)="onStartDateChange(e)",
+              (ngModelChange)="onStartDateChange()",
               placeholder="yyy-mm-dd")
       div(style="display: inline-block;")
         ngb-timepicker(
@@ -41,7 +41,7 @@
           [ngClass]="{'invalid-input': isInvalid}",
           size="small",
           [(ngModel)]="sTime",
-          (ngModelChange)="onStartTimeChange(e)",
+          (ngModelChange)="onStartTimeChange()",
           [spinners]="OFF")
   .col-sm-6.col-md-5.col-lg-5
     form.form-inline
@@ -66,7 +66,7 @@
               ngbDatepicker,
               [ngClass]="{'invalid-input': isInvalid}",
               [(ngModel)]="eDate",
-              (ngModelChange)="onEndDateChange(e)",
+              (ngModelChange)="onEndDateChange()",
               placeholder="yyy-mm-dd")
       div(style="display: inline-block;")
         ngb-timepicker(
@@ -75,5 +75,5 @@
           [ngClass]="{'invalid-input': isInvalid}",
           size="small",
           [(ngModel)]="eTime",
-          (ngModelChange)="onEndTimeChange(e)",
+          (ngModelChange)="onEndTimeChange()",
           [spinners]="OFF")

@@ -9,6 +9,17 @@ import { GdaxDataService } from '../../services/gdax-data.service';
 })
 export class FilterControlsComponent implements OnInit {
   /**
+  * Here to help Angular build process from getting confused.
+  * [spinners]='OFF' is a timepicker necessity,
+  * but angular doesn't know that.
+  */
+  OFF: string = 'OFF';
+  /**
+  * Flag to determine whether or not to show invalid data colors
+  * inside the datetime filters.
+  */
+  isInvalid: boolean = false;
+  /**
   * Maintains current granularity level (ie. 3600)
   */
   timeInterval: number = 3600;
