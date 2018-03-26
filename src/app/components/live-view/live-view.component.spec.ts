@@ -38,13 +38,12 @@ describe('LiveViewComponent', () => {
         {
           provide: GdaxDataService,
           useValue: {
-            getLatestGdaxData: () => {
-              return {
-                subscribe: (fn) => {
-                  fn([1, 2, 3, 4, 5, 6]);
-                }
-              };
-            }
+            changeCurrencyType: () => {},
+            chartData: {
+              subscribe: (fn) => {
+                fn([1, 2, 3, 4, 5, 6]);
+              }
+            },
           }
         }
       ],

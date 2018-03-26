@@ -1,0 +1,6 @@
+.row
+  .col-lg-3.offset-lg-1
+    select(
+      [ngModel]="timeInterval",
+      (ngModelChange)="changedTimeInterval($event)")
+      option(*ngFor="let interval of timeIntervals", value="{{interval.value}}") {{ interval.label }}

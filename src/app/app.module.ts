@@ -14,6 +14,7 @@ import { CryptobotControlsComponent } from './components/cryptobot-controls/cryp
 import { AppRoutingModule } from './app-routing.module';
 import { SidePanelComponent } from './components/side-panel/side-panel.component';
 import { GdaxDataService } from './services/gdax-data.service';
+import { FilterControlsComponent } from './components/filter-controls/filter-controls.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { GdaxDataService } from './services/gdax-data.service';
     TradingHistoryComponent,
     ProfitPortfolioComponent,
     CryptobotControlsComponent,
-    SidePanelComponent
+    SidePanelComponent,
+    FilterControlsComponent
   ],
   imports: [
     BrowserModule,
