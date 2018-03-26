@@ -36,8 +36,7 @@ export class LiveViewComponent implements OnInit {
     if (!data.length) {
       return;
     }
-    console.log('updateChart', data);
-    // tslint:disable-next-line:argument-of-type
+    // console.log('updateChart', data);
     const options = {};
     options['chart'] = {
       type: 'line',
@@ -78,8 +77,17 @@ export class LiveViewComponent implements OnInit {
     options['tooltip'] = {
       formatter: function() {
         const moneyPipe = new CurrencyPipe('en-US');
+        const dateOptions = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
         const fun = val => {
-          return `<p>${new Date(val * 1000)}</br>${moneyPipe.transform(this.y)}</p>`;
+          return `
+            <table>
+              <tr>
+                <td>Date:</td><td>${new Date(val * 1000).toLocaleString('en-US', dateOptions)}</td>
+              </tr>
+              <tr>
+                <td>Price:</td><td>${moneyPipe.transform(this.y)}</td>
+              </tr>
+            </table>`;
         };
         const label = fun(this.x);
         return label;

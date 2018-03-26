@@ -1,6 +1,79 @@
-.row
-  .col-lg-3.offset-lg-1
-    select(
-      [ngModel]="timeInterval",
-      (ngModelChange)="changedTimeInterval($event)")
-      option(*ngFor="let interval of timeIntervals", value="{{interval.value}}") {{ interval.label }}
+.row(style="margin-bottom: 40px;")
+  .col-sm-12.col-md-1.col-lg-2
+    .btn-group(
+      ngbDropdown,
+      role="group",
+      aria-label="Button group with nested dropdown")
+      button.btn.btn-outline-primary.btn-intervals(ngbDropdownToggle) {{ timeIntervalLabel }}
+      .dropdown-menu(ngbDropdownMenu)
+        button.dropdown-item(
+          *ngFor="let interval of timeIntervals",
+          (click)="changedTimeInterval(interval)") {{ interval.label }}
+  .col-sm-6.col-md-5.col-lg-5
+    form.form-inline
+      label.label-date(
+        for="dPick1",
+        [ngClass]="{'invalid-input': isInvalid}") Start Date:
+      div(style="display:inline-block;")
+        .input-group
+          button.btn.btn-sm.btn-primary.btn-datepicker(
+              (click)="d1.toggle()",
+              type="button")
+              span.fa.fa-calendar(
+                height="auto",
+                style="width: 1.2rem; height: 1rem; cursor: pointer;",
+                width="auto")
+          |
+          .input-group-append
+            input.form-control.date-text(
+              #d1="ngbDatepicker",
+              id="dPick1",
+              name="dPick1",
+              ngbDatepicker,
+              [ngClass]="{'invalid-input': isInvalid}",
+              [(ngModel)]="sDate",
+              (ngModelChange)="onStartDateChange(e)",
+              placeholder="yyy-mm-dd")
+      div(style="display: inline-block;")
+        ngb-timepicker(
+          id="tpick1",
+          name="tPick1",
+          [ngClass]="{'invalid-input': isInvalid}",
+          size="small",
+          [(ngModel)]="sTime",
+          (ngModelChange)="onStartTimeChange(e)",
+          [spinners]="OFF")
+  .col-sm-6.col-md-5.col-lg-5
+    form.form-inline
+      label.label-date(
+        for="dPick2",
+        [ngClass]="{'invalid-input': isInvalid}") End Date:
+      div(style="display:inline-block;")
+        .input-group
+          button.btn.btn-sm.btn-primary.btn-datepicker(
+              (click)="d2.toggle()",
+              type="button")
+              span.fa.fa-calendar(
+                height="auto",
+                style="width: 1.2rem; height: 1rem; cursor: pointer;",
+                width="auto")
+          |
+          .input-group-append
+            input.form-control.date-text(
+              #d2="ngbDatepicker",
+              id="dPick2",
+              name="dPick2",
+              ngbDatepicker,
+              [ngClass]="{'invalid-input': isInvalid}",
+              [(ngModel)]="eDate",
+              (ngModelChange)="onEndDateChange(e)",
+              placeholder="yyy-mm-dd")
+      div(style="display: inline-block;")
+        ngb-timepicker(
+          id="tpick2",
+          name="tPick2",
+          [ngClass]="{'invalid-input': isInvalid}",
+          size="small",
+          [(ngModel)]="eTime",
+          (ngModelChange)="onEndTimeChange(e)",
+          [spinners]="OFF")
