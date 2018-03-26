@@ -25,7 +25,7 @@
 ### ⊕ **new SidePanelComponent**(): [SidePanelComponent](sidepanelcomponent.md)
 
 
-*Defined in [app/components/side-panel/side-panel.component.ts:9](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/components/side-panel/side-panel.component.ts#L9)*
+*Defined in [app/components/side-panel/side-panel.component.ts:9](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/app/components/side-panel/side-panel.component.ts#L9)*
 
 
 
@@ -43,7 +43,7 @@
 
 **●  pathState**:  *`string`*  = "BTC-USD"
 
-*Defined in [app/components/side-panel/side-panel.component.ts:9](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/components/side-panel/side-panel.component.ts#L9)*
+*Defined in [app/components/side-panel/side-panel.component.ts:9](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/app/components/side-panel/side-panel.component.ts#L9)*
 
 
 

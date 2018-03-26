@@ -28,7 +28,7 @@ export class GdaxDataService {
 
   /**
   * Constructor for the class. Injects Angular's HttpClient service
-  * @param HttpClient Angular's HttpClient service for making http calls
+  * @param http Angular's HttpClient service for making http calls
   */
   constructor(private http: HttpClient) { }
   /**
