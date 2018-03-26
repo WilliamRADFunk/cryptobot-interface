@@ -29,7 +29,7 @@
 ### ⊕ **new CryptobotControlsComponent**(): [CryptobotControlsComponent](cryptobotcontrolscomponent.md)
 
 
-*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.ts:8](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/components/cryptobot-controls/cryptobot-controls.component.ts#L8)*
+*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.ts:8](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/components/cryptobot-controls/cryptobot-controls.component.ts#L8)*
 
 
 
@@ -49,7 +49,7 @@
 
 
 
-*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.ts:12](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/components/cryptobot-controls/cryptobot-controls.component.ts#L12)*
+*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.ts:12](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/components/cryptobot-controls/cryptobot-controls.component.ts#L12)*
 
 
 

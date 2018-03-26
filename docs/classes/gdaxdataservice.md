@@ -39,8 +39,11 @@
 ### ⊕ **new GdaxDataService**(http: *`HttpClient`*): [GdaxDataService](gdaxdataservice.md)
 
 
-*Defined in [app/services/gdax-data.service.ts:27](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/services/gdax-data.service.ts#L27)*
+*Defined in [app/services/gdax-data.service.ts:27](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/services/gdax-data.service.ts#L27)*
 
+
+
+Constructor for the class. Injects Angular's HttpClient service
 
 
 **Parameters:**
@@ -65,8 +68,11 @@
 
 **●  chartData**:  *`BehaviorSubject`.<`number`[][]>*  =  new BehaviorSubject<number[][]>([])
 
-*Defined in [app/services/gdax-data.service.ts:11](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/services/gdax-data.service.ts#L11)*
+*Defined in [app/services/gdax-data.service.ts:11](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/services/gdax-data.service.ts#L11)*
 
+
+
+The updated query results for historical trade market data in a format that all of the live views will understand and be able to use.
 
 
 
@@ -79,8 +85,11 @@ ___
 
 **●  currency**:  *`string`*  = "BTC-USD"
 
-*Defined in [app/services/gdax-data.service.ts:15](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/services/gdax-data.service.ts#L15)*
+*Defined in [app/services/gdax-data.service.ts:15](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/services/gdax-data.service.ts#L15)*
 
+
+
+Currency type which is used as part of the query URL.
 
 
 
@@ -93,8 +102,11 @@ ___
 
 **●  endDate**:  *`Date`*  =  new Date()
 
-*Defined in [app/services/gdax-data.service.ts:19](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/services/gdax-data.service.ts#L19)*
+*Defined in [app/services/gdax-data.service.ts:19](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/services/gdax-data.service.ts#L19)*
 
+
+
+The end datetime used as a parameter in the query URL
 
 
 
@@ -107,7 +119,7 @@ ___
 
 **●  http**:  *`HttpClient`* 
 
-*Defined in [app/services/gdax-data.service.ts:33](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/services/gdax-data.service.ts#L33)*
+*Defined in [app/services/gdax-data.service.ts:33](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/services/gdax-data.service.ts#L33)*
 
 
 
@@ -121,8 +133,11 @@ ___
 
 **●  interval**:  *`number`*  = 3600
 
-*Defined in [app/services/gdax-data.service.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/services/gdax-data.service.ts#L23)*
+*Defined in [app/services/gdax-data.service.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/services/gdax-data.service.ts#L23)*
 
+
+
+The granularity between data points. Used as a parameter in query URL.
 
 
 
@@ -135,8 +150,11 @@ ___
 
 **●  startDate**:  *`Date`*  =  new Date(this.endDate.getTime() - 86400000)
 
-*Defined in [app/services/gdax-data.service.ts:27](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/services/gdax-data.service.ts#L27)*
+*Defined in [app/services/gdax-data.service.ts:27](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/services/gdax-data.service.ts#L27)*
 
+
+
+The start datetime used as a parameter in the query URL
 
 
 
@@ -153,15 +171,18 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:38](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/services/gdax-data.service.ts#L38)*
+*Defined in [app/services/gdax-data.service.ts:38](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/services/gdax-data.service.ts#L38)*
 
+
+
+Updates the currency type being viewed, and refreshes query results.
 
 
 **Parameters:**
 
 | Param | Type | Description |
 | ------ | ------ | ------ |
-| currency | `string`   |  - |
+| currency | `string`   |  the currency string (ie. 'BTC-USD') |
 
 
 
@@ -183,15 +204,18 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:48](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/services/gdax-data.service.ts#L48)*
+*Defined in [app/services/gdax-data.service.ts:48](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/services/gdax-data.service.ts#L48)*
 
+
+
+Updates the end datetime being viewed, and refreshes query results.
 
 
 **Parameters:**
 
 | Param | Type | Description |
 | ------ | ------ | ------ |
-| date | `Date`   |  - |
+| date | `Date`   |  the end datetime object |
 
 
 
@@ -213,15 +237,18 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:58](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/services/gdax-data.service.ts#L58)*
+*Defined in [app/services/gdax-data.service.ts:58](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/services/gdax-data.service.ts#L58)*
 
+
+
+Updates the start datetime being viewed, and refreshes query results.
 
 
 **Parameters:**
 
 | Param | Type | Description |
 | ------ | ------ | ------ |
-| date | `Date`   |  - |
+| date | `Date`   |  the start datetime object |
 
 
 
@@ -243,15 +270,18 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:69](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/services/gdax-data.service.ts#L69)*
+*Defined in [app/services/gdax-data.service.ts:69](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/services/gdax-data.service.ts#L69)*
 
+
+
+Updates the granularity of the data points, and refreshes query results.
 
 
 **Parameters:**
 
 | Param | Type | Description |
 | ------ | ------ | ------ |
-| interval | `number`   |  - |
+| interval | `number`   |  the granularity to use |
 
 
 
@@ -273,13 +303,18 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:79](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/services/gdax-data.service.ts#L79)*
+*Defined in [app/services/gdax-data.service.ts:79](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/services/gdax-data.service.ts#L79)*
 
+
+
+Call to GDAX for historical market data
 
 
 
 
 **Returns:** `Observable`.<`any`>
+an observable that returns market data specific to query params
+
 
 
 

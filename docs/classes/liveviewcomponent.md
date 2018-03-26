@@ -40,7 +40,7 @@
 ### ⊕ **new LiveViewComponent**(activatedRouter: *`ActivatedRoute`*, router: *`Router`*, gdaxDataService: *[GdaxDataService](gdaxdataservice.md)*): [LiveViewComponent](liveviewcomponent.md)
 
 
-*Defined in [app/components/live-view/live-view.component.ts:18](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/components/live-view/live-view.component.ts#L18)*
+*Defined in [app/components/live-view/live-view.component.ts:18](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/components/live-view/live-view.component.ts#L18)*
 
 
 
@@ -68,7 +68,7 @@
 
 **●  activatedRouter**:  *`ActivatedRoute`* 
 
-*Defined in [app/components/live-view/live-view.component.ts:21](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/components/live-view/live-view.component.ts#L21)*
+*Defined in [app/components/live-view/live-view.component.ts:21](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/components/live-view/live-view.component.ts#L21)*
 
 
 
@@ -82,7 +82,7 @@ ___
 
 **●  chart**:  *`Chart`* 
 
-*Defined in [app/components/live-view/live-view.component.ts:16](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/components/live-view/live-view.component.ts#L16)*
+*Defined in [app/components/live-view/live-view.component.ts:16](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/components/live-view/live-view.component.ts#L16)*
 
 
 
@@ -96,7 +96,7 @@ ___
 
 **●  chartReady**:  *`boolean`*  = false
 
-*Defined in [app/components/live-view/live-view.component.ts:17](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/components/live-view/live-view.component.ts#L17)*
+*Defined in [app/components/live-view/live-view.component.ts:17](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/components/live-view/live-view.component.ts#L17)*
 
 
 
@@ -110,7 +110,7 @@ ___
 
 **●  gdaxDataService**:  *[GdaxDataService](gdaxdataservice.md)* 
 
-*Defined in [app/components/live-view/live-view.component.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/components/live-view/live-view.component.ts#L23)*
+*Defined in [app/components/live-view/live-view.component.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/components/live-view/live-view.component.ts#L23)*
 
 
 
@@ -124,7 +124,7 @@ ___
 
 **●  pathState**:  *`string`*  = "BTC-USD"
 
-*Defined in [app/components/live-view/live-view.component.ts:18](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/components/live-view/live-view.component.ts#L18)*
+*Defined in [app/components/live-view/live-view.component.ts:18](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/components/live-view/live-view.component.ts#L18)*
 
 
 
@@ -138,7 +138,7 @@ ___
 
 **●  router**:  *`Router`* 
 
-*Defined in [app/components/live-view/live-view.component.ts:22](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/components/live-view/live-view.component.ts#L22)*
+*Defined in [app/components/live-view/live-view.component.ts:22](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/components/live-view/live-view.component.ts#L22)*
 
 
 
@@ -156,7 +156,7 @@ ___
 
 
 
-*Defined in [app/components/live-view/live-view.component.ts:25](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/components/live-view/live-view.component.ts#L25)*
+*Defined in [app/components/live-view/live-view.component.ts:25](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/components/live-view/live-view.component.ts#L25)*
 
 
 
@@ -178,7 +178,7 @@ ___
 
 
 
-*Defined in [app/components/live-view/live-view.component.ts:35](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a24c33f/src/app/components/live-view/live-view.component.ts#L35)*
+*Defined in [app/components/live-view/live-view.component.ts:35](https://github.com/WilliamRADFunk/cryptobot-interface/blob/4204bce/src/app/components/live-view/live-view.component.ts#L35)*
 
 
 
