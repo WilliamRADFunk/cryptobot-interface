@@ -1,19 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 
+import { NgbTimepickerConfig } from '@ng-bootstrap/ng-bootstrap';
+
 import { GdaxDataService } from '../../services/gdax-data.service';
 
 @Component({
   selector: 'app-filter-controls',
   templateUrl: './filter-controls.component.html',
-  styleUrls: ['./filter-controls.component.scss']
+  styleUrls: ['./filter-controls.component.scss'],
+  providers: [ NgbTimepickerConfig ]
 })
 export class FilterControlsComponent implements OnInit {
-  /**
-  * Here to help Angular build process from getting confused.
-  * [spinners]='OFF' is a timepicker necessity,
-  * but angular doesn't know that.
-  */
-  OFF: string = 'OFF';
   /**
   * Flag to determine whether or not to show invalid data colors
   * inside the datetime filters.
@@ -98,7 +95,12 @@ export class FilterControlsComponent implements OnInit {
   /**
   * Constructor for the class.
   */
-  constructor(private gdaxDataService: GdaxDataService) { }
+  constructor(
+    private gdaxDataService: GdaxDataService,
+    private config: NgbTimepickerConfig) {
+      config.seconds = false;
+      config.spinners = false;
+    }
   /**
   * Triggered when component is loaded, but before it is viewed.
   * Gets REST path info, and updates the profit chart.

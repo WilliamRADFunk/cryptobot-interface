@@ -41,8 +41,7 @@
           [ngClass]="{'invalid-input': isInvalid}",
           size="small",
           [(ngModel)]="sTime",
-          (ngModelChange)="onStartTimeChange()",
-          [spinners]="OFF")
+          (ngModelChange)="onStartTimeChange()")
   .col-sm-6.col-md-5.col-lg-5
     form.form-inline
       label.label-date(
@@ -75,5 +74,4 @@
           [ngClass]="{'invalid-input': isInvalid}",
           size="small",
           [(ngModel)]="eTime",
-          (ngModelChange)="onEndTimeChange()",
-          [spinners]="OFF")
+          (ngModelChange)="onEndTimeChange()")

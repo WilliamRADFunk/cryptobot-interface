@@ -36,7 +36,7 @@
 ### ⊕ **new TradingHistoryComponent**(activatedRouter: *`ActivatedRoute`*, router: *`Router`*): [TradingHistoryComponent](tradinghistorycomponent.md)
 
 
-*Defined in [app/components/trading-history/trading-history.component.ts:14](https://github.com/WilliamRADFunk/cryptobot-interface/blob/64d4170/src/app/components/trading-history/trading-history.component.ts#L14)*
+*Defined in [app/components/trading-history/trading-history.component.ts:14](https://github.com/WilliamRADFunk/cryptobot-interface/blob/0ee4bcc/src/app/components/trading-history/trading-history.component.ts#L14)*
 
 
 
@@ -66,7 +66,7 @@ Constructor for the class. Injects Angular's ActivatedRoute, and Router services
 
 **●  activatedRouter**:  *`ActivatedRoute`* 
 
-*Defined in [app/components/trading-history/trading-history.component.ts:22](https://github.com/WilliamRADFunk/cryptobot-interface/blob/64d4170/src/app/components/trading-history/trading-history.component.ts#L22)*
+*Defined in [app/components/trading-history/trading-history.component.ts:22](https://github.com/WilliamRADFunk/cryptobot-interface/blob/0ee4bcc/src/app/components/trading-history/trading-history.component.ts#L22)*
 
 
 
@@ -83,7 +83,7 @@ ___
 
 **●  pathState**:  *`string`*  = "BTC-USD"
 
-*Defined in [app/components/trading-history/trading-history.component.ts:14](https://github.com/WilliamRADFunk/cryptobot-interface/blob/64d4170/src/app/components/trading-history/trading-history.component.ts#L14)*
+*Defined in [app/components/trading-history/trading-history.component.ts:14](https://github.com/WilliamRADFunk/cryptobot-interface/blob/0ee4bcc/src/app/components/trading-history/trading-history.component.ts#L14)*
 
 
 
@@ -100,7 +100,7 @@ ___
 
 **●  router**:  *`Router`* 
 
-*Defined in [app/components/trading-history/trading-history.component.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/64d4170/src/app/components/trading-history/trading-history.component.ts#L23)*
+*Defined in [app/components/trading-history/trading-history.component.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/0ee4bcc/src/app/components/trading-history/trading-history.component.ts#L23)*
 
 
 
@@ -121,7 +121,7 @@ ___
 
 
 
-*Defined in [app/components/trading-history/trading-history.component.ts:28](https://github.com/WilliamRADFunk/cryptobot-interface/blob/64d4170/src/app/components/trading-history/trading-history.component.ts#L28)*
+*Defined in [app/components/trading-history/trading-history.component.ts:28](https://github.com/WilliamRADFunk/cryptobot-interface/blob/0ee4bcc/src/app/components/trading-history/trading-history.component.ts#L28)*
 
 
 
