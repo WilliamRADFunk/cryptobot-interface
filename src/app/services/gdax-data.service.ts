@@ -26,6 +26,10 @@ export class GdaxDataService {
   */
   startDate: Date = new Date(this.endDate.getTime() - 86400000);
 
+  /*
+  * Constructor for the class. Injects Angular's HttpClient service
+  * @param HttpClient Angular's HttpClient service for making http calls
+  */
   constructor(private http: HttpClient) { }
   /*
   * Updates the currency type being viewed, and refreshes query results.
