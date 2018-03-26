@@ -40,17 +40,20 @@
 ### ⊕ **new LiveViewComponent**(activatedRouter: *`ActivatedRoute`*, router: *`Router`*, gdaxDataService: *[GdaxDataService](gdaxdataservice.md)*): [LiveViewComponent](liveviewcomponent.md)
 
 
-*Defined in [app/components/live-view/live-view.component.ts:18](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/app/components/live-view/live-view.component.ts#L18)*
+*Defined in [app/components/live-view/live-view.component.ts:29](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/app/components/live-view/live-view.component.ts#L29)*
 
+
+
+Constructor for the class. Injects Angular's ActivatedRoute, Router, and GdaxDataService services
 
 
 **Parameters:**
 
 | Param | Type | Description |
 | ------ | ------ | ------ |
-| activatedRouter | `ActivatedRoute`   |  - |
-| router | `Router`   |  - |
-| gdaxDataService | [GdaxDataService](gdaxdataservice.md)   |  - |
+| activatedRouter | `ActivatedRoute`   |  Angular's ActivatedRoute service for knowing current route |
+| router | `Router`   |  Angular's Router service for changing route |
+| gdaxDataService | [GdaxDataService](gdaxdataservice.md)   |  Internal service to get queried market data. |
 
 
 
@@ -68,8 +71,11 @@
 
 **●  activatedRouter**:  *`ActivatedRoute`* 
 
-*Defined in [app/components/live-view/live-view.component.ts:21](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/app/components/live-view/live-view.component.ts#L21)*
+*Defined in [app/components/live-view/live-view.component.ts:38](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/app/components/live-view/live-view.component.ts#L38)*
 
+
+
+Angular's ActivatedRoute service for knowing current route
 
 
 
@@ -82,8 +88,11 @@ ___
 
 **●  chart**:  *`Chart`* 
 
-*Defined in [app/components/live-view/live-view.component.ts:16](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/app/components/live-view/live-view.component.ts#L16)*
+*Defined in [app/components/live-view/live-view.component.ts:20](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/app/components/live-view/live-view.component.ts#L20)*
 
+
+
+The main chart object to be constructed whenever new data is returned from the service.
 
 
 
@@ -96,8 +105,11 @@ ___
 
 **●  chartReady**:  *`boolean`*  = false
 
-*Defined in [app/components/live-view/live-view.component.ts:17](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/app/components/live-view/live-view.component.ts#L17)*
+*Defined in [app/components/live-view/live-view.component.ts:24](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/app/components/live-view/live-view.component.ts#L24)*
 
+
+
+Flag to prevent chart compilation until after chart is created.
 
 
 
@@ -110,8 +122,11 @@ ___
 
 **●  gdaxDataService**:  *[GdaxDataService](gdaxdataservice.md)* 
 
-*Defined in [app/components/live-view/live-view.component.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/app/components/live-view/live-view.component.ts#L23)*
+*Defined in [app/components/live-view/live-view.component.ts:40](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/app/components/live-view/live-view.component.ts#L40)*
 
+
+
+Internal service to get queried market data.
 
 
 
@@ -124,8 +139,11 @@ ___
 
 **●  pathState**:  *`string`*  = "BTC-USD"
 
-*Defined in [app/components/live-view/live-view.component.ts:18](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/app/components/live-view/live-view.component.ts#L18)*
+*Defined in [app/components/live-view/live-view.component.ts:29](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/app/components/live-view/live-view.component.ts#L29)*
 
+
+
+The initial path state passed in by the activatedRouter. Keeps track of what currency the chart should be viewing.
 
 
 
@@ -138,8 +156,11 @@ ___
 
 **●  router**:  *`Router`* 
 
-*Defined in [app/components/live-view/live-view.component.ts:22](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/app/components/live-view/live-view.component.ts#L22)*
+*Defined in [app/components/live-view/live-view.component.ts:39](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/app/components/live-view/live-view.component.ts#L39)*
 
+
+
+Angular's Router service for changing route
 
 
 
@@ -156,8 +177,11 @@ ___
 
 
 
-*Defined in [app/components/live-view/live-view.component.ts:25](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/app/components/live-view/live-view.component.ts#L25)*
+*Defined in [app/components/live-view/live-view.component.ts:45](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/app/components/live-view/live-view.component.ts#L45)*
 
+
+
+Triggered when component is loaded, but before it is viewed. Gets REST path info, and updates the profit chart.
 
 
 
@@ -178,15 +202,18 @@ ___
 
 
 
-*Defined in [app/components/live-view/live-view.component.ts:35](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/app/components/live-view/live-view.component.ts#L35)*
+*Defined in [app/components/live-view/live-view.component.ts:59](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/app/components/live-view/live-view.component.ts#L59)*
 
+
+
+When new data is received, it's passed to this function. Here the chart details assembled, and the chartReady flag is released.
 
 
 **Parameters:**
 
 | Param | Type | Description |
 | ------ | ------ | ------ |
-| data | `number`[][]   |  - |
+| data | `number`[][]   |  queried market data passed from the GdaxDataService. |
 
 
 

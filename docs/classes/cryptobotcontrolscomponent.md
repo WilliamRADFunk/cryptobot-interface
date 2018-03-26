@@ -29,8 +29,11 @@
 ### ⊕ **new CryptobotControlsComponent**(): [CryptobotControlsComponent](cryptobotcontrolscomponent.md)
 
 
-*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.ts:8](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/app/components/cryptobot-controls/cryptobot-controls.component.ts#L8)*
+*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.ts:8](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/app/components/cryptobot-controls/cryptobot-controls.component.ts#L8)*
 
+
+
+Constructor for the class.
 
 
 
@@ -49,8 +52,11 @@
 
 
 
-*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.ts:12](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/app/components/cryptobot-controls/cryptobot-controls.component.ts#L12)*
+*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.ts:16](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/app/components/cryptobot-controls/cryptobot-controls.component.ts#L16)*
 
+
+
+Triggered when component is loaded, but before it is viewed.
 
 
 

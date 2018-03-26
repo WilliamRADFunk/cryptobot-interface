@@ -25,8 +25,11 @@
 ### ⊕ **new SidePanelComponent**(): [SidePanelComponent](sidepanelcomponent.md)
 
 
-*Defined in [app/components/side-panel/side-panel.component.ts:9](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/app/components/side-panel/side-panel.component.ts#L9)*
+*Defined in [app/components/side-panel/side-panel.component.ts:15](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/app/components/side-panel/side-panel.component.ts#L15)*
 
+
+
+Constructor for the class.
 
 
 
@@ -43,8 +46,11 @@
 
 **●  pathState**:  *`string`*  = "BTC-USD"
 
-*Defined in [app/components/side-panel/side-panel.component.ts:9](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/app/components/side-panel/side-panel.component.ts#L9)*
+*Defined in [app/components/side-panel/side-panel.component.ts:15](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/app/components/side-panel/side-panel.component.ts#L15)*
 
+
+
+The initial pathstate passed in by the main view. When these controls trigger a currency view change, and this component is replaced by its counterpart, this bound variable is what is updated to make relevant button 'active'
 
 
 

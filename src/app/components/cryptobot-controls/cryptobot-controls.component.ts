@@ -6,10 +6,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./cryptobot-controls.component.scss']
 })
 export class CryptobotControlsComponent implements OnInit {
-
+  /**
+  * Constructor for the class.
+  */
   constructor() { }
-
-  ngOnInit() {
-  }
+  /**
+  * Triggered when component is loaded, but before it is viewed.
+  */
+  ngOnInit() { }
 
 }

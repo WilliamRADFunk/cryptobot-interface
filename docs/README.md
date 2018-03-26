@@ -71,7 +71,7 @@
   ] }
 ]
 
-*Defined in [app/app-routing.module.ts:9](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/app/app-routing.module.ts#L9)*
+*Defined in [app/app-routing.module.ts:9](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/app/app-routing.module.ts#L9)*
 
 
 
@@ -85,7 +85,7 @@ ___
 
 **●  context**:  *`any`*  =  require.context('./', true, /\.spec\.ts$/)
 
-*Defined in [test.ts:18](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/test.ts#L18)*
+*Defined in [test.ts:18](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/test.ts#L18)*
 
 
 
@@ -99,7 +99,7 @@ ___
 
 **●  date**:  *`Date`*  =  new Date('2018-03-25T03:55:19.336Z')
 
-*Defined in [app/services/gdax-data.service.spec.ts:6](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/app/services/gdax-data.service.spec.ts#L6)*
+*Defined in [app/services/gdax-data.service.spec.ts:6](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/app/services/gdax-data.service.spec.ts#L6)*
 
 
 
@@ -113,7 +113,7 @@ ___
 
 **●  httpClient**:  *`any`* 
 
-*Defined in [app/services/gdax-data.service.spec.ts:12](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/app/services/gdax-data.service.spec.ts#L12)*
+*Defined in [app/services/gdax-data.service.spec.ts:12](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/app/services/gdax-data.service.spec.ts#L12)*
 
 
 
@@ -127,7 +127,7 @@ ___
 
 **●  require**:  *`any`* 
 
-*Defined in [test.ts:10](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/test.ts#L10)*
+*Defined in [test.ts:10](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/test.ts#L10)*
 
 
 
@@ -147,8 +147,8 @@ ___
 
 **●  production**:  *`boolean`*  = false
 
-*Defined in [environments/environment.prod.ts:2](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/environments/environment.prod.ts#L2)*
-*Defined in [environments/environment.ts:7](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/environments/environment.ts#L7)*
+*Defined in [environments/environment.prod.ts:2](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/environments/environment.prod.ts#L2)*
+*Defined in [environments/environment.ts:7](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/environments/environment.ts#L7)*
 
 
 
@@ -169,7 +169,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.spec.ts:8](https://github.com/WilliamRADFunk/cryptobot-interface/blob/5de8bfa/src/app/services/gdax-data.service.spec.ts#L8)*
+*Defined in [app/services/gdax-data.service.spec.ts:8](https://github.com/WilliamRADFunk/cryptobot-interface/blob/df30c74/src/app/services/gdax-data.service.spec.ts#L8)*
 
 
 

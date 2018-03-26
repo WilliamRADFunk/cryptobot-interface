@@ -13,15 +13,35 @@ import { CurrencyPipe } from '@angular/common';
   styleUrls: ['./live-view.component.scss']
 })
 export class LiveViewComponent implements OnInit {
+  /**
+  * The main chart object to be constructed whenever new
+  * data is returned from the service.
+  */
   chart: Chart;
+  /**
+  * Flag to prevent chart compilation until after chart is created.
+  */
   chartReady: boolean = false;
+  /**
+  * The initial path state passed in by the activatedRouter.
+  * Keeps track of what currency the chart should be viewing.
+  */
   pathState: string = 'BTC-USD';
 
+  /**
+  * Constructor for the class. Injects Angular's ActivatedRoute, Router, and GdaxDataService services
+  * @param activatedRouter Angular's ActivatedRoute service for knowing current route
+  * @param router Angular's Router service for changing route
+  * @param gdaxDataService Internal service to get queried market data.
+  */
   constructor(
     private activatedRouter: ActivatedRoute,
     private router: Router,
     private gdaxDataService: GdaxDataService) { }
-
+  /**
+  * Triggered when component is loaded, but before it is viewed.
+  * Gets REST path info, and updates the profit chart.
+  */
   ngOnInit() {
     this.activatedRouter.url
       .subscribe((segments: UrlSegment[]) => {
@@ -31,7 +51,11 @@ export class LiveViewComponent implements OnInit {
     this.gdaxDataService.chartData
       .subscribe(this.updateChart.bind(this));
   }
-
+  /**
+  * When new data is received, it's passed to this function.
+  * Here the chart details assembled, and the chartReady flag is released.
+  * @param data queried market data passed from the GdaxDataService.
+  */
   updateChart(data: number[][]) {
     if (!data.length) {
       return;
