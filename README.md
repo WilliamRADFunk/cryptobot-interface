@@ -23,6 +23,34 @@ Inside the `/src/assets/configs/` folder you will see my `.htaccess` file. Just 
 
 Don't worry about moving this file. The build command will do that for you at the end of the build process. Simply upload all `dist/` folder contents to the server location you want, and it should do the rest.
 
-For any other server hosting types, you'll have to figure it out for yourself. 
+For any other server hosting types, you'll have to figure it out for yourself.
 
 ---
+
+## Typescript Linting
+
+With a few exceptions, all typescript linting is performed by the built in Angular linter. Personal preferences can be added in the `tslint.json` file, which resides at project root level.
+
+To run only the typescript linter, simply run the command: `ng lint`
+
+To run all the linters, simply run the command: `npm run lint`
+
+---
+
+## Pug Linting
+
+All pug linting is performed by the third-party linter: `pug-lint`. Personal preferences are currently and can be added in the `.pug-lintrc.json` file, which resides at project root level.
+
+To run only the typescript linter, simply run the command: `ng lint:pug`
+
+To run all the linters, simply run the command: `npm run lint`
+
+---
+
+## Sass Linting
+
+All sass linting is performed by the third-party linter: `stylelint`. Personal preferences are currently and can be added in the `.stylelintrc.json` file, which resides at project root level.
+
+To run only the typescript linter, simply run the command: `ng lint:pug`
+
+To run all the linters, simply run the command: `npm run lint:style`
