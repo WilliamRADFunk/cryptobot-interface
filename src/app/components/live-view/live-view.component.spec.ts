@@ -3,10 +3,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ChartModule } from 'angular-highcharts';
+import { ChartModule, Chart } from 'angular-highcharts';
 
 import { LiveViewComponent } from './live-view.component';
 import { GdaxDataService } from '../../services/gdax-data.service';
+
+let gdaxDataService;
 
 describe('LiveViewComponent', () => {
   let component: LiveViewComponent;
@@ -49,6 +51,7 @@ describe('LiveViewComponent', () => {
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     });
+    gdaxDataService = TestBed.get(GdaxDataService);
   }));
 
   beforeEach(() => {
@@ -59,5 +62,21 @@ describe('LiveViewComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+  describe('updateChart', () => {
+    it('should return without updating chart or chartReady', () => {
+      component.chart = undefined;
+      component.chartReady = false;
+      component.updateChart([]);
+      expect(component.chart).toBe(undefined);
+      expect(component.chartReady).toBe(false);
+    });
+    it('should set chart object to a Chart object and chartReady to true', () => {
+      component.chart = undefined;
+      component.chartReady = false;
+      component.updateChart([[new Date().getTime(), 2, 3, 4, 5]]);
+      expect(component.chart instanceof Chart).toBe(true);
+      expect(component.chartReady).toBe(true);
+    });
   });
 });
