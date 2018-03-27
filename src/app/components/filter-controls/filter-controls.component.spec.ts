@@ -9,15 +9,25 @@ import { FilterControlsComponent } from './filter-controls.component';
 import { GdaxDataService } from '../../services/gdax-data.service';
 
 let gdaxDataService;
-const date = new Date('2018-03-25T03:55:00.000Z');
-const shortDate: { year: number, month: number, day: number} = {
-  year: date.getFullYear(),
-  month: date.getMonth() + 1,
-  day: date.getDate()
+const date1 = new Date('2018-03-25T03:55:00.000Z');
+const date2 = new Date('2018-03-26T03:55:00.000Z');
+const shortDate1: { year: number, month: number, day: number} = {
+  year: date1.getFullYear(),
+  month: date1.getMonth() + 1,
+  day: date1.getDate()
 };
-const shortTime: { hour: number, minute: number } = {
-  hour: date.getHours(),
-  minute: date.getMinutes()
+const shortTime1: { hour: number, minute: number } = {
+  hour: date1.getHours(),
+  minute: date1.getMinutes()
+};
+const shortDate2: { year: number, month: number, day: number} = {
+  year: date2.getFullYear(),
+  month: date2.getMonth() + 1,
+  day: date2.getDate()
+};
+const shortTime2: { hour: number, minute: number } = {
+  hour: date2.getHours(),
+  minute: date2.getMinutes()
 };
 
 describe('FilterControlsComponent', () => {
@@ -76,34 +86,42 @@ describe('FilterControlsComponent', () => {
   });
   describe('onEndDateChange', () => {
     it(`should call gdaxDataService.changeTimeInterval with expected date`, () => {
-      component.eDate = shortDate;
-      component.eTime = shortTime;
+      component.sDate = shortDate1;
+      component.sTime = shortTime1;
+      component.eDate = shortDate2;
+      component.eTime = shortTime2;
       component.onEndDateChange();
-      expect(gdaxDataService.changeEndDateTime).toHaveBeenCalledWith(date);
+      expect(gdaxDataService.changeEndDateTime).toHaveBeenCalledWith(date2);
     });
   });
   describe('onEndTimeChange', () => {
     it(`should call gdaxDataService.changeTimeInterval with expected date`, () => {
-      component.eDate = shortDate;
-      component.eTime = shortTime;
+      component.sDate = shortDate1;
+      component.sTime = shortTime1;
+      component.eDate = shortDate2;
+      component.eTime = shortTime2;
       component.onEndTimeChange();
-      expect(gdaxDataService.changeEndDateTime).toHaveBeenCalledWith(date);
+      expect(gdaxDataService.changeEndDateTime).toHaveBeenCalledWith(date2);
     });
   });
   describe('onStartDateChange', () => {
     it(`should call gdaxDataService.changeTimeInterval with expected date`, () => {
-      component.sDate = shortDate;
-      component.sTime = shortTime;
+      component.sDate = shortDate1;
+      component.sTime = shortTime1;
+      component.eDate = shortDate2;
+      component.eTime = shortTime2;
       component.onStartDateChange();
-      expect(gdaxDataService.changeStartDateTime).toHaveBeenCalledWith(date);
+      expect(gdaxDataService.changeStartDateTime).toHaveBeenCalledWith(date1);
     });
   });
   describe('onStartTimeChange', () => {
     it(`should call gdaxDataService.changeTimeInterval with expected date`, () => {
-      component.sDate = shortDate;
-      component.sTime = shortTime;
+      component.sDate = shortDate1;
+      component.sTime = shortTime1;
+      component.eDate = shortDate2;
+      component.eTime = shortTime2;
       component.onStartTimeChange();
-      expect(gdaxDataService.changeStartDateTime).toHaveBeenCalledWith(date);
+      expect(gdaxDataService.changeStartDateTime).toHaveBeenCalledWith(date1);
     });
   });
 });
