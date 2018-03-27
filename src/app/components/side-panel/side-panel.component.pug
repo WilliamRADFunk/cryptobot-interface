@@ -1,20 +1,20 @@
-.row(style="border-right: 3px solid #294f6e;")
-  .col-3.col-sm-3.col-md-3.col-lg-10.offset-lg-1.spacer-bottom
+.row.border-right-custom
+  .col-3.col-sm-3.col-md-3.col-lg-10.offset-lg-1.spacer-bottom.no-side-padding
     div.btn-custom.sub-nav.col(
       [routerLink]="['../BTC-USD']",
       [ngClass]="{'active': pathState === 'BTC-USD'}",
       style="background-image: url(assets/images/btn-chart-a.png);") BTC-USD
-  .col-3.col-sm-3.col-md-3.col-lg-10.offset-lg-1.spacer-bottom
+  .col-3.col-sm-3.col-md-3.col-lg-10.offset-lg-1.spacer-bottom.no-side-padding
     div.btn-custom.sub-nav.col(
       [routerLink]="['../LTC-USD']",
       [ngClass]="{'active': pathState === 'LTC-USD'}",
       style="background-image: url(assets/images/btn-chart-b.png);") LTC-USD
-  .col-3.col-sm-3.col-md-3.col-lg-10.offset-lg-1.spacer-bottom
+  .col-3.col-sm-3.col-md-3.col-lg-10.offset-lg-1.spacer-bottom.no-side-padding
     div.btn-custom.sub-nav.col(
       [routerLink]="['../ETH-USD']",
       [ngClass]="{'active': pathState === 'ETH-USD'}",
       style="background-image: url(assets/images/btn-chart-c.png);") ETH-USD
-  .col-3.col-sm-3.col-md-3.col-lg-10.offset-lg-1
+  .col-3.col-sm-3.col-md-3.col-lg-10.offset-lg-1.no-side-padding
     div.btn-custom.sub-nav.col(
       [routerLink]="['../ALL']",
       [ngClass]="{'active': pathState === 'ALL'}",

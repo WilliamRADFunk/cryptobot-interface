@@ -13,7 +13,7 @@
     form.form-inline
       label.label-date(
         for="dPick1",
-        [ngClass]="{'invalid-input': isInvalid}") Start Date:
+        [ngClass]="{'invalid-input': invalidStartDatetime}") Start Date:
       div(style="display:inline-block;")
         .input-group
           button.btn.btn-sm.btn-primary.btn-datepicker(
@@ -30,7 +30,7 @@
               id="dPick1",
               name="dPick1",
               ngbDatepicker,
-              [ngClass]="{'invalid-input': isInvalid}",
+              [ngClass]="{'invalid-input': invalidStartDatetime}",
               [(ngModel)]="sDate",
               (ngModelChange)="onStartDateChange()",
               placeholder="yyy-mm-dd")
@@ -38,7 +38,7 @@
         ngb-timepicker(
           id="tpick1",
           name="tPick1",
-          [ngClass]="{'invalid-input': isInvalid}",
+          [ngClass]="{'invalid-input': invalidStartDatetime}",
           size="small",
           [(ngModel)]="sTime",
           (ngModelChange)="onStartTimeChange()")
@@ -46,7 +46,7 @@
     form.form-inline
       label.label-date(
         for="dPick2",
-        [ngClass]="{'invalid-input': isInvalid}") End Date:
+        [ngClass]="{'invalid-input': invalidEndDatetime}") End Date:
       div(style="display:inline-block;")
         .input-group
           button.btn.btn-sm.btn-primary.btn-datepicker(
@@ -63,7 +63,7 @@
               id="dPick2",
               name="dPick2",
               ngbDatepicker,
-              [ngClass]="{'invalid-input': isInvalid}",
+              [ngClass]="{'invalid-input': invalidEndDatetime}",
               [(ngModel)]="eDate",
               (ngModelChange)="onEndDateChange()",
               placeholder="yyy-mm-dd")
@@ -71,7 +71,7 @@
         ngb-timepicker(
           id="tpick2",
           name="tPick2",
-          [ngClass]="{'invalid-input': isInvalid}",
+          [ngClass]="{'invalid-input': invalidEndDatetime}",
           size="small",
           [(ngModel)]="eTime",
           (ngModelChange)="onEndTimeChange()")

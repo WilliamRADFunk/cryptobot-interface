@@ -91,6 +91,8 @@ export class FilterControlsComponent implements OnInit {
     hour: this.endDate.getHours(),
     minute: this.endDate.getMinutes()
   };
+  invalidStartDatetime: boolean = false;
+  invalidEndDatetime: boolean = false;
 
   /**
   * Constructor for the class.
@@ -121,31 +123,132 @@ export class FilterControlsComponent implements OnInit {
   * Updates the service variable.
   */
   onEndDateChange() {
-    const changedDateTime: Date = new Date(this.eDate.year, this.eDate.month - 1, this.eDate.day, this.eTime.hour, this.eTime.minute);
-    this.gdaxDataService.changeEndDateTime(changedDateTime);
+    if (this.checkValidDateTime()) {
+      this.invalidEndDatetime = false;
+      this.invalidStartDatetime = false;
+      const changedDateTime: Date = new Date(this.eDate.year, this.eDate.month - 1, this.eDate.day, this.eTime.hour, this.eTime.minute);
+      this.gdaxDataService.changeEndDateTime(changedDateTime);
+    } else {
+      this.invalidEndDatetime = true;
+    }
   }
   /**
   * Triggered when user changes end time choice.
   * Updates the service variable.
   */
   onEndTimeChange() {
-    const changedDateTime: Date = new Date(this.eDate.year, this.eDate.month - 1, this.eDate.day, this.eTime.hour, this.eTime.minute);
-    this.gdaxDataService.changeEndDateTime(changedDateTime);
+    if (this.checkValidDateTime()) {
+      this.invalidEndDatetime = false;
+      this.invalidStartDatetime = false;
+      const changedDateTime: Date = new Date(this.eDate.year, this.eDate.month - 1, this.eDate.day, this.eTime.hour, this.eTime.minute);
+      this.gdaxDataService.changeEndDateTime(changedDateTime);
+    } else {
+      this.invalidEndDatetime = true;
+    }
   }
   /**
   * Triggered when user changes start date choice.
   * Updates the service variable.
   */
   onStartDateChange() {
-    const changedDateTime: Date = new Date(this.sDate.year, this.sDate.month - 1, this.sDate.day, this.sTime.hour, this.sTime.minute);
-    this.gdaxDataService.changeStartDateTime(changedDateTime);
+    if (this.checkValidDateTime()) {
+      this.invalidEndDatetime = false;
+      this.invalidStartDatetime = false;
+      const changedDateTime: Date = new Date(this.sDate.year, this.sDate.month - 1, this.sDate.day, this.sTime.hour, this.sTime.minute);
+      this.gdaxDataService.changeStartDateTime(changedDateTime);
+    } else {
+      this.invalidStartDatetime = true;
+    }
   }
   /**
   * Triggered when user changes start time choice.
   * Updates the service variable.
   */
   onStartTimeChange() {
-    const changedDateTime: Date = new Date(this.sDate.year, this.sDate.month - 1, this.sDate.day, this.sTime.hour, this.sTime.minute);
-    this.gdaxDataService.changeStartDateTime(changedDateTime);
+    if (this.checkValidDateTime()) {
+      this.invalidEndDatetime = false;
+      this.invalidStartDatetime = false;
+      const changedDateTime: Date = new Date(this.sDate.year, this.sDate.month - 1, this.sDate.day, this.sTime.hour, this.sTime.minute);
+      this.gdaxDataService.changeStartDateTime(changedDateTime);
+    } else {
+      this.invalidStartDatetime = true;
+    }
+  }
+
+  checkValidDateTime(): boolean {
+    return (
+      this.checkValidYear(this.sDate.year) &&
+      this.checkValidYear(this.eDate.year) &&
+      this.checkValidMonth(this.sDate.month) &&
+      this.checkValidMonth(this.eDate.month) &&
+      this.checkValidDay(this.sDate.day) &&
+      this.checkValidDay(this.eDate.day) &&
+      this.checkValidHours(this.sTime.hour) &&
+      this.checkValidHours(this.eTime.hour) &&
+      this.checkValidMinutes(this.sTime.minute) &&
+      this.checkValidMinutes(this.eTime.minute) &&
+      this.checkValidDateTimeOrder()
+    );
+  }
+
+  checkValidYear(year: number): boolean {
+    if (!year || isNaN(Number(year))) {
+      return false;
+    }
+    if (year < 1970 || year > 2199) {
+      return false;
+    }
+    return true;
+  }
+
+  checkValidMonth(month: number): boolean {
+    if (!month || isNaN(Number(month))) {
+      return false;
+    }
+    if (month < 1 || month > 12) {
+      return false;
+    }
+    return true;
+  }
+
+  checkValidDay(day: number): boolean {
+    if (!day || isNaN(Number(day))) {
+      return false;
+    }
+    if (day < 1 || day > 31) {
+      return false;
+    }
+    return true;
+  }
+
+  checkValidHours(hours: number): boolean {
+    if (undefined ===  hours || isNaN(Number(hours))) {
+      return false;
+    }
+    if (hours < 0 || hours > 23) {
+      return false;
+    }
+    return true;
+  }
+
+  checkValidMinutes(minutes: number): boolean {
+    if (undefined ===  minutes || isNaN(Number(minutes))) {
+      return false;
+    }
+    if (minutes < 0 || minutes > 59) {
+      return false;
+    }
+    return true;
+  }
+
+  checkValidDateTimeOrder(): boolean {
+    const beforeDate = new Date(this.sDate.year, this.sDate.month, this.sDate.day, this.sTime.hour, this.sTime.minute);
+    const afterDate = new Date(this.eDate.year, this.eDate.month, this.eDate.day, this.eTime.hour, this.eTime.minute);
+
+    if (beforeDate.getTime() < afterDate.getTime()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

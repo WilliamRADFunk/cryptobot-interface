@@ -2,6 +2,19 @@
   margin-bottom: 20px;
 }
 
+.border-right-custom {
+  border-right: 3px solid #294f6e;
+}
+
+.no-side-padding {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.no-right-side-padding {
+  padding-right: 0;
+}
+
 .sub-nav {
   background-position: 5px 5px;
   background-repeat: no-repeat;
@@ -29,6 +42,9 @@
 }
 
 @media only screen and (max-width: 1048px) {
+  .border-right-custom {
+    border-right: 3px solid #294f6e;
+  }
   .sub-nav {
     background-size: 98px;
     height: 113px;
@@ -37,6 +53,12 @@
     &.active {
       border-width: 2px;
     }
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .border-right-custom {
+    border-right: none;
   }
 }
 
@@ -61,3 +83,16 @@
     }
   }
 }
+
+// @media only screen and (max-width: 400px) {
+//   .sub-nav {
+//     background-size: 63px;
+//     font-size: 11px;
+//     height: 75px;
+//     width: 100%;
+
+//     &.active {
+//       border-width: 1px;
+//     }
+//   }
+// }
