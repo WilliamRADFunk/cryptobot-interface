@@ -318,6 +318,14 @@ describe('FilterControlsComponent', () => {
   });
   describe('checkValidDateTimeOrder', () => {
     it(`should return false`, () => {
+      component.sDate = shortDate1;
+      component.sTime = shortTime1;
+      component.eDate = shortDate1;
+      component.eTime = shortTime1;
+      component.eTime['minute'] = shortTime1['minute'] + 9;
+      expect(component.checkValidDateTimeOrder()).toBe(false);
+    });
+    it(`should return false`, () => {
       component.sDate = shortDate2;
       component.sTime = shortTime2;
       component.eDate = shortDate1;

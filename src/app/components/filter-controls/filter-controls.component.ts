@@ -75,10 +75,6 @@ export class FilterControlsComponent implements OnInit {
   */
   timeIntervalOptions: {label: string, value: number}[] = [
     {
-      label: '1 minute',
-      value: 60
-    },
-    {
       label: '5 minutes',
       value: 300
     },
@@ -203,7 +199,8 @@ export class FilterControlsComponent implements OnInit {
     const beforeDate = new Date(this.sDate.year, this.sDate.month, this.sDate.day, this.sTime.hour, this.sTime.minute);
     const afterDate = new Date(this.eDate.year, this.eDate.month, this.eDate.day, this.eTime.hour, this.eTime.minute);
 
-    if (beforeDate.getTime() < afterDate.getTime()) {
+    // Needs to be at least two minutes apart to have at least one granularity option.
+    if (beforeDate.getTime() < afterDate.getTime() - 600000) {
       return true;
     } else {
       return false;
