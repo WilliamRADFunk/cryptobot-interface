@@ -142,7 +142,7 @@ export class FilterControlsComponent implements OnInit {
     const totalPossibleSeconds = (endDate.getTime() - startDate.getTime()) / 1000;
     this.timeIntervalOptions.forEach(element => {
       const maxPeriods = totalPossibleSeconds / element['value'];
-      if (maxPeriods <= 300) {
+      if (maxPeriods <= 300 && maxPeriods > 1) {
         const granule: { label: string, value: number } = {
           label: element['label'],
           value: element['value']
@@ -227,7 +227,7 @@ export class FilterControlsComponent implements OnInit {
   * @return True is valid | False if invalid
   */
   checkValidHours(hours: number): boolean {
-    if (undefined ===  hours || isNaN(Number(hours))) {
+    if (null ===  hours || isNaN(Number(hours))) {
       return false;
     }
     if (hours < 0 || hours > 23) {
@@ -240,7 +240,7 @@ export class FilterControlsComponent implements OnInit {
   * @return True is valid | False if invalid
   */
   checkValidMinutes(minutes: number): boolean {
-    if (undefined ===  minutes || isNaN(Number(minutes))) {
+    if (null ===  minutes || isNaN(Number(minutes))) {
       return false;
     }
     if (minutes < 0 || minutes > 59) {
