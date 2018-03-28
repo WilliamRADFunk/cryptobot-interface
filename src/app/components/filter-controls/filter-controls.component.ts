@@ -165,7 +165,7 @@ export class FilterControlsComponent implements OnInit {
     const totalPossibleSeconds = (endDate.getTime() - startDate.getTime()) / 1000;
     this.timeIntervalOptions.forEach(element => {
       const maxPeriods = totalPossibleSeconds / element['value'];
-      if (maxPeriods <= 300 && maxPeriods > 1) {
+      if (Math.ceil(maxPeriods) <= 300 && Math.floor(maxPeriods) > 1) {
         const granule: { label: string, value: number } = {
           label: element['label'],
           value: element['value']
