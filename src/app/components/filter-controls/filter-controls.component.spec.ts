@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { ChartModule } from 'angular-highcharts';
 
 import { FilterControlsComponent } from './filter-controls.component';
@@ -579,6 +579,113 @@ describe('FilterControlsComponent', () => {
           value: 86400
         }
       ]);
+    });
+  });
+  describe('closeTooltip', () => {
+    let spy1;
+    let spy2;
+    let spy3;
+    beforeEach( () => {
+      const tooltip = {
+        isOpen: () => {
+          return true;
+        },
+        open: () => {
+          return true;
+        },
+        close: () => {
+          return true;
+        }
+      };
+      component.tooltip = tooltip as any;
+      spy1 = spyOn(component.tooltip, 'isOpen').and.callThrough();
+      spy2 = spyOn(component.tooltip, 'open').and.returnValue(true);
+      spy3 = spyOn(component.tooltip, 'close').and.returnValue(true);
+    });
+    it(`should call isOpen and close on tooltip`, () => {
+      component.closeTooltip();
+      expect(component.tooltip.isOpen).toHaveBeenCalled();
+      expect(component.tooltip.close).toHaveBeenCalled();
+      expect(component.tooltip.open).not.toHaveBeenCalled();
+    });
+    it(`should call isOpen and close on tooltip`, () => {
+      spy1.and.returnValue(false);
+      component.closeTooltip();
+      expect(component.tooltip.isOpen).toHaveBeenCalled();
+      expect(component.tooltip.close).not.toHaveBeenCalled();
+      expect(component.tooltip.open).not.toHaveBeenCalled();
+    });
+  });
+  describe('openTooltip', () => {
+    let spy1;
+    let spy2;
+    let spy3;
+    beforeEach( () => {
+      const tooltip = {
+        isOpen: () => {
+          return false;
+        },
+        open: () => {
+          return true;
+        },
+        close: () => {
+          return true;
+        }
+      };
+      component.tooltip = tooltip as any;
+      spy1 = spyOn(component.tooltip, 'isOpen').and.callThrough();
+      spy2 = spyOn(component.tooltip, 'open').and.returnValue(true);
+      spy3 = spyOn(component.tooltip, 'close').and.returnValue(true);
+    });
+    it(`should call isOpen and open on tooltip`, () => {
+      component.openTooltip();
+      expect(component.tooltip.isOpen).toHaveBeenCalled();
+      expect(component.tooltip.close).not.toHaveBeenCalled();
+      expect(component.tooltip.open).toHaveBeenCalled();
+    });
+    it(`should call isOpen and open on tooltip`, () => {
+      spy1.and.returnValue(true);
+      component.openTooltip();
+      expect(component.tooltip.isOpen).toHaveBeenCalled();
+      expect(component.tooltip.close).not.toHaveBeenCalled();
+      expect(component.tooltip.open).not.toHaveBeenCalled();
+    });
+  });
+  describe('resetMinMax', () => {
+    it(`should set min and max dates for start and end datetimes`, () => {
+      const newDate = new Date();
+      const newMaxEndDate = {
+        year: new Date().getFullYear(),
+        month: new Date().getMonth() + 1,
+        day: new Date().getDate()
+      } as any;
+      const newMinEndDate = {
+        year: newMaxEndDate['year'],
+        month: newMaxEndDate['month'],
+        day: newMaxEndDate['day'] - 1
+      } as any;
+      const newMaxStartDate = {
+        year: component.eDate['year'],
+        month: component.eDate['month'],
+        day: component.eDate['day']
+      } as any;
+      const afterDate = new Date(
+        component.eDate.year,
+        component.eDate.month - 1,
+        component.eDate.day,
+        component.eTime.hour,
+        component.eTime.minute);
+      const earliestDate = new Date(afterDate.getTime() - 25833600000);
+      const newMinStartDate = {
+        year: earliestDate.getFullYear(),
+        month: earliestDate.getMonth() + 1,
+        day: earliestDate.getDate()
+      } as any;
+      component.resetMinMax();
+      expect(component.maxEndDate).toEqual(newMaxEndDate);
+      expect(component.minEndDate).toEqual(newMinEndDate);
+      expect(component.maxStartDate).toEqual(newMaxStartDate);
+      expect(component.minStartDate).toEqual(newMinStartDate);
     });
   });
 });

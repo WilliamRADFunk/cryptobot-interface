@@ -302,16 +302,13 @@ export class FilterControlsComponent implements OnInit {
     }
     return true;
   }
+  /**
+  * Closes the datetime warning tooltip if it's open
+  */
   closeTooltip() {
     const isOpen = this.tooltip.isOpen();
     if (isOpen) {
       this.tooltip.close();
-    }
-  }
-  openTooltip() {
-    const isOpen = this.tooltip.isOpen();
-    if (!isOpen) {
-      this.tooltip.open(this.warningMessage);
     }
   }
   /**
@@ -384,6 +381,15 @@ export class FilterControlsComponent implements OnInit {
     } else {
       this.openTooltip();
       this.invalidStartDatetime = true;
+    }
+  }
+  /**
+  * Opens the datetime warning tooltip if it's closed
+  */
+  openTooltip() {
+    const isOpen = this.tooltip.isOpen();
+    if (!isOpen) {
+      this.tooltip.open(this.warningMessage);
     }
   }
   /**
