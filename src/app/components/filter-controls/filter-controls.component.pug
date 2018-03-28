@@ -1,17 +1,23 @@
-.row(style="margin-bottom: 40px;")
-  .col-sm-12.col-md-1.col-lg-2
-    .btn-group(
+.row(
+  #t="ngbTooltip",
+  [ngbTooltip]="tooltip",
+  placement="bottom",
+  style="margin-bottom: 40px;",
+  triggers="manual")
+  .col-sm-12.col-md-12.col-lg-2.col-xl-2.filter-bottom-gap.d-flex.justify-content-center
+    .btn-group.custom-dropdown-group(
       ngbDropdown,
       role="group",
       aria-label="Button group with nested dropdown")
-      button.btn.btn-outline-primary.btn-intervals(ngbDropdownToggle) {{ timeIntervalLabel }}
+      button.btn.btn-outline-primary.btn-intervals.custom-dropdown.margin-middle(
+        ngbDropdownToggle) {{ timeIntervalLabel }}
       .dropdown-menu(ngbDropdownMenu)
         button.dropdown-item(
           *ngFor="let interval of timeIntervals",
           (click)="changedTimeInterval(interval)") {{ interval.label }}
-  .col-sm-6.col-md-5.col-lg-5
-    form.form-inline
-      label.label-date(
+  .col-12.col-sm-12.col-md-12.col-lg-5.col-xl-5.filter-bottom-gap.d-flex.justify-content-center
+    form.form-inline.centered
+      label.label-date.text-center(
         for="dPick1",
         [ngClass]="{'invalid-input': invalidStartDatetime}") Start Date:
       div(style="display:inline-block;")
@@ -28,12 +34,14 @@
             input.form-control.date-text(
               #d1="ngbDatepicker",
               id="dPick1",
+              [maxDate]="maxStartDate",
+              [minDate]="minStartDate",
               name="dPick1",
               ngbDatepicker,
               [ngClass]="{'invalid-input': invalidStartDatetime}",
               [(ngModel)]="sDate",
               (ngModelChange)="onStartDateChange()",
-              placeholder="yyy-mm-dd")
+              placeholder="yyyy-mm-dd")
       div(style="display: inline-block;")
         ngb-timepicker(
           id="tpick1",
@@ -42,11 +50,12 @@
           size="small",
           [(ngModel)]="sTime",
           (ngModelChange)="onStartTimeChange()")
-  .col-sm-6.col-md-5.col-lg-5
+  .col-12.col-sm-12.col-md-12.col-lg-5.col-xl-5.filter-bottom-gap.d-flex.justify-content-center
     form.form-inline
-      label.label-date(
+      label.label-date.extra-padding.text-center(
         for="dPick2",
-        [ngClass]="{'invalid-input': invalidEndDatetime}") End Date:
+        [ngClass]="{'invalid-input': invalidEndDatetime}",
+        style="") End Date:
       div(style="display:inline-block;")
         .input-group
           button.btn.btn-sm.btn-primary.btn-datepicker(
@@ -61,12 +70,14 @@
             input.form-control.date-text(
               #d2="ngbDatepicker",
               id="dPick2",
+              [maxDate]="maxEndDate",
+              [minDate]="minEndDate",
               name="dPick2",
               ngbDatepicker,
               [ngClass]="{'invalid-input': invalidEndDatetime}",
               [(ngModel)]="eDate",
               (ngModelChange)="onEndDateChange()",
-              placeholder="yyy-mm-dd")
+              placeholder="yyyy-mm-dd")
       div(style="display: inline-block;")
         ngb-timepicker(
           id="tpick2",
@@ -75,3 +86,8 @@
           size="small",
           [(ngModel)]="eTime",
           (ngModelChange)="onEndTimeChange()")
+ng-template(#tooltip="")
+  ol(style="padding-left: 15px; padding-top: 10px;")
+    li.text-left(
+      *ngFor="let sentence of warningMessage",
+      style="margin-bottom: 5px;") {{ sentence }}

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { NgbTimepickerConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbTimepickerConfig, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
 import { GdaxDataService } from '../../services/gdax-data.service';
 
@@ -11,6 +11,7 @@ import { GdaxDataService } from '../../services/gdax-data.service';
   providers: [ NgbTimepickerConfig ]
 })
 export class FilterControlsComponent implements OnInit {
+  @ViewChild('t') public tooltip: NgbTooltip;
   /**
   * Maintains the end date in actual Javascript Date form
   */
@@ -44,9 +45,25 @@ export class FilterControlsComponent implements OnInit {
   */
   invalidEndDatetime: boolean = false;
   /**
+  * Max date a dropdown from end date ngb-tooltip should show.
+  */
+  maxEndDate: { year: number, month: number, day: number};
+  /**
+  * Max date a dropdown from start date ngb-tooltip should show.
+  */
+  maxStartDate: { year: number, month: number, day: number};
+  /**
+  * Min date a dropdown from end date ngb-tooltip should show.
+  */
+  minEndDate: { year: number, month: number, day: number};
+  /**
+  * Min date a dropdown from start date ngb-tooltip should show.
+  */
+  minStartDate: { year: number, month: number, day: number};
+  /**
   * Maintains the start date in actual Javascript Date form
   */
-  startDate: Date = new Date(this.endDate.getTime() - 86400000);
+  startDate: Date = new Date(this.endDate.getTime() - 87600000);
   /**
   * Maintains the start date for 'Start Date:' datepicker
   */
@@ -99,6 +116,14 @@ export class FilterControlsComponent implements OnInit {
   * Contains all possible granularity levels available to end user.
   */
   timeIntervals: {label: string, value: number}[] = this.timeIntervalOptions.slice();
+  /**
+  * Message to use if start datetime is invalid
+  */
+  warningMessage: string[] = [
+    'Start datetime must be before End datetime.',
+    'Datetimes must be at least more than 10 minutes apart.',
+    'Datetimes must be less than 299 days apart.'
+  ];
 
   /**
   * Constructor for the class.
@@ -110,17 +135,19 @@ export class FilterControlsComponent implements OnInit {
       config.spinners = false;
     }
   /**
+  * @private
   * Triggered when component is loaded, but before it is viewed.
   * Gets REST path info, and updates the profit chart.
   */
-  ngOnInit() {
+  ngOnInit(): void {
+    this.resetMinMax();
     this.adjustGranularityOptions();
   }
   /**
   * Checks which of the time intervals have no more than the gdax max of 300
   * results between start and end datetimes
   */
-  adjustGranularityOptions() {
+  adjustGranularityOptions(): void {
     const timeIntervalLabelOld = this.timeIntervalLabel;
     const tempTimeIntervals = [];
     const endDate = new Date(
@@ -167,7 +194,7 @@ export class FilterControlsComponent implements OnInit {
   * Updates the service variable.
   * @param event label/value object containing granularity label and value
   */
-  changedTimeInterval(event) {
+  changedTimeInterval(event): void {
     this.timeInterval = event['value'];
     this.timeIntervalLabel = event['label'];
     this.gdaxDataService.changeTimeInterval(this.timeInterval);
@@ -178,16 +205,16 @@ export class FilterControlsComponent implements OnInit {
   */
   checkValidDateTime(): boolean {
     return (
-      this.checkValidYear(this.sDate.year) &&
-      this.checkValidYear(this.eDate.year) &&
-      this.checkValidMonth(this.sDate.month) &&
-      this.checkValidMonth(this.eDate.month) &&
-      this.checkValidDay(this.sDate.day) &&
-      this.checkValidDay(this.eDate.day) &&
-      this.checkValidHours(this.sTime.hour) &&
-      this.checkValidHours(this.eTime.hour) &&
-      this.checkValidMinutes(this.sTime.minute) &&
-      this.checkValidMinutes(this.eTime.minute) &&
+      this.checkValidYear(this.sDate) &&
+      this.checkValidYear(this.eDate) &&
+      this.checkValidMonth(this.sDate) &&
+      this.checkValidMonth(this.eDate) &&
+      this.checkValidDay(this.sDate) &&
+      this.checkValidDay(this.eDate) &&
+      this.checkValidHours(this.sTime) &&
+      this.checkValidHours(this.eTime) &&
+      this.checkValidMinutes(this.sTime) &&
+      this.checkValidMinutes(this.eTime) &&
       this.checkValidDateTimeOrder()
     );
   }
@@ -196,25 +223,29 @@ export class FilterControlsComponent implements OnInit {
   * @return True is valid | False if invalid
   */
   checkValidDateTimeOrder(): boolean {
-    const beforeDate = new Date(this.sDate.year, this.sDate.month, this.sDate.day, this.sTime.hour, this.sTime.minute);
-    const afterDate = new Date(this.eDate.year, this.eDate.month, this.eDate.day, this.eTime.hour, this.eTime.minute);
+    const beforeDate = new Date(this.sDate.year, this.sDate.month - 1, this.sDate.day, this.sTime.hour, this.sTime.minute);
+    const afterDate = new Date(this.eDate.year, this.eDate.month - 1, this.eDate.day, this.eTime.hour, this.eTime.minute);
 
     // Needs to be at least two minutes apart to have at least one granularity option.
-    if (beforeDate.getTime() < afterDate.getTime() - 600000) {
-      return true;
-    } else {
+    if (afterDate.getTime() > new Date().getTime() + 1000) {
       return false;
+    } else if (beforeDate.getTime() >= afterDate.getTime() - 600000) {
+      return false;
+    } else if (afterDate.getTime() - beforeDate.getTime() >= 25833600000) {
+      return false;
+    } else {
+      return true;
     }
   }
   /**
   * Checks to make sure day is valid
   * @return True is valid | False if invalid
   */
-  checkValidDay(day: number): boolean {
-    if (!day || isNaN(Number(day))) {
+  checkValidDay(date: { year: number, month: number, day: number}): boolean {
+    if (!date || !date['day'] || isNaN(Number(date['day']))) {
       return false;
     }
-    if (day < 1 || day > 31) {
+    if (date['day'] < 1 || date['day'] > 31) {
       return false;
     }
     return true;
@@ -223,11 +254,11 @@ export class FilterControlsComponent implements OnInit {
   * Checks to make sure hour is valid
   * @return True is valid | False if invalid
   */
-  checkValidHours(hours: number): boolean {
-    if (null ===  hours || isNaN(Number(hours))) {
+  checkValidHours(time: { hour: number, minute: number }): boolean {
+    if (!time || null ===  time['hour'] || isNaN(Number(time['hour']))) {
       return false;
     }
-    if (hours < 0 || hours > 23) {
+    if (time['hour'] < 0 || time['hour'] > 23) {
       return false;
     }
     return true;
@@ -236,11 +267,11 @@ export class FilterControlsComponent implements OnInit {
   * Checks to make sure minute is valid
   * @return True is valid | False if invalid
   */
-  checkValidMinutes(minutes: number): boolean {
-    if (null ===  minutes || isNaN(Number(minutes))) {
+  checkValidMinutes(time: { hour: number, minute: number }): boolean {
+    if (!time || null ===  time['minute'] || isNaN(Number(time['minute']))) {
       return false;
     }
-    if (minutes < 0 || minutes > 59) {
+    if (time['minute'] < 0 || time['minute'] > 59) {
       return false;
     }
     return true;
@@ -249,11 +280,11 @@ export class FilterControlsComponent implements OnInit {
   * Checks to make sure month is valid
   * @return True is valid | False if invalid
   */
-  checkValidMonth(month: number): boolean {
-    if (!month || isNaN(Number(month))) {
+  checkValidMonth(date: { year: number, month: number, day: number}): boolean {
+    if (!date || !date['month'] || isNaN(Number(date['month']))) {
       return false;
     }
-    if (month < 1 || month > 12) {
+    if (date['month'] < 1 || date['month'] > 12) {
       return false;
     }
     return true;
@@ -262,27 +293,42 @@ export class FilterControlsComponent implements OnInit {
   * Checks to make sure year is valid
   * @return True is valid | False if invalid
   */
-  checkValidYear(year: number): boolean {
-    if (!year || isNaN(Number(year))) {
+  checkValidYear(date: { year: number, month: number, day: number}): boolean {
+    if (!date || !date['year'] || isNaN(Number(date['year']))) {
       return false;
     }
-    if (year < 1970 || year > 2199) {
+    if (date['year'] < 1970 || date['year'] > 2199) {
       return false;
     }
     return true;
+  }
+  closeTooltip() {
+    const isOpen = this.tooltip.isOpen();
+    if (isOpen) {
+      this.tooltip.close();
+    }
+  }
+  openTooltip() {
+    const isOpen = this.tooltip.isOpen();
+    if (!isOpen) {
+      this.tooltip.open(this.warningMessage);
+    }
   }
   /**
   * Triggered when user changes end date choice.
   * Updates the service variable.
   */
-  onEndDateChange() {
+  onEndDateChange(): void {
     if (this.checkValidDateTime()) {
       this.invalidEndDatetime = false;
       this.invalidStartDatetime = false;
+      this.closeTooltip();
       this.adjustGranularityOptions();
       const changedDateTime: Date = new Date(this.eDate.year, this.eDate.month - 1, this.eDate.day, this.eTime.hour, this.eTime.minute);
       this.gdaxDataService.changeEndDateTime(changedDateTime);
+      this.resetMinMax();
     } else {
+      this.openTooltip();
       this.invalidEndDatetime = true;
     }
   }
@@ -290,14 +336,17 @@ export class FilterControlsComponent implements OnInit {
   * Triggered when user changes end time choice.
   * Updates the service variable.
   */
-  onEndTimeChange() {
+  onEndTimeChange(): void {
     if (this.checkValidDateTime()) {
       this.invalidEndDatetime = false;
       this.invalidStartDatetime = false;
+      this.closeTooltip();
       this.adjustGranularityOptions();
       const changedDateTime: Date = new Date(this.eDate.year, this.eDate.month - 1, this.eDate.day, this.eTime.hour, this.eTime.minute);
       this.gdaxDataService.changeEndDateTime(changedDateTime);
+      this.resetMinMax();
     } else {
+      this.openTooltip();
       this.invalidEndDatetime = true;
     }
   }
@@ -305,14 +354,17 @@ export class FilterControlsComponent implements OnInit {
   * Triggered when user changes start date choice.
   * Updates the service variable.
   */
-  onStartDateChange() {
+  onStartDateChange(): void {
     if (this.checkValidDateTime()) {
       this.invalidEndDatetime = false;
       this.invalidStartDatetime = false;
+      this.closeTooltip();
       this.adjustGranularityOptions();
       const changedDateTime: Date = new Date(this.sDate.year, this.sDate.month - 1, this.sDate.day, this.sTime.hour, this.sTime.minute);
       this.gdaxDataService.changeStartDateTime(changedDateTime);
+      this.resetMinMax();
     } else {
+      this.openTooltip();
       this.invalidStartDatetime = true;
     }
   }
@@ -320,15 +372,46 @@ export class FilterControlsComponent implements OnInit {
   * Triggered when user changes start time choice.
   * Updates the service variable.
   */
-  onStartTimeChange() {
+  onStartTimeChange(): void {
     if (this.checkValidDateTime()) {
       this.invalidEndDatetime = false;
       this.invalidStartDatetime = false;
+      this.closeTooltip();
       this.adjustGranularityOptions();
       const changedDateTime: Date = new Date(this.sDate.year, this.sDate.month - 1, this.sDate.day, this.sTime.hour, this.sTime.minute);
       this.gdaxDataService.changeStartDateTime(changedDateTime);
+      this.resetMinMax();
     } else {
+      this.openTooltip();
       this.invalidStartDatetime = true;
     }
+  }
+  /**
+  * Changes the min and max dates for both datepickers when one changes.
+  */
+  resetMinMax(): void {
+    this.maxEndDate = {
+      year: new Date().getFullYear(),
+      month: new Date().getMonth() + 1,
+      day: new Date().getDate()
+    };
+    this.minEndDate = {
+      year: this.sDate['year'],
+      month: this.sDate['month'],
+      day: this.sDate['day']
+    };
+    this.maxStartDate = {
+      year: this.eDate['year'],
+      month: this.eDate['month'],
+      day: this.eDate['day']
+    };
+
+    const afterDate = new Date(this.eDate.year, this.eDate.month - 1, this.eDate.day, this.eTime.hour, this.eTime.minute);
+    const earliestDate = new Date(afterDate.getTime() - 25833600000);
+    this.minStartDate = {
+      year: earliestDate.getFullYear(),
+      month: earliestDate.getMonth() + 1,
+      day: earliestDate.getDate()
+    };
   }
 }

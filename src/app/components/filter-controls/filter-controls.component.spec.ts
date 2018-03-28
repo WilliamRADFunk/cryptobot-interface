@@ -200,6 +200,16 @@ describe('FilterControlsComponent', () => {
     });
   });
   describe('checkValidYear', () => {
+    const tempDate: { year: number, month: number, day: number} = {
+      year: null,
+      month: null,
+      day: null
+    };
+    beforeEach(() => {
+      tempDate['year'] = shortDate1['year'];
+      tempDate['month'] = shortDate1['month'];
+      tempDate['day'] = shortDate1['day'];
+    });
     it(`should return false`, () => {
       expect(component.checkValidYear(null)).toBe(false);
     });
@@ -207,22 +217,33 @@ describe('FilterControlsComponent', () => {
       expect(component.checkValidYear(undefined)).toBe(false);
     });
     it(`should return false`, () => {
-      expect(component.checkValidYear(1969)).toBe(false);
+      tempDate['year'] = 1969;
+      expect(component.checkValidYear(tempDate)).toBe(false);
     });
     it(`should return false`, () => {
-      expect(component.checkValidYear(2200)).toBe(false);
+      tempDate['year'] = 2200;
+      expect(component.checkValidYear(tempDate)).toBe(false);
     });
     it(`should return true`, () => {
-      expect(component.checkValidYear(1970)).toBe(true);
+      tempDate['year'] = 2008;
+      expect(component.checkValidYear(tempDate)).toBe(true);
     });
     it(`should return true`, () => {
-      expect(component.checkValidYear(2199)).toBe(true);
-    });
-    it(`should return true`, () => {
-      expect(component.checkValidYear(2018)).toBe(true);
+      tempDate['year'] = 2018;
+      expect(component.checkValidYear(tempDate)).toBe(true);
     });
   });
   describe('checkValidMonth', () => {
+    const tempDate: { year: number, month: number, day: number} = {
+      year: null,
+      month: null,
+      day: null
+    };
+    beforeEach(() => {
+      tempDate['year'] = shortDate1['year'];
+      tempDate['month'] = shortDate1['month'];
+      tempDate['day'] = shortDate1['day'];
+    });
     it(`should return false`, () => {
       expect(component.checkValidMonth(null)).toBe(false);
     });
@@ -230,22 +251,35 @@ describe('FilterControlsComponent', () => {
       expect(component.checkValidMonth(undefined)).toBe(false);
     });
     it(`should return false`, () => {
-      expect(component.checkValidMonth(0)).toBe(false);
+      tempDate['month'] = 0;
+      expect(component.checkValidMonth(tempDate)).toBe(false);
     });
     it(`should return false`, () => {
-      expect(component.checkValidMonth(13)).toBe(false);
+      tempDate['month'] = 13;
+      expect(component.checkValidMonth(tempDate)).toBe(false);
     });
     it(`should return true`, () => {
-      expect(component.checkValidMonth(1)).toBe(true);
+      tempDate['month'] = 1;
+      expect(component.checkValidMonth(tempDate)).toBe(true);
     });
     it(`should return true`, () => {
-      expect(component.checkValidMonth(12)).toBe(true);
+      tempDate['month'] = 12;
+      expect(component.checkValidMonth(tempDate)).toBe(true);
     });
     it(`should return true`, () => {
-      expect(component.checkValidMonth(3)).toBe(true);
+      tempDate['month'] = 3;
+      expect(component.checkValidMonth(tempDate)).toBe(true);
     });
   });
   describe('checkValidMinutes', () => {
+    const tempTime: { hour: number, minute: number } = {
+      hour: null,
+      minute: null
+    };
+    beforeEach(() => {
+      tempTime['hour'] = shortTime1['hour'];
+      tempTime['minute'] = shortTime1['minute'];
+    });
     it(`should return false`, () => {
       expect(component.checkValidMinutes(null)).toBe(false);
     });
@@ -253,23 +287,35 @@ describe('FilterControlsComponent', () => {
       expect(component.checkValidMinutes(undefined)).toBe(false);
     });
     it(`should return false`, () => {
-      expect(component.checkValidMinutes(-1)).toBe(false);
+      tempTime['minute'] = -1;
+      expect(component.checkValidMinutes(tempTime)).toBe(false);
     });
     it(`should return false`, () => {
-      expect(component.checkValidMinutes(60)).toBe(false);
+      tempTime['minute'] = 60;
+      expect(component.checkValidMinutes(tempTime)).toBe(false);
     });
     it(`should return true`, () => {
-      expect(component.checkValidMinutes(0)).toBe(true);
+      tempTime['minute'] = 0;
+      expect(component.checkValidMinutes(tempTime)).toBe(true);
     });
     it(`should return true`, () => {
-      expect(component.checkValidMinutes(59)).toBe(true);
+      tempTime['minute'] = 59;
+      expect(component.checkValidMinutes(tempTime)).toBe(true);
     });
     it(`should return true`, () => {
-      const foo: number = '00' as any;
-      expect(component.checkValidMinutes(foo)).toBe(true);
+      tempTime['minute'] = '00' as any;
+      expect(component.checkValidMinutes(tempTime)).toBe(true);
     });
   });
   describe('checkValidHours', () => {
+    const tempTime: { hour: number, minute: number } = {
+      hour: null,
+      minute: null
+    };
+    beforeEach(() => {
+      tempTime['hour'] = shortTime1['hour'];
+      tempTime['minute'] = shortTime1['minute'];
+    });
     it(`should return false`, () => {
       expect(component.checkValidHours(null)).toBe(false);
     });
@@ -277,23 +323,37 @@ describe('FilterControlsComponent', () => {
       expect(component.checkValidHours(undefined)).toBe(false);
     });
     it(`should return false`, () => {
-      expect(component.checkValidHours(-1)).toBe(false);
+      tempTime['hour'] = -1;
+      expect(component.checkValidHours(tempTime)).toBe(false);
     });
     it(`should return false`, () => {
-      expect(component.checkValidHours(24)).toBe(false);
+      tempTime['hour'] = 24;
+      expect(component.checkValidHours(tempTime)).toBe(false);
     });
     it(`should return true`, () => {
-      expect(component.checkValidHours(0)).toBe(true);
+      tempTime['hour'] = 0;
+      expect(component.checkValidHours(tempTime)).toBe(true);
     });
     it(`should return true`, () => {
-      expect(component.checkValidHours(23)).toBe(true);
+      tempTime['hour'] = 23;
+      expect(component.checkValidHours(tempTime)).toBe(true);
     });
     it(`should return true`, () => {
-      const foo: number = '00' as any;
-      expect(component.checkValidHours(foo)).toBe(true);
+      tempTime['hour'] = '00' as any;
+      expect(component.checkValidHours(tempTime)).toBe(true);
     });
   });
   describe('checkValidDay', () => {
+    const tempDate: { year: number, month: number, day: number} = {
+      year: null,
+      month: null,
+      day: null
+    };
+    beforeEach(() => {
+      tempDate['year'] = shortDate1['year'];
+      tempDate['month'] = shortDate1['month'];
+      tempDate['day'] = shortDate1['day'];
+    });
     it(`should return false`, () => {
       expect(component.checkValidDay(null)).toBe(false);
     });
@@ -301,19 +361,24 @@ describe('FilterControlsComponent', () => {
       expect(component.checkValidDay(undefined)).toBe(false);
     });
     it(`should return false`, () => {
-      expect(component.checkValidDay(0)).toBe(false);
+      tempDate['day'] = 0;
+      expect(component.checkValidDay(tempDate)).toBe(false);
     });
     it(`should return false`, () => {
-      expect(component.checkValidDay(32)).toBe(false);
+      tempDate['day'] = 32;
+      expect(component.checkValidDay(tempDate)).toBe(false);
     });
     it(`should return true`, () => {
-      expect(component.checkValidDay(1)).toBe(true);
+      tempDate['day'] = 1;
+      expect(component.checkValidDay(tempDate)).toBe(true);
     });
     it(`should return true`, () => {
-      expect(component.checkValidDay(31)).toBe(true);
+      tempDate['day'] = 31;
+      expect(component.checkValidDay(tempDate)).toBe(true);
     });
     it(`should return true`, () => {
-      expect(component.checkValidDay(26)).toBe(true);
+      tempDate['day'] = 26;
+      expect(component.checkValidDay(tempDate)).toBe(true);
     });
   });
   describe('checkValidDateTimeOrder', () => {

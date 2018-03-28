@@ -1,13 +1,17 @@
+$padding5px: 5px;
+
 .label-date {
   background-color: #2d2d31;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 0.25rem 0 0 0.25rem;
   border-right-width: 0;
   color: #fff;
+  font-size: 13.5px;
   height: 31px;
   margin-bottom: 0;
-  padding-left: 5px;
-  padding-right: 5px;
+  padding-left: $padding5px;
+  padding-right: $padding5px;
+  vertical-align: middle;
 
   &.invalid-input {
     background-color: #a00;
@@ -15,18 +19,28 @@
     border-right-width: 0;
     color: #fff;
   }
+
+  &.extra-padding {
+    padding-left: $padding5px + 2px;
+    padding-right: $padding5px + 3px;
+  }
 }
 
-.date-text {
+.form-control.date-text {
   border-radius: 0 0.25rem 0.25rem 0;
+  font-size: 13.5px;
   height: 31px;
-  margin-right: 2px;
+  margin-right: 5px;
+  padding-left: 0;
+  padding-right: 0;
   position: relative;
-  width: 112px;
+  text-align: center;
+  width: 92px;
 
   &.invalid-input {
-    border-color: #a00;
-    color: #a00;
+    background-color: #a00;
+    border-color: #000;
+    color: #fff;
   }
 }
 
@@ -41,6 +55,45 @@
 .btn-intervals {
   border-color: #2d2d31;
   color: #2d2d31;
+  font-size: 13.5px;
   height: 31px;
+  padding-right: 15px;
   padding-top: 2px;
+}
+
+.dropdown-toggle::after {
+  display: none;
+}
+
+.filter-bottom-gap {
+  margin-bottom: 5px;
+}
+
+@media only screen and (max-width: 1000px) {
+  .custom-dropdown {
+    max-width: 281px;
+    width: 100%;
+  }
+
+  .custom-dropdown-group {
+    width: 100%;
+  }
+
+  .margin-middle,
+  .btn.margin-middle {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1012px) {
+  .form-control.date-text {
+    width: 85px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .label-date {
+    line-height: 2;
+  }
 }

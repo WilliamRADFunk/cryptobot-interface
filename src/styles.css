@@ -1,1 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+.ngb-tp-spacer {
+  width: 5px!important;
+}
+.ngb-tp-hour .form-control-sm,
+.ngb-tp-minute .form-control-sm {
+  font-size: 13.5px;
+  height: 31px;
+  padding: 0;
+  width: 35px;
+}
+
+.invalid-input .ngb-tp-hour .form-control-sm,
+.invalid-input .ngb-tp-minute .form-control-sm {
+  background-color: #a00;
+  border-color: #000;
+  color: #fff;
+}
