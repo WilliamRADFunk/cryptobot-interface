@@ -688,4 +688,29 @@ describe('FilterControlsComponent', () => {
       expect(component.minStartDate).toEqual(newMinStartDate);
     });
   });
+  describe('isTooltipOpen', () => {
+    let spy1;
+    beforeEach( () => {
+      const tooltip = {
+        isOpen: () => {
+          return false;
+        },
+        open: () => {
+          return true;
+        },
+        close: () => {
+          return true;
+        }
+      };
+      component.tooltip = tooltip as any;
+      spy1 = spyOn(component.tooltip, 'isOpen').and.callThrough();
+    });
+    it(`should return false`, () => {
+      expect(component.isTooltipOpen()).toBe(false);
+    });
+    it(`should return true`, () => {
+      spy1.and.returnValue(true);
+      expect(component.isTooltipOpen()).toBe(true);
+    });
+  });
 });

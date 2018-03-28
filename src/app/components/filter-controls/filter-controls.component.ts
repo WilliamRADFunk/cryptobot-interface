@@ -45,19 +45,19 @@ export class FilterControlsComponent implements OnInit {
   */
   invalidEndDatetime: boolean = false;
   /**
-  * Max date a dropdown from end date ngb-tooltip should show.
+  * Max date a dropdown from end date ngb-tooltip should show
   */
   maxEndDate: { year: number, month: number, day: number};
   /**
-  * Max date a dropdown from start date ngb-tooltip should show.
+  * Max date a dropdown from start date ngb-tooltip should show
   */
   maxStartDate: { year: number, month: number, day: number};
   /**
-  * Min date a dropdown from end date ngb-tooltip should show.
+  * Min date a dropdown from end date ngb-tooltip should show
   */
   minEndDate: { year: number, month: number, day: number};
   /**
-  * Min date a dropdown from start date ngb-tooltip should show.
+  * Min date a dropdown from start date ngb-tooltip should show
   */
   minStartDate: { year: number, month: number, day: number};
   /**
@@ -88,7 +88,7 @@ export class FilterControlsComponent implements OnInit {
   */
   timeIntervalLabel: string = '1 hour';
   /**
-  * Contains all possible granularity levels.
+  * Contains all possible granularity levels
   */
   timeIntervalOptions: {label: string, value: number}[] = [
     {
@@ -113,7 +113,7 @@ export class FilterControlsComponent implements OnInit {
     }
   ];
   /**
-  * Contains all possible granularity levels available to end user.
+  * Contains all possible granularity levels available to end user
   */
   timeIntervals: {label: string, value: number}[] = this.timeIntervalOptions.slice();
   /**
@@ -126,7 +126,7 @@ export class FilterControlsComponent implements OnInit {
   ];
 
   /**
-  * Constructor for the class.
+  * Constructor for the class
   */
   constructor(
     private gdaxDataService: GdaxDataService,
@@ -136,8 +136,8 @@ export class FilterControlsComponent implements OnInit {
     }
   /**
   * @private
-  * Triggered when component is loaded, but before it is viewed.
-  * Gets REST path info, and updates the profit chart.
+  * Triggered when component is loaded, but before it is viewed
+  * Gets REST path info, and updates the profit chart
   */
   ngOnInit(): void {
     this.resetMinMax();
@@ -190,8 +190,8 @@ export class FilterControlsComponent implements OnInit {
     }
   }
   /**
-  * Triggered when user changes granularity choice.
-  * Updates the service variable.
+  * Triggered when user changes granularity choice
+  * Updates the service variable
   * @param event label/value object containing granularity label and value
   */
   changedTimeInterval(event): void {
@@ -305,15 +305,22 @@ export class FilterControlsComponent implements OnInit {
   /**
   * Closes the datetime warning tooltip if it's open
   */
-  closeTooltip() {
+  closeTooltip(): void {
     const isOpen = this.tooltip.isOpen();
     if (isOpen) {
       this.tooltip.close();
     }
   }
   /**
-  * Triggered when user changes end date choice.
-  * Updates the service variable.
+  * Tells whether or not the warningMessage tooltip is open or not
+  * @return True if the warning tooltip is open } False if not
+  */
+  isTooltipOpen(): boolean {
+    return this.tooltip.isOpen();
+  }
+  /**
+  * Triggered when user changes end date choice
+  * Updates the service variable
   */
   onEndDateChange(): void {
     if (this.checkValidDateTime()) {
@@ -330,8 +337,8 @@ export class FilterControlsComponent implements OnInit {
     }
   }
   /**
-  * Triggered when user changes end time choice.
-  * Updates the service variable.
+  * Triggered when user changes end time choice
+  * Updates the service variable
   */
   onEndTimeChange(): void {
     if (this.checkValidDateTime()) {
@@ -348,8 +355,8 @@ export class FilterControlsComponent implements OnInit {
     }
   }
   /**
-  * Triggered when user changes start date choice.
-  * Updates the service variable.
+  * Triggered when user changes start date choice
+  * Updates the service variable
   */
   onStartDateChange(): void {
     if (this.checkValidDateTime()) {
@@ -366,8 +373,8 @@ export class FilterControlsComponent implements OnInit {
     }
   }
   /**
-  * Triggered when user changes start time choice.
-  * Updates the service variable.
+  * Triggered when user changes start time choice
+  * Updates the service variable
   */
   onStartTimeChange(): void {
     if (this.checkValidDateTime()) {
@@ -386,14 +393,14 @@ export class FilterControlsComponent implements OnInit {
   /**
   * Opens the datetime warning tooltip if it's closed
   */
-  openTooltip() {
+  openTooltip(): void {
     const isOpen = this.tooltip.isOpen();
     if (!isOpen) {
       this.tooltip.open(this.warningMessage);
     }
   }
   /**
-  * Changes the min and max dates for both datepickers when one changes.
+  * Changes the min and max dates for both datepickers when one changes
   */
   resetMinMax(): void {
     this.maxEndDate = {
