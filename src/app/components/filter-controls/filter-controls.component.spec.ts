@@ -119,6 +119,7 @@ describe('FilterControlsComponent', () => {
       spyOn(component, 'adjustGranularityOptions').and.returnValue(true);
       spyOn(component, 'closeTooltip').and.returnValue(true);
       spyOn(component, 'openTooltip').and.returnValue(true);
+      spyOn(component, 'resetMinMax').and.returnValue(true);
     });
     it(`should call gdaxDataService.changeEndDateTime with expected date,
       and set warning flags to false.`, () => {
@@ -129,6 +130,7 @@ describe('FilterControlsComponent', () => {
       expect(component.invalidEndDatetime).toBe(false);
       expect(component.invalidStartDatetime).toBe(false);
       expect(component.closeTooltip).toHaveBeenCalled();
+      expect(component.resetMinMax).toHaveBeenCalled();
       expect(component.openTooltip).not.toHaveBeenCalled();
       expect(component.adjustGranularityOptions).toHaveBeenCalled();
       expect(gdaxDataService.changeEndDateTime).toHaveBeenCalledWith(date2);
@@ -140,6 +142,7 @@ describe('FilterControlsComponent', () => {
       expect(component.invalidEndDatetime).toBe(true);
       expect(component.invalidStartDatetime).toBe(false);
       expect(component.closeTooltip).not.toHaveBeenCalled();
+      expect(component.resetMinMax).not.toHaveBeenCalled();
       expect(component.openTooltip).toHaveBeenCalled();
       expect(component.adjustGranularityOptions).not.toHaveBeenCalled();
       expect(gdaxDataService.changeEndDateTime).not.toHaveBeenCalledWith(date2);
@@ -150,6 +153,7 @@ describe('FilterControlsComponent', () => {
       spyOn(component, 'adjustGranularityOptions').and.returnValue(true);
       spyOn(component, 'closeTooltip').and.returnValue(true);
       spyOn(component, 'openTooltip').and.returnValue(true);
+      spyOn(component, 'resetMinMax').and.returnValue(true);
     });
     it(`should call gdaxDataService.changeEndDateTime with expected date,
     and set warning flags to false.`, () => {
@@ -160,6 +164,7 @@ describe('FilterControlsComponent', () => {
       expect(component.invalidEndDatetime).toBe(false);
       expect(component.invalidStartDatetime).toBe(false);
       expect(component.closeTooltip).toHaveBeenCalled();
+      expect(component.resetMinMax).toHaveBeenCalled();
       expect(component.openTooltip).not.toHaveBeenCalled();
       expect(gdaxDataService.changeEndDateTime).toHaveBeenCalledWith(date2);
     });
@@ -170,6 +175,7 @@ describe('FilterControlsComponent', () => {
       expect(component.invalidEndDatetime).toBe(true);
       expect(component.invalidStartDatetime).toBe(false);
       expect(component.closeTooltip).not.toHaveBeenCalled();
+      expect(component.resetMinMax).not.toHaveBeenCalled();
       expect(component.openTooltip).toHaveBeenCalled();
       expect(component.adjustGranularityOptions).not.toHaveBeenCalled();
       expect(gdaxDataService.changeEndDateTime).not.toHaveBeenCalledWith(date2);
@@ -180,6 +186,7 @@ describe('FilterControlsComponent', () => {
       spyOn(component, 'adjustGranularityOptions').and.returnValue(true);
       spyOn(component, 'closeTooltip').and.returnValue(true);
       spyOn(component, 'openTooltip').and.returnValue(true);
+      spyOn(component, 'resetMinMax').and.returnValue(true);
     });
     it(`should call gdaxDataService.changeStartDateTime with expected date,
     and set warning flags to false.`, () => {
@@ -190,6 +197,7 @@ describe('FilterControlsComponent', () => {
       expect(component.invalidEndDatetime).toBe(false);
       expect(component.invalidStartDatetime).toBe(false);
       expect(component.closeTooltip).toHaveBeenCalled();
+      expect(component.resetMinMax).toHaveBeenCalled();
       expect(component.openTooltip).not.toHaveBeenCalled();
       expect(gdaxDataService.changeStartDateTime).toHaveBeenCalledWith(date1);
     });
@@ -200,6 +208,7 @@ describe('FilterControlsComponent', () => {
       expect(component.invalidEndDatetime).toBe(false);
       expect(component.invalidStartDatetime).toBe(true);
       expect(component.closeTooltip).not.toHaveBeenCalled();
+      expect(component.resetMinMax).not.toHaveBeenCalled();
       expect(component.openTooltip).toHaveBeenCalled();
       expect(component.adjustGranularityOptions).not.toHaveBeenCalled();
       expect(gdaxDataService.changeStartDateTime).not.toHaveBeenCalledWith(date1);
@@ -210,6 +219,7 @@ describe('FilterControlsComponent', () => {
       spyOn(component, 'adjustGranularityOptions').and.returnValue(true);
       spyOn(component, 'closeTooltip').and.returnValue(true);
       spyOn(component, 'openTooltip').and.returnValue(true);
+      spyOn(component, 'resetMinMax').and.returnValue(true);
     });
     it(`should call gdaxDataService.changeStartDateTime with expected date,
     and set warning flags to false.`, () => {
@@ -220,6 +230,7 @@ describe('FilterControlsComponent', () => {
       expect(component.invalidEndDatetime).toBe(false);
       expect(component.invalidStartDatetime).toBe(false);
       expect(component.closeTooltip).toHaveBeenCalled();
+      expect(component.resetMinMax).toHaveBeenCalled();
       expect(component.openTooltip).not.toHaveBeenCalled();
       expect(gdaxDataService.changeStartDateTime).toHaveBeenCalledWith(date1);
     });
@@ -230,6 +241,7 @@ describe('FilterControlsComponent', () => {
       expect(component.invalidEndDatetime).toBe(false);
       expect(component.invalidStartDatetime).toBe(true);
       expect(component.closeTooltip).not.toHaveBeenCalled();
+      expect(component.resetMinMax).not.toHaveBeenCalled();
       expect(component.openTooltip).toHaveBeenCalled();
       expect(component.adjustGranularityOptions).not.toHaveBeenCalled();
       expect(gdaxDataService.changeStartDateTime).not.toHaveBeenCalledWith(date1);
