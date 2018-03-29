@@ -72,11 +72,31 @@ export class LiveViewComponent implements OnInit {
     options['credits'] = {
       enabled: false
     };
-    options['series'] = [{
-      name: this.pathState,
-      color: '#2d2d31',
-      data: []
-    }],
+    if (this.pathState === 'ALL') {
+      options['series'] = [
+        {
+          name: 'BTC-USD',
+          color: '#2d2d31',
+          data: []
+        },
+        {
+          name: 'LTC-USD',
+          color: '#ff0000',
+          data: []
+        },
+        {
+          name: 'ETH-USD',
+          color: '#ffff00',
+          data: []
+        }
+      ];
+    } else {
+      options['series'] = [{
+        name: this.pathState,
+        color: '#2d2d31',
+        data: []
+      }];
+    }
     options['xAxis'] = {
       title: {
         text: null
@@ -119,18 +139,38 @@ export class LiveViewComponent implements OnInit {
       useHTML: true
     };
     const tempChart = new Chart(options);
-    const dps = [];
+    const dps1 = [];
+    const dps2 = [];
+    const dps3 = [];
     data.forEach((element) => {
       const dp = {
         value: element[0],
         x: element[0],
         y: element[4],
       };
-      dps.push(dp);
+      if (element.length > 6) {
+        if (element[6] === 0) {
+          dps1.push(dp);
+        } else if (element[6] === 1) {
+          dps2.push(dp);
+        } else if (element[6] === 2) {
+          dps3.push(dp);
+        }
+      } else {
+        dps1.push(dp);
+      }
     });
-    dps.reverse();
-    dps.forEach(element => {
-      tempChart.addPoint(element);
+    dps1.reverse();
+    dps2.reverse();
+    dps3.reverse();
+    dps1.forEach(element => {
+      tempChart.addPoint(element, 0);
+    });
+    dps2.forEach(element => {
+      tempChart.addPoint(element, 1);
+    });
+    dps3.forEach(element => {
+      tempChart.addPoint(element, 2);
     });
     this.chart = tempChart;
     this.chartReady = true;

@@ -32,6 +32,11 @@ export class FilterControlsComponent implements OnInit {
     minute: this.endDate.getMinutes()
   };
   /**
+  * Checks with service to see if it's busy in a query,
+  * and disables controls when it is.
+  */
+  isBusy: boolean = true;
+  /**
   * Flag to determine whether or not to show invalid data colors
   * inside the datetime filters.
   */
@@ -140,6 +145,16 @@ export class FilterControlsComponent implements OnInit {
   * Gets REST path info, and updates the profit chart
   */
   ngOnInit(): void {
+    this.gdaxDataService.isBusy
+      .subscribe(data => {
+        this.isBusy = data;
+      });
+    this.timeIntervals.forEach(element => {
+      if (element['value'] === this.gdaxDataService.interval) {
+        this.timeInterval = this.gdaxDataService.interval;
+        this.timeIntervalLabel = element['label'];
+      }
+    });
     this.resetMinMax();
     this.adjustGranularityOptions();
   }

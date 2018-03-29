@@ -78,5 +78,29 @@ describe('LiveViewComponent', () => {
       expect(component.chart instanceof Chart).toBe(true);
       expect(component.chartReady).toBe(true);
     });
+    it('should set chart object to a Chart object and chartReady to true', () => {
+      component.chart = undefined;
+      component.chartReady = false;
+      component.pathState = 'ALL';
+      component.updateChart([
+        [new Date().getTime(), 2, 3, 4, 5, 6, 0],
+        [new Date().getTime(), 2, 3, 4, 5, 6, 1],
+        [new Date().getTime(), 2, 3, 4, 5, 6, 2]
+      ]);
+      expect(component.chart instanceof Chart).toBe(true);
+      expect(component.chartReady).toBe(true);
+    });
+    it('should set chart object to a Chart object and chartReady to true', () => {
+      component.chart = undefined;
+      component.chartReady = false;
+      component.pathState = 'ALL';
+      component.updateChart([
+        [new Date().getTime(), 2, 3, 4, 5, 6, 0],
+        [new Date().getTime(), 2, 3, 4, 5, 6, 1],
+        [new Date().getTime(), 2, 3, 4, 5, 6, 3]
+      ]);
+      expect(component.chart instanceof Chart).toBe(true);
+      expect(component.chartReady).toBe(true);
+    });
   });
 });

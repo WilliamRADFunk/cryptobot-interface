@@ -6,7 +6,7 @@ import { GdaxDataService } from './gdax-data.service';
 const date = new Date('2018-03-25T03:55:19.336Z');
 const subscribeReturn = {
   subscribe: (fn) => {
-    fn([1, 2, 3, 4, 5, 6]);
+    fn([[1, 2, 3, 4, 5, 6]]);
   }
 };
 let httpClient;
@@ -19,7 +19,7 @@ describe('GdaxDataService', () => {
           provide: HttpClient,
           useValue: {
             get: (data) => {
-              return data;
+              return subscribeReturn;
             },
           }
         },
@@ -68,14 +68,25 @@ describe('GdaxDataService', () => {
       expect(service.getLatestGdaxData).toHaveBeenCalled();
     }));
   });
-  describe('changeTimeInterval', () => {
-    it('should change interval to 300 and call getLatestGdaxData',
+  describe('getLatestGdaxData', () => {
+    it('should callhttpClient.get with expected parameters',
       inject([GdaxDataService], (service: GdaxDataService) => {
       spyOn(httpClient, 'get').and.callThrough();
       service.startDate = date;
       service.endDate = date;
       service.getLatestGdaxData();
       expect(httpClient.get.calls.mostRecent().args[0]).toEqual('https://api.gdax.com/products/BTC-USD/candles');
+      expect(httpClient.get.calls.mostRecent().args[1].params.toString())
+        .toEqual('granularity=3600&start=2018-03-25T03:55:19.336Z&end=2018-03-25T03:55:19.336Z');
+    }));
+    it('should callhttpClient.get with expected parameters',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      spyOn(httpClient, 'get').and.callThrough();
+      service.startDate = date;
+      service.endDate = date;
+      service.currency = 'ALL';
+      service.getLatestGdaxData();
+      expect(httpClient.get.calls.mostRecent().args[0]).toEqual('https://api.gdax.com/products/ETH-USD/candles');
       expect(httpClient.get.calls.mostRecent().args[1].params.toString())
         .toEqual('granularity=3600&start=2018-03-25T03:55:19.336Z&end=2018-03-25T03:55:19.336Z');
     }));

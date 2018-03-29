@@ -15,6 +15,11 @@
   padding-right: 0;
 }
 
+.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
 .sub-nav {
   background-position: 5px 5px;
   background-repeat: no-repeat;

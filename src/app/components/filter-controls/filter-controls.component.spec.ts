@@ -84,6 +84,12 @@ describe('FilterControlsComponent', () => {
             },
             changeEndDateTime: () => {
               return { };
+            },
+            interval: 3600,
+            isBusy: {
+              subscribe: fn => {
+                fn(true);
+              }
             }
           }
         }
@@ -441,11 +447,15 @@ describe('FilterControlsComponent', () => {
     it(`should return false`, () => {
       component.sDate = shortDate1;
       component.sTime = shortTime1;
-      component.eDate = shortDate1;
-      component.eTime = shortTime1;
+      component.eDate['year'] = new Date().getFullYear();
+      component.eDate['month'] = new Date().getMonth() + 1;
+      component.eDate['day'] = new Date().getDate();
       component.eTime['hour'] = new Date().getHours();
       component.eTime['minute'] = new Date().getMinutes() + 11;
-      expect(component.checkValidDateTimeOrder()).toBe(false);
+      const result = component.checkValidDateTimeOrder();
+      component.eDate = shortDate1;
+      component.eTime = shortTime1;
+      expect(result).toBe(false);
     });
     it(`should return false`, () => {
       component.sDate = shortDate3;
@@ -544,6 +554,10 @@ describe('FilterControlsComponent', () => {
       expect(component.timeInterval).toBe(3600);
       expect(component.timeIntervalLabel).toBe('1 hour');
       expect(component.timeIntervals).toEqual([
+        {
+          label: '5 minutes',
+          value: 300
+        },
         {
           label: '15 minutes',
           value: 900
@@ -659,15 +673,15 @@ describe('FilterControlsComponent', () => {
         month: new Date().getMonth() + 1,
         day: new Date().getDate()
       } as any;
-      const newMinEndDate = {
-        year: newMaxEndDate['year'],
-        month: newMaxEndDate['month'],
-        day: newMaxEndDate['day'] - 1
-      } as any;
       const newMaxStartDate = {
         year: component.eDate['year'],
         month: component.eDate['month'],
         day: component.eDate['day']
+      } as any;
+      const newMinEndDate = {
+        year: component.sDate['year'],
+        month: component.sDate['month'],
+        day: component.sDate['day']
       } as any;
       const afterDate = new Date(
         component.eDate.year,

@@ -10,14 +10,14 @@
       role="group",
       aria-label="Button group with nested dropdown")
       button.btn.btn-outline-primary.btn-intervals.custom-dropdown.margin-middle(
-        [disabled]="isTooltipOpen()",
+        [disabled]="isTooltipOpen() || isBusy",
         ngbDropdownToggle) {{ timeIntervalLabel }}
       .dropdown-menu(ngbDropdownMenu)
         button.dropdown-item(
           *ngFor="let interval of timeIntervals",
           (click)="changedTimeInterval(interval)") {{ interval.label }}
   .col-12.col-sm-12.col-md-12.col-lg-5.col-xl-5.filter-bottom-gap.d-flex.justify-content-center
-    form.form-inline.centered
+    form.form-inline([ngClass]="{'disabled': isBusy}")
       label.label-date.text-center(
         for="dPick1",
         [ngClass]="{'invalid-input': invalidStartDatetime}") Start Date:
@@ -52,7 +52,7 @@
           [(ngModel)]="sTime",
           (ngModelChange)="onStartTimeChange()")
   .col-12.col-sm-12.col-md-12.col-lg-5.col-xl-5.filter-bottom-gap.d-flex.justify-content-center
-    form.form-inline
+    form.form-inline([ngClass]="{'disabled': isBusy}")
       label.label-date.extra-padding.text-center(
         for="dPick2",
         [ngClass]="{'invalid-input': invalidEndDatetime}",
