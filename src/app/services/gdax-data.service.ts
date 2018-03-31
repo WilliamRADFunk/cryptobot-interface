@@ -71,6 +71,7 @@ export class GdaxDataService {
   */
   getLatestGdaxData(): void {
     this.isBusy.next(true);
+    this.chartData.next([]);
     const headers = new HttpHeaders()
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json');
