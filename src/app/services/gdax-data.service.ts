@@ -13,7 +13,7 @@ export class GdaxDataService {
   * The updated query results for historical trade market data in a format
   * that all of the live views will understand and be able to use.
   */
-  tableData: BehaviorSubject<number[][]> = new BehaviorSubject<number[][]>([]);
+  tableData: BehaviorSubject<{}[]> = new BehaviorSubject<{}[]>([]);
   /**
   * Used to determine which of the api to refresh.
   */
@@ -134,15 +134,76 @@ export class GdaxDataService {
       .set('Access-Control-Allow-Headers', 'X-PINGOTHER, Content-Type')
       .set('Access-Control-Max-Age', '86400');
     const params = new HttpParams()
-      .set('granularity', this.interval.toString())
       .set('start', this.startDate.toISOString())
       .set('end', this.endDate.toISOString());
-    this.http.get<any>(`http://167.99.149.6:3000/history/${this.currency.split('-')[0].toLowerCase()}`, {headers, params})
-      .subscribe(data => {
-        console.log(data);
-        this.tableData.next(data);
-        this.isBusy.next(false);
-      });
+    if (this.currency === 'ALL') {
+      this.http.get<any>(`http://167.99.149.6:3000/history/btc`, {headers, params})
+        .subscribe(data1 => {
+          const d1: {}[] = [];
+          data1.forEach(element => {
+            const e1 = element;
+            if (e1['details']
+            && e1['details']['product_id']
+            && e1['details']['product_id'].split('-').length > 1) {
+              e1['product'] = e1['details']['product_id'].split('-')[0];
+            } else {
+              e1['product'] = 'BTC';
+            }
+            d1.push(e1);
+          });
+          this.http.get<any>(`http://167.99.149.6:3000/history/ltc`, {headers, params})
+            .subscribe(data2 => {
+              const d2: {}[] = [];
+              data2.forEach(element => {
+                const e2 = element;
+                if (e2['details']
+                && e2['details']['product_id']
+                && e2['details']['product_id'].split('-').length > 1) {
+                  e2['product'] = e2['details']['product_id'].split('-')[0];
+                } else {
+                  e2['product'] = 'LTC';
+                }
+                d2.push(e2);
+              });
+              this.http.get<any>(`http://167.99.149.6:3000/history/eth`, {headers, params})
+                .subscribe(data3 => {
+                  const d3: {}[] = [];
+                  data3.forEach(element => {
+                    const e3 = element;
+                    if (e3['details']
+                    && e3['details']['product_id']
+                    && e3['details']['product_id'].split('-').length > 1) {
+                      e3['product'] = e3['details']['product_id'].split('-')[0];
+                    } else {
+                      e3['product'] = 'ETH';
+                    }
+                    d3.push(e3);
+                  });
+                  this.tableData.next(d1.concat(d2, d3));
+                  this.isBusy.next(false);
+                });
+            });
+        });
+    } else {
+      const curr: string = this.currency.split('-')[0].toLowerCase();
+      this.http.get<any>(`http://167.99.149.6:3000/history/${curr}`, {headers, params})
+        .subscribe(data => {
+          const d: {}[] = [];
+          data.forEach(element => {
+            const e = element;
+            if (e['details']
+            && e['details']['product_id']
+            && e['details']['product_id'].split('-').length > 1) {
+              e['product'] = e['details']['product_id'].split('-')[0];
+            } else {
+              e['product'] = curr.toUpperCase();
+            }
+            d.push(e);
+          });
+          this.tableData.next(d);
+          this.isBusy.next(false);
+        });
+    }
   }
   refreshData() {
     if (this.basePath === 'live-view') {

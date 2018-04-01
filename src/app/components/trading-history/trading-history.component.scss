@@ -1,0 +1,11 @@
+.table th,
+.table td {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.table-view {
+  display: block;
+  max-height: 456px;
+  overflow: auto;
+}

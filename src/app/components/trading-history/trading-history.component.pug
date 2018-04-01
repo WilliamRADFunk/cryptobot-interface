@@ -6,14 +6,31 @@
       .col-12.col-sm-12.col-md-12.col-lg-12
         app-filter-controls
       .col-12.col-sm-12.col-md-12.col-lg-12
-        table.table.table-inverse
-          tr
-            th Date
-            th Type
-            th Amount
-            th Balance
-          tr
-            td Now
-            td Match
-            td 2,000,000
-            td 10,123,123
+        .table-responsive-xl.table-view
+          table.table.table-dark.table-striped.table-hover(
+            *ngIf="table.length && tableReady")
+            tbody
+              tr
+                th id
+                th Date
+                th Product
+                th Buy/Sell
+                th Amount
+                th Balance
+                th Type
+              tr(*ngFor="let transaction of table")
+                td {{ transaction.id }}
+                td {{ transaction.date }}
+                td {{ transaction.product }}
+                td {{ transaction.buysell }}
+                td {{ transaction.amount | number: '.8'}}
+                td {{ transaction.balance | number: '.8' }}
+                td {{ transaction.type }}
+          table.table.table-inverse(*ngIf="!table.length && tableReady")
+            tr
+              td
+                p There is no data matching your criteria
+          table.table.table-inverse(*ngIf="!tableReady")
+            tr
+              td
+                p Building the table of the bot's trading history

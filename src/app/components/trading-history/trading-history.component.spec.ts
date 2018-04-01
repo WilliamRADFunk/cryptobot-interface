@@ -41,7 +41,7 @@ describe('TradingHistoryComponent', () => {
           provide: GdaxDataService,
           useValue: {
             changeCurrencyType: () => {},
-            chartData: {
+            tableData: {
               subscribe: (fn) => {
                 fn([1, 2, 3, 4, 5, 6]);
               }
