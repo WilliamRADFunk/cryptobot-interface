@@ -34,3 +34,18 @@
             tr
               td
                 p Building the table of the bot's trading history
+        .col-12.col-sm-12.col-md-12.col-lg-12.col-xl-12.paginate-box(style="color: #ffc000;")
+          div(style="display: inline-block; margin-right: 10px;")
+            span Page:
+            div.btn.btn-lg([ngClass]="{'disabled': isNoPrevPage}")
+              span.fa.fa-angle-left.angle-btn-left
+            span {{ page }}
+            div.btn.btn-lg([ngClass]="{'disabled': isNoNextPage}")
+              span.fa.fa-angle-right.angle-btn-right
+          div(style="display: inline-block; margin-left: 20px; margin-right: 10px;")
+            span Rows / Page:
+            div.btn.btn-lg
+              span.fa.fa-angle-left.angle-btn-left
+            span {{ page }}
+            div.btn.btn-lg.btn-no-buffer-right
+              span.fa.fa-angle-right.angle-btn-right

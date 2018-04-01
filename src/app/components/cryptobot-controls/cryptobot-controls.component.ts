@@ -9,7 +9,7 @@ import { GdaxDataService } from '../../services/gdax-data.service';
 })
 export class CryptobotControlsComponent implements OnInit {
   /**
-  * Constructor for the class.
+  * Constructor for the CryptobotControlsComponent class.
   * @param gdaxDataService Internal service to get queried market data.
   */
   constructor(private gdaxDataService: GdaxDataService) { }

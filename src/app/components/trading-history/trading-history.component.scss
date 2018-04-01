@@ -1,3 +1,7 @@
+.table {
+  margin-bottom: 0;
+}
+
 .table th,
 .table td {
   text-align: center;
@@ -6,7 +10,7 @@
 
 .table-view {
   display: block;
-  max-height: 456px;
+  max-height: 406px;
   overflow: auto;
 }
 
@@ -24,4 +28,37 @@
 
 .table-dark.table-striped tbody tr:first-child {
   background-color: rgb(32, 32, 32);
+}
+
+.paginate-box {
+  background-color: #353a40;
+  height: 50px;
+}
+
+.paginate-box .btn {
+  padding-left: 12px;
+}
+
+.btn-no-buffer-right {
+  margin-right: 0;
+  padding-right: 0;
+}
+
+.fa-angle-left,
+.fa-angle-right {
+  color: #ffc000;
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+.angle-btn-left,
+.angle-btn-right {
+  padding-bottom: 10px;
+}
+
+.disabled {
+  opacity: 0.4;
+  pointer-events: none;
 }

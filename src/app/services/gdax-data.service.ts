@@ -131,6 +131,10 @@ export class GdaxDataService {
         });
     }
   }
+  /**
+  * Call to GDAX for trading history data
+  * @return an observable that returns trading history data specific to query params
+  */
   getLatestGdaxHistoryData() {
     this.isBusy.next(true);
     const headers = new HttpHeaders()
@@ -212,6 +216,9 @@ export class GdaxDataService {
         });
     }
   }
+  /**
+  * Determines which data api to use based off of basePath, and calls it.
+  */
   refreshData() {
     if (this.basePath === 'live-view') {
       this.isRelevant.next(true);

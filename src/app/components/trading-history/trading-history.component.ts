@@ -10,6 +10,14 @@ import { GdaxDataService } from '../../services/gdax-data.service';
 })
 export class TradingHistoryComponent implements OnInit {
   /**
+  * Number of rows to show per page
+  */
+  rowsPerPage: number = 100;
+  /**
+  * Current page number
+  */
+  page: number = 1;
+  /**
   * The initial path state passed in by the activatedRouter.
   * Keeps track of what currency the chart should be viewing.
   */
@@ -24,7 +32,6 @@ export class TradingHistoryComponent implements OnInit {
   * Keeps track of what currency the chart should be viewing.
   */
   tableReady: boolean = false;
-
   /**
   * Constructor for the class. Injects Angular's ActivatedRoute, and Router services
   * @param activatedRouter Angular's ActivatedRoute service for knowing current route

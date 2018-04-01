@@ -13,11 +13,12 @@
         *ngIf="isRelevant",
         [disabled]="isTooltipOpen() || isBusy || !isRelevant",
         ngbDropdownToggle) {{ timeIntervalLabel }}
-      div(ngbTooltip="Granularity has no effect in this view")
-        button.btn.btn-outline-primary.btn-intervals.custom-dropdown.margin-middle(
+      div.custom-dropdown.margin-middle(ngbTooltip="Granularity has no effect in this view")
+        button.btn.btn-outline-primary.btn-intervals(
           *ngIf="!isRelevant",
           ngbDropdownToggle,
-          [ngClass]="{'disabled': true}") {{ timeIntervalLabel }}
+          [ngClass]="{'disabled': true}",
+          style="width: 100%;") None
       .dropdown-menu(ngbDropdownMenu)
         button.dropdown-item(
           *ngFor="let interval of timeIntervals",
