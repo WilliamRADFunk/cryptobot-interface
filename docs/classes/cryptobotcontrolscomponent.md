@@ -15,6 +15,11 @@
 * [constructor](cryptobotcontrolscomponent.md#markdown-header-constructor)
 
 
+### Properties
+
+* [gdaxDataService](cryptobotcontrolscomponent.md#markdown-header-private-gdaxdataservice)
+
+
 ### Methods
 
 * [ngOnInit](cryptobotcontrolscomponent.md#markdown-header-ngoninit)
@@ -26,14 +31,22 @@
 
 
 
-### ⊕ **new CryptobotControlsComponent**(): [CryptobotControlsComponent](cryptobotcontrolscomponent.md)
+### ⊕ **new CryptobotControlsComponent**(gdaxDataService: *[GdaxDataService](gdaxdataservice.md)*): [CryptobotControlsComponent](cryptobotcontrolscomponent.md)
 
 
-*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.ts:8](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/components/cryptobot-controls/cryptobot-controls.component.ts#L8)*
+*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.ts:10](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/components/cryptobot-controls/cryptobot-controls.component.ts#L10)*
 
 
 
 Constructor for the class.
+
+
+**Parameters:**
+
+| Param | Type | Description |
+| ------ | ------ | ------ |
+| gdaxDataService | [GdaxDataService](gdaxdataservice.md)   |  Internal service to get queried market data. |
+
 
 
 
@@ -41,6 +54,25 @@ Constructor for the class.
 **Returns:** [CryptobotControlsComponent](cryptobotcontrolscomponent.md)
 
 ---
+
+
+## Properties
+
+
+### «Private» gdaxDataService
+
+**●  gdaxDataService**:  *[GdaxDataService](gdaxdataservice.md)* 
+
+*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.ts:15](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/components/cryptobot-controls/cryptobot-controls.component.ts#L15)*
+
+
+
+Internal service to get queried market data.
+
+
+
+
+___
 
 
 ## Methods
@@ -52,7 +84,7 @@ Constructor for the class.
 
 
 
-*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.ts:16](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/components/cryptobot-controls/cryptobot-controls.component.ts#L16)*
+*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.ts:19](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/components/cryptobot-controls/cryptobot-controls.component.ts#L19)*
 
 
 

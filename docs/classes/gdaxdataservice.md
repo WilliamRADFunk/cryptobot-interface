@@ -13,6 +13,7 @@
 
 ### Properties
 
+* [basePath](gdaxdataservice.md#markdown-header-basepath)
 * [chartData](gdaxdataservice.md#markdown-header-chartdata)
 * [currency](gdaxdataservice.md#markdown-header-currency)
 * [endDate](gdaxdataservice.md#markdown-header-enddate)
@@ -20,6 +21,7 @@
 * [interval](gdaxdataservice.md#markdown-header-interval)
 * [isBusy](gdaxdataservice.md#markdown-header-isbusy)
 * [startDate](gdaxdataservice.md#markdown-header-startdate)
+* [tableData](gdaxdataservice.md#markdown-header-tabledata)
 
 
 ### Methods
@@ -29,6 +31,8 @@
 * [changeStartDateTime](gdaxdataservice.md#markdown-header-changestartdatetime)
 * [changeTimeInterval](gdaxdataservice.md#markdown-header-changetimeinterval)
 * [getLatestGdaxData](gdaxdataservice.md#markdown-header-getlatestgdaxdata)
+* [getLatestGdaxHistoryData](gdaxdataservice.md#markdown-header-getlatestgdaxhistorydata)
+* [refreshData](gdaxdataservice.md#markdown-header-refreshdata)
 
 
 
@@ -40,7 +44,7 @@
 ### ⊕ **new GdaxDataService**(http: *`HttpClient`*): [GdaxDataService](gdaxdataservice.md)
 
 
-*Defined in [app/services/gdax-data.service.ts:28](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/services/gdax-data.service.ts#L28)*
+*Defined in [app/services/gdax-data.service.ts:37](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/services/gdax-data.service.ts#L37)*
 
 
 
@@ -65,11 +69,28 @@ Constructor for the class. Injects Angular's HttpClient service
 ## Properties
 
 
+###  basePath
+
+**●  basePath**:  *`string`*  = "live-view"
+
+*Defined in [app/services/gdax-data.service.ts:20](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/services/gdax-data.service.ts#L20)*
+
+
+
+Used to determine which of the api to refresh.
+
+
+
+
+___
+
+
+
 ###  chartData
 
 **●  chartData**:  *`BehaviorSubject`.<`number`[][]>*  =  new BehaviorSubject<number[][]>([])
 
-*Defined in [app/services/gdax-data.service.ts:11](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/services/gdax-data.service.ts#L11)*
+*Defined in [app/services/gdax-data.service.ts:11](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/services/gdax-data.service.ts#L11)*
 
 
 
@@ -86,7 +107,7 @@ ___
 
 **●  currency**:  *`string`*  = "BTC-USD"
 
-*Defined in [app/services/gdax-data.service.ts:15](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/services/gdax-data.service.ts#L15)*
+*Defined in [app/services/gdax-data.service.ts:24](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/services/gdax-data.service.ts#L24)*
 
 
 
@@ -103,7 +124,7 @@ ___
 
 **●  endDate**:  *`Date`*  =  new Date()
 
-*Defined in [app/services/gdax-data.service.ts:19](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/services/gdax-data.service.ts#L19)*
+*Defined in [app/services/gdax-data.service.ts:28](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/services/gdax-data.service.ts#L28)*
 
 
 
@@ -120,7 +141,7 @@ ___
 
 **●  http**:  *`HttpClient`* 
 
-*Defined in [app/services/gdax-data.service.ts:34](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/services/gdax-data.service.ts#L34)*
+*Defined in [app/services/gdax-data.service.ts:43](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/services/gdax-data.service.ts#L43)*
 
 
 
@@ -137,7 +158,7 @@ ___
 
 **●  interval**:  *`number`*  = 3600
 
-*Defined in [app/services/gdax-data.service.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/services/gdax-data.service.ts#L23)*
+*Defined in [app/services/gdax-data.service.ts:32](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/services/gdax-data.service.ts#L32)*
 
 
 
@@ -154,7 +175,7 @@ ___
 
 **●  isBusy**:  *`BehaviorSubject`.<`boolean`>*  =  new BehaviorSubject<boolean>(false)
 
-*Defined in [app/services/gdax-data.service.ts:24](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/services/gdax-data.service.ts#L24)*
+*Defined in [app/services/gdax-data.service.ts:33](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/services/gdax-data.service.ts#L33)*
 
 
 
@@ -168,11 +189,28 @@ ___
 
 **●  startDate**:  *`Date`*  =  new Date(this.endDate.getTime() - 86400000)
 
-*Defined in [app/services/gdax-data.service.ts:28](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/services/gdax-data.service.ts#L28)*
+*Defined in [app/services/gdax-data.service.ts:37](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/services/gdax-data.service.ts#L37)*
 
 
 
 The start datetime used as a parameter in the query URL
+
+
+
+
+___
+
+
+
+###  tableData
+
+**●  tableData**:  *`BehaviorSubject`.<`number`[][]>*  =  new BehaviorSubject<number[][]>([])
+
+*Defined in [app/services/gdax-data.service.ts:16](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/services/gdax-data.service.ts#L16)*
+
+
+
+The updated query results for historical trade market data in a format that all of the live views will understand and be able to use.
 
 
 
@@ -185,11 +223,11 @@ ___
 
 ###  changeCurrencyType
 
-► **changeCurrencyType**(currency: *`string`*): `void`
+► **changeCurrencyType**(currency: *`string`*, basePath: *`string`*): `void`
 
 
 
-*Defined in [app/services/gdax-data.service.ts:39](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/services/gdax-data.service.ts#L39)*
+*Defined in [app/services/gdax-data.service.ts:48](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/services/gdax-data.service.ts#L48)*
 
 
 
@@ -201,6 +239,7 @@ Updates the currency type being viewed, and refreshes query results.
 | Param | Type | Description |
 | ------ | ------ | ------ |
 | currency | `string`   |  the currency string (ie. 'BTC-USD') |
+| basePath | `string`   |  - |
 
 
 
@@ -222,7 +261,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:47](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/services/gdax-data.service.ts#L47)*
+*Defined in [app/services/gdax-data.service.ts:57](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/services/gdax-data.service.ts#L57)*
 
 
 
@@ -255,7 +294,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:55](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/services/gdax-data.service.ts#L55)*
+*Defined in [app/services/gdax-data.service.ts:65](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/services/gdax-data.service.ts#L65)*
 
 
 
@@ -288,7 +327,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:64](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/services/gdax-data.service.ts#L64)*
+*Defined in [app/services/gdax-data.service.ts:74](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/services/gdax-data.service.ts#L74)*
 
 
 
@@ -321,7 +360,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:72](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/services/gdax-data.service.ts#L72)*
+*Defined in [app/services/gdax-data.service.ts:82](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/services/gdax-data.service.ts#L82)*
 
 
 
@@ -333,6 +372,50 @@ Call to GDAX for historical market data
 **Returns:** `void`
 an observable that returns market data specific to query params
 
+
+
+
+
+
+___
+
+
+
+###  getLatestGdaxHistoryData
+
+► **getLatestGdaxHistoryData**(): `void`
+
+
+
+*Defined in [app/services/gdax-data.service.ts:127](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/services/gdax-data.service.ts#L127)*
+
+
+
+
+
+**Returns:** `void`
+
+
+
+
+
+___
+
+
+
+###  refreshData
+
+► **refreshData**(): `void`
+
+
+
+*Defined in [app/services/gdax-data.service.ts:147](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/services/gdax-data.service.ts#L147)*
+
+
+
+
+
+**Returns:** `void`
 
 
 

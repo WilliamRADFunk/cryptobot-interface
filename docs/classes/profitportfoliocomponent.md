@@ -19,6 +19,7 @@
 
 * [activatedRouter](profitportfoliocomponent.md#markdown-header-private-activatedrouter)
 * [chart](profitportfoliocomponent.md#markdown-header-chart)
+* [gdaxDataService](profitportfoliocomponent.md#markdown-header-private-gdaxdataservice)
 * [pathState](profitportfoliocomponent.md#markdown-header-pathstate)
 * [router](profitportfoliocomponent.md#markdown-header-private-router)
 
@@ -34,10 +35,10 @@
 
 
 
-### ⊕ **new ProfitPortfolioComponent**(activatedRouter: *`ActivatedRoute`*, router: *`Router`*): [ProfitPortfolioComponent](profitportfoliocomponent.md)
+### ⊕ **new ProfitPortfolioComponent**(activatedRouter: *`ActivatedRoute`*, router: *`Router`*, gdaxDataService: *[GdaxDataService](gdaxdataservice.md)*): [ProfitPortfolioComponent](profitportfoliocomponent.md)
 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:21](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/components/profit-portfolio/profit-portfolio.component.ts#L21)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/components/profit-portfolio/profit-portfolio.component.ts#L23)*
 
 
 
@@ -50,6 +51,7 @@ Constructor for the class. Injects Angular's ActivatedRoute, and Router services
 | ------ | ------ | ------ |
 | activatedRouter | `ActivatedRoute`   |  Angular's ActivatedRoute service for knowing current route |
 | router | `Router`   |  Angular's Router service for changing route |
+| gdaxDataService | [GdaxDataService](gdaxdataservice.md)   |  Internal service to get queried market data. |
 
 
 
@@ -67,7 +69,7 @@ Constructor for the class. Injects Angular's ActivatedRoute, and Router services
 
 **●  activatedRouter**:  *`ActivatedRoute`* 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:29](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/components/profit-portfolio/profit-portfolio.component.ts#L29)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:32](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/components/profit-portfolio/profit-portfolio.component.ts#L32)*
 
 
 
@@ -84,7 +86,7 @@ ___
 
 **●  chart**:  *`Chart`* 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:16](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/components/profit-portfolio/profit-portfolio.component.ts#L16)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:18](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/components/profit-portfolio/profit-portfolio.component.ts#L18)*
 
 
 
@@ -97,11 +99,28 @@ ___
 
 
 
+### «Private» gdaxDataService
+
+**●  gdaxDataService**:  *[GdaxDataService](gdaxdataservice.md)* 
+
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:34](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/components/profit-portfolio/profit-portfolio.component.ts#L34)*
+
+
+
+Internal service to get queried market data.
+
+
+
+
+___
+
+
+
 ###  pathState
 
 **●  pathState**:  *`string`*  = "BTC-USD"
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:21](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/components/profit-portfolio/profit-portfolio.component.ts#L21)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/components/profit-portfolio/profit-portfolio.component.ts#L23)*
 
 
 
@@ -118,7 +137,7 @@ ___
 
 **●  router**:  *`Router`* 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:30](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/components/profit-portfolio/profit-portfolio.component.ts#L30)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:33](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/components/profit-portfolio/profit-portfolio.component.ts#L33)*
 
 
 
@@ -139,7 +158,7 @@ ___
 
 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:35](https://github.com/WilliamRADFunk/cryptobot-interface/blob/de4f8ae/src/app/components/profit-portfolio/profit-portfolio.component.ts#L35)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:39](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/components/profit-portfolio/profit-portfolio.component.ts#L39)*
 
 
 

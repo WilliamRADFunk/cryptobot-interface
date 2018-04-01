@@ -33,39 +33,40 @@ describe('GdaxDataService', () => {
     expect(service).toBeTruthy();
   }));
   describe('changeCurrencyType', () => {
-    it('should change currency to LTC-USD and call getLatestGdaxData',
+    it('should change currency to LTC-USD, basePath to live-view, and call refreshData',
       inject([GdaxDataService], (service: GdaxDataService) => {
-      spyOn(service, 'getLatestGdaxData').and.returnValue(subscribeReturn);
-      service.changeCurrencyType('LTC-USD');
+      spyOn(service, 'refreshData').and.returnValue(true);
+      service.changeCurrencyType('LTC-USD', 'live-view');
       expect(service.currency).toBe('LTC-USD');
-      expect(service.getLatestGdaxData).toHaveBeenCalled();
+      expect(service.basePath).toBe('live-view');
+      expect(service.refreshData).toHaveBeenCalled();
     }));
   });
   describe('changeEndDateTime', () => {
-    it('should change end DateTime and call getLatestGdaxData',
+    it('should change end DateTime and call refreshData',
       inject([GdaxDataService], (service: GdaxDataService) => {
-      spyOn(service, 'getLatestGdaxData').and.returnValue(subscribeReturn);
+        spyOn(service, 'refreshData').and.returnValue(true);
       service.changeEndDateTime(date);
       expect(service.endDate).toEqual(date);
-      expect(service.getLatestGdaxData).toHaveBeenCalled();
+      expect(service.refreshData).toHaveBeenCalled();
     }));
   });
   describe('changeStartDateTime', () => {
-    it('should change start DateTime and call getLatestGdaxData',
+    it('should change start DateTime and call refreshData',
       inject([GdaxDataService], (service: GdaxDataService) => {
-      spyOn(service, 'getLatestGdaxData').and.returnValue(subscribeReturn);
+        spyOn(service, 'refreshData').and.returnValue(true);
       service.changeStartDateTime(date);
       expect(service.startDate).toEqual(date);
-      expect(service.getLatestGdaxData).toHaveBeenCalled();
+      expect(service.refreshData).toHaveBeenCalled();
     }));
   });
   describe('changeTimeInterval', () => {
-    it('should change interval to 300 and call getLatestGdaxData',
+    it('should change interval to 300 and call refreshData',
       inject([GdaxDataService], (service: GdaxDataService) => {
-      spyOn(service, 'getLatestGdaxData').and.returnValue(subscribeReturn);
+        spyOn(service, 'refreshData').and.returnValue(true);
       service.changeTimeInterval(300);
       expect(service.interval).toBe(300);
-      expect(service.getLatestGdaxData).toHaveBeenCalled();
+      expect(service.refreshData).toHaveBeenCalled();
     }));
   });
   describe('getLatestGdaxData', () => {

@@ -6,6 +6,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChartModule } from 'angular-highcharts';
 
 import { CryptobotControlsComponent } from './cryptobot-controls.component';
+import { GdaxDataService } from '../../services/gdax-data.service';
+
+let gdaxDataService;
 
 describe('CryptobotControlsComponent', () => {
   let component: CryptobotControlsComponent;
@@ -26,11 +29,17 @@ describe('CryptobotControlsComponent', () => {
         {
           provide: Router,
           useClass: class { navigate: {} = jasmine.createSpy('navigate'); }
+        },
+        {
+          provide: GdaxDataService,
+          useValue: {
+            changeCurrencyType: () => {}
+          }
         }
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
-    })
-    .compileComponents();
+    });
+    gdaxDataService = TestBed.get(GdaxDataService);
   }));
 
   beforeEach(() => {

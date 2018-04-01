@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { GdaxDataService } from '../../services/gdax-data.service';
+
 @Component({
   selector: 'app-cryptobot-controls',
   templateUrl: './cryptobot-controls.component.html',
@@ -8,11 +10,14 @@ import { Component, OnInit } from '@angular/core';
 export class CryptobotControlsComponent implements OnInit {
   /**
   * Constructor for the class.
+  * @param gdaxDataService Internal service to get queried market data.
   */
-  constructor() { }
+  constructor(private gdaxDataService: GdaxDataService) { }
   /**
   * Triggered when component is loaded, but before it is viewed.
   */
-  ngOnInit() { }
+  ngOnInit() {
+    this.gdaxDataService.changeCurrencyType(null, 'cryptobot-controls');
+  }
 
 }

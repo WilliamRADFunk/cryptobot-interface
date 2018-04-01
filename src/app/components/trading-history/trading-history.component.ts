@@ -33,7 +33,7 @@ export class TradingHistoryComponent implements OnInit {
     this.activatedRouter.url
       .subscribe((segments: UrlSegment[]) => {
         this.pathState = segments[0]['path'];
-        this.gdaxDataService.changeCurrencyType(this.pathState);
+        this.gdaxDataService.changeCurrencyType(this.pathState, 'trading-history');
       });
   }
 }

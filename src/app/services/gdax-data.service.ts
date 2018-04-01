@@ -15,6 +15,10 @@ export class GdaxDataService {
   */
   tableData: BehaviorSubject<number[][]> = new BehaviorSubject<number[][]>([]);
   /**
+  * Used to determine which of the api to refresh.
+  */
+  basePath: string = 'live-view';
+  /**
   * Currency type which is used as part of the query URL.
   */
   currency: string = 'BTC-USD';
@@ -41,10 +45,10 @@ export class GdaxDataService {
   * Updates the currency type being viewed, and refreshes query results.
   * @param currency the currency string (ie. 'BTC-USD')
   */
-  changeCurrencyType(currency: string) {
+  changeCurrencyType(currency: string, basePath: string) {
+    this.basePath = basePath;
     this.currency = currency;
-    this.getLatestGdaxData();
-    this.getLatestGdaxHistoryData();
+    this.refreshData();
   }
   /**
   * Updates the end datetime being viewed, and refreshes query results.
@@ -52,7 +56,7 @@ export class GdaxDataService {
   */
   changeEndDateTime(date: Date) {
     this.endDate = date;
-    this.getLatestGdaxData();
+    this.refreshData();
   }
   /**
   * Updates the start datetime being viewed, and refreshes query results.
@@ -60,7 +64,7 @@ export class GdaxDataService {
   */
   changeStartDateTime(date: Date) {
     this.startDate = date;
-    this.getLatestGdaxData();
+    this.refreshData();
   }
   /**
   * Updates the granularity of the data points,
@@ -69,7 +73,7 @@ export class GdaxDataService {
   */
   changeTimeInterval(interval: number) {
     this.interval = interval;
-    this.getLatestGdaxData();
+    this.refreshData();
   }
   /**
   * Call to GDAX for historical market data
@@ -139,5 +143,16 @@ export class GdaxDataService {
         this.tableData.next(data);
         this.isBusy.next(false);
       });
+  }
+  refreshData() {
+    if (this.basePath === 'live-view') {
+      this.getLatestGdaxData();
+    } else if (this.basePath === 'trading-history') {
+      this.getLatestGdaxHistoryData();
+    } else if (this.basePath === 'profit-portfolio') {
+      // this.getLatestGdaxProfitData();
+    } else if (this.basePath === 'cryptobot-controls') {
+      // this.getLatestCryptoBotData();
+    }
   }
 }

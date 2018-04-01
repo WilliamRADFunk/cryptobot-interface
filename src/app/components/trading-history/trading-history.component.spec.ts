@@ -6,6 +6,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChartModule } from 'angular-highcharts';
 
 import { TradingHistoryComponent } from './trading-history.component';
+import { GdaxDataService } from '../../services/gdax-data.service';
+
+let gdaxDataService;
 
 describe('TradingHistoryComponent', () => {
   let component: TradingHistoryComponent;
@@ -33,11 +36,22 @@ describe('TradingHistoryComponent', () => {
         {
           provide: Router,
           useClass: class { navigate: {} = jasmine.createSpy('navigate'); }
+        },
+        {
+          provide: GdaxDataService,
+          useValue: {
+            changeCurrencyType: () => {},
+            chartData: {
+              subscribe: (fn) => {
+                fn([1, 2, 3, 4, 5, 6]);
+              }
+            },
+          }
         }
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
-    })
-    .compileComponents();
+    });
+    gdaxDataService = TestBed.get(GdaxDataService);
   }));
 
   beforeEach(() => {
