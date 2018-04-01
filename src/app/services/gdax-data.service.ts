@@ -10,6 +10,11 @@ export class GdaxDataService {
   */
   chartData: BehaviorSubject<number[][]> = new BehaviorSubject<number[][]>([]);
   /**
+  * The updated query results for historical trade market data in a format
+  * that all of the live views will understand and be able to use.
+  */
+  tableData: BehaviorSubject<number[][]> = new BehaviorSubject<number[][]>([]);
+  /**
   * Currency type which is used as part of the query URL.
   */
   currency: string = 'BTC-USD';
@@ -39,6 +44,7 @@ export class GdaxDataService {
   changeCurrencyType(currency: string) {
     this.currency = currency;
     this.getLatestGdaxData();
+    this.getLatestGdaxHistoryData();
   }
   /**
   * Updates the end datetime being viewed, and refreshes query results.
@@ -113,5 +119,25 @@ export class GdaxDataService {
           this.isBusy.next(false);
         });
     }
+  }
+  getLatestGdaxHistoryData() {
+    this.isBusy.next(true);
+    const headers = new HttpHeaders()
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .set('Access-Control-Allow-Origin', 'http://localhost:4200')
+      .set('Access-Control-Allow-Methods', 'POST, GET')
+      .set('Access-Control-Allow-Headers', 'X-PINGOTHER, Content-Type')
+      .set('Access-Control-Max-Age', '86400');
+    const params = new HttpParams()
+      .set('granularity', this.interval.toString())
+      .set('start', this.startDate.toISOString())
+      .set('end', this.endDate.toISOString());
+    this.http.get<any>(`http://167.99.149.6:3000/history/${this.currency.split('-')[0].toLowerCase()}`, {headers, params})
+      .subscribe(data => {
+        console.log(data);
+        this.tableData.next(data);
+        this.isBusy.next(false);
+      });
   }
 }
