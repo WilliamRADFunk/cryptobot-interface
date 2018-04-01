@@ -90,6 +90,11 @@ describe('FilterControlsComponent', () => {
               subscribe: fn => {
                 fn(true);
               }
+            },
+            isRelevant: {
+              subscribe: fn => {
+                fn(true);
+              }
             }
           }
         }

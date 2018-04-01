@@ -9,3 +9,19 @@
   max-height: 456px;
   overflow: auto;
 }
+
+.table-dark.table-striped tbody {
+  background-color: rgb(44, 62, 80);
+}
+
+.table-dark.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(44, 62, 80, 0.25);
+}
+
+.table-dark.table-striped tbody tr:nth-of-type(even) {
+  background-color: rgba(212, 155, 4, 0.25);
+}
+
+.table-dark.table-striped tbody tr:first-child {
+  background-color: rgb(32, 32, 32);
+}

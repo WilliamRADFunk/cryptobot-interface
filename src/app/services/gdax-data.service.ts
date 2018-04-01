@@ -27,10 +27,17 @@ export class GdaxDataService {
   */
   endDate: Date = new Date();
   /**
-  * The granularity between data points. Used as a parameter in query URL.
+  * The granularity between data points. Used as a parameter in query URL
   */
   interval: number = 3600;
+  /**
+  * The flag to designate if query is busy
+  */
   isBusy: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  /**
+  * The flag to designate if granularity is relevant for basePath api
+  */
+  isRelevant: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   /**
   * The start datetime used as a parameter in the query URL
   */
@@ -207,12 +214,16 @@ export class GdaxDataService {
   }
   refreshData() {
     if (this.basePath === 'live-view') {
+      this.isRelevant.next(true);
       this.getLatestGdaxData();
     } else if (this.basePath === 'trading-history') {
+      this.isRelevant.next(false);
       this.getLatestGdaxHistoryData();
     } else if (this.basePath === 'profit-portfolio') {
+      this.isRelevant.next(false);
       // this.getLatestGdaxProfitData();
     } else if (this.basePath === 'cryptobot-controls') {
+      this.isRelevant.next(false);
       // this.getLatestCryptoBotData();
     }
   }

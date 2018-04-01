@@ -37,6 +37,11 @@ export class FilterControlsComponent implements OnInit {
   */
   isBusy: boolean = true;
   /**
+  * Checks with service to see if granularity control is relevant in a query,
+  * and disables control when it isn't.
+  */
+  isRelevant: boolean = true;
+  /**
   * Flag to determine whether or not to show invalid data colors
   * inside the datetime filters.
   */
@@ -148,6 +153,10 @@ export class FilterControlsComponent implements OnInit {
     this.gdaxDataService.isBusy
       .subscribe(data => {
         this.isBusy = data;
+      });
+    this.gdaxDataService.isRelevant
+      .subscribe(data => {
+        this.isRelevant = data;
       });
     this.timeIntervals.forEach(element => {
       if (element['value'] === this.gdaxDataService.interval) {

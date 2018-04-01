@@ -21,11 +21,14 @@
 * [gdaxDataService](tradinghistorycomponent.md#markdown-header-private-gdaxdataservice)
 * [pathState](tradinghistorycomponent.md#markdown-header-pathstate)
 * [router](tradinghistorycomponent.md#markdown-header-private-router)
+* [table](tradinghistorycomponent.md#markdown-header-table)
+* [tableReady](tradinghistorycomponent.md#markdown-header-tableready)
 
 
 ### Methods
 
 * [ngOnInit](tradinghistorycomponent.md#markdown-header-ngoninit)
+* [updateTable](tradinghistorycomponent.md#markdown-header-updatetable)
 
 
 
@@ -37,7 +40,7 @@
 ### ⊕ **new TradingHistoryComponent**(activatedRouter: *`ActivatedRoute`*, router: *`Router`*, gdaxDataService: *[GdaxDataService](gdaxdataservice.md)*): [TradingHistoryComponent](tradinghistorycomponent.md)
 
 
-*Defined in [app/components/trading-history/trading-history.component.ts:16](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/components/trading-history/trading-history.component.ts#L16)*
+*Defined in [app/components/trading-history/trading-history.component.ts:26](https://github.com/WilliamRADFunk/cryptobot-interface/blob/fce7f1c/src/app/components/trading-history/trading-history.component.ts#L26)*
 
 
 
@@ -68,7 +71,7 @@ Constructor for the class. Injects Angular's ActivatedRoute, and Router services
 
 **●  activatedRouter**:  *`ActivatedRoute`* 
 
-*Defined in [app/components/trading-history/trading-history.component.ts:25](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/components/trading-history/trading-history.component.ts#L25)*
+*Defined in [app/components/trading-history/trading-history.component.ts:35](https://github.com/WilliamRADFunk/cryptobot-interface/blob/fce7f1c/src/app/components/trading-history/trading-history.component.ts#L35)*
 
 
 
@@ -85,7 +88,7 @@ ___
 
 **●  gdaxDataService**:  *[GdaxDataService](gdaxdataservice.md)* 
 
-*Defined in [app/components/trading-history/trading-history.component.ts:27](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/components/trading-history/trading-history.component.ts#L27)*
+*Defined in [app/components/trading-history/trading-history.component.ts:37](https://github.com/WilliamRADFunk/cryptobot-interface/blob/fce7f1c/src/app/components/trading-history/trading-history.component.ts#L37)*
 
 
 
@@ -102,7 +105,7 @@ ___
 
 **●  pathState**:  *`string`*  = "BTC-USD"
 
-*Defined in [app/components/trading-history/trading-history.component.ts:16](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/components/trading-history/trading-history.component.ts#L16)*
+*Defined in [app/components/trading-history/trading-history.component.ts:16](https://github.com/WilliamRADFunk/cryptobot-interface/blob/fce7f1c/src/app/components/trading-history/trading-history.component.ts#L16)*
 
 
 
@@ -119,11 +122,45 @@ ___
 
 **●  router**:  *`Router`* 
 
-*Defined in [app/components/trading-history/trading-history.component.ts:26](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/components/trading-history/trading-history.component.ts#L26)*
+*Defined in [app/components/trading-history/trading-history.component.ts:36](https://github.com/WilliamRADFunk/cryptobot-interface/blob/fce7f1c/src/app/components/trading-history/trading-history.component.ts#L36)*
 
 
 
 Angular's Router service for changing route
+
+
+
+
+___
+
+
+
+###  table
+
+**●  table**:  *`__type`[]*  =  []
+
+*Defined in [app/components/trading-history/trading-history.component.ts:21](https://github.com/WilliamRADFunk/cryptobot-interface/blob/fce7f1c/src/app/components/trading-history/trading-history.component.ts#L21)*
+
+
+
+The main table object to be constructed whenever new data is returned from the service.
+
+
+
+
+___
+
+
+
+###  tableReady
+
+**●  tableReady**:  *`boolean`*  = false
+
+*Defined in [app/components/trading-history/trading-history.component.ts:26](https://github.com/WilliamRADFunk/cryptobot-interface/blob/fce7f1c/src/app/components/trading-history/trading-history.component.ts#L26)*
+
+
+
+The initial path state passed in by the activatedRouter. Keeps track of what currency the chart should be viewing.
 
 
 
@@ -140,11 +177,44 @@ ___
 
 
 
-*Defined in [app/components/trading-history/trading-history.component.ts:32](https://github.com/WilliamRADFunk/cryptobot-interface/blob/db3d1a3/src/app/components/trading-history/trading-history.component.ts#L32)*
+*Defined in [app/components/trading-history/trading-history.component.ts:42](https://github.com/WilliamRADFunk/cryptobot-interface/blob/fce7f1c/src/app/components/trading-history/trading-history.component.ts#L42)*
 
 
 
 Triggered when component is loaded, but before it is viewed. Gets REST path info, and updates the history table.
+
+
+
+
+**Returns:** `void`
+
+
+
+
+
+___
+
+
+
+###  updateTable
+
+► **updateTable**(data: *`__type`[]*): `void`
+
+
+
+*Defined in [app/components/trading-history/trading-history.component.ts:56](https://github.com/WilliamRADFunk/cryptobot-interface/blob/fce7f1c/src/app/components/trading-history/trading-history.component.ts#L56)*
+
+
+
+When new data is received, it's passed to this function. Here the table details are assembled, and the tableReady flag is released.
+
+
+**Parameters:**
+
+| Param | Type | Description |
+| ------ | ------ | ------ |
+| data | `__type`[]   |  queried trading history data passed from the GdaxDataService. |
+
 
 
 

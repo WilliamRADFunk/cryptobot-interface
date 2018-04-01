@@ -1,8 +1,8 @@
 $padding5px: 5px;
 
 .label-date {
-  background-color: #2d2d31;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  background-color: #353a40;
+  border: 1px solid rgba(53, 58, 64, 0.15);
   border-radius: 0.25rem 0 0 0.25rem;
   border-right-width: 0;
   color: #fff;
@@ -15,7 +15,7 @@ $padding5px: 5px;
 
   &.invalid-input {
     background-color: #a00;
-    border-color: #000;
+    border-color: #353a40;
     border-right-width: 0;
     color: #fff;
   }
@@ -39,7 +39,7 @@ $padding5px: 5px;
 
   &.invalid-input {
     background-color: #a00;
-    border-color: #000;
+    border-color: #353a40;
     color: #fff;
   }
 }
@@ -53,8 +53,8 @@ $padding5px: 5px;
 }
 
 .btn-intervals {
-  border-color: #2d2d31;
-  color: #2d2d31;
+  border-color: #353a40;
+  color: #353a40;
   font-size: 13.5px;
   height: 31px;
   padding-right: 15px;

@@ -10,8 +10,14 @@
       role="group",
       aria-label="Button group with nested dropdown")
       button.btn.btn-outline-primary.btn-intervals.custom-dropdown.margin-middle(
-        [disabled]="isTooltipOpen() || isBusy",
+        *ngIf="isRelevant",
+        [disabled]="isTooltipOpen() || isBusy || !isRelevant",
         ngbDropdownToggle) {{ timeIntervalLabel }}
+      div(ngbTooltip="Granularity has no effect in this view")
+        button.btn.btn-outline-primary.btn-intervals.custom-dropdown.margin-middle(
+          *ngIf="!isRelevant",
+          ngbDropdownToggle,
+          [ngClass]="{'disabled': true}") {{ timeIntervalLabel }}
       .dropdown-menu(ngbDropdownMenu)
         button.dropdown-item(
           *ngFor="let interval of timeIntervals",
