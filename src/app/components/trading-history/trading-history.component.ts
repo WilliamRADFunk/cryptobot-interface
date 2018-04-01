@@ -10,6 +10,14 @@ import { GdaxDataService } from '../../services/gdax-data.service';
 })
 export class TradingHistoryComponent implements OnInit {
   /**
+  * Flag to disable next page button if there is no more data.
+  */
+  isNoNextPage: boolean = false;
+  /**
+  * Flag to disable previous page button if user is on first page.
+  */
+  isNoPrevPage: boolean = false;
+  /**
   * Number of rows to show per page
   */
   rowsPerPage: number = 100;
