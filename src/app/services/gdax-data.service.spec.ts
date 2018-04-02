@@ -106,9 +106,11 @@ describe('GdaxDataService', () => {
     it('should callhttpClient.get with expected parameters',
       inject([GdaxDataService], (service: GdaxDataService) => {
       spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
+      spyOn(service, 'formatProduct').and.returnValue([{}]);
       service.startDate = date;
       service.endDate = date;
       service.getLatestGdaxHistoryData();
+      expect(service.formatProduct['calls'].count()).toEqual(1);
       expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/btc') > -1).toBe(true);
       expect(httpClient.get.calls.mostRecent().args[1].params.toString())
         .toEqual('start=2018-03-25T03:55:19.336Z&end=2018-03-25T03:55:19.336Z');
@@ -116,10 +118,12 @@ describe('GdaxDataService', () => {
     it('should callhttpClient.get with expected parameters',
       inject([GdaxDataService], (service: GdaxDataService) => {
       spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
+      spyOn(service, 'formatProduct').and.returnValue([{}]);
       service.startDate = date;
       service.endDate = date;
       service.currency = 'ALL';
       service.getLatestGdaxHistoryData();
+      expect(service.formatProduct['calls'].count()).toEqual(3);
       expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/eth') > -1).toBe(true);
       expect(httpClient.get.calls.mostRecent().args[1].params.toString())
         .toEqual('start=2018-03-25T03:55:19.336Z&end=2018-03-25T03:55:19.336Z');
@@ -215,6 +219,37 @@ describe('GdaxDataService', () => {
       service.changeRowsPerPage(10);
       expect(service.rowsPerPage).toBe(10);
       expect(service.refreshData).toHaveBeenCalled();
+    }));
+  });
+  describe('formatProduct', () => {
+    it('should return empty array',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      expect(service.formatProduct([{}])).toEqual([{product: 'BTC'}]);
+    }));
+    it('should return empty array',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      expect(service.formatProduct([{'details': 'nerple'}])).toEqual([{
+        details: 'nerple',
+        product: 'BTC'
+      }]);
+    }));
+    it('should return empty array',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      expect(service.formatProduct([{'details': {'product_id': 'derple'}}])).toEqual([{
+        details: {
+          'product_id': 'derple'
+        },
+        product: 'BTC'
+      }]);
+    }));
+    it('should return array with "product": "BTC"',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      expect(service.formatProduct([{'details': {'product_id': 'LTC-USD'}}])).toEqual([{
+        details: {
+          'product_id': 'LTC-USD'
+        },
+        product: 'LTC'
+      }]);
     }));
   });
 });

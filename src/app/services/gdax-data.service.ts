@@ -109,6 +109,26 @@ export class GdaxDataService {
     this.refreshData();
   }
   /**
+  * Pulls out and formats the product from gdax query results.
+  * @param data array of data objects to be formatted
+  * @return     formatted data array
+  */
+  formatProduct(data: {}[]): {}[] {
+    const d1: {}[] = [];
+    data.forEach(element => {
+      const e1 = element;
+      if (e1['details']
+      && e1['details']['product_id']
+      && e1['details']['product_id'].split('-').length > 1) {
+        e1['product'] = e1['details']['product_id'].split('-')[0];
+      } else {
+        e1['product'] = 'BTC';
+      }
+      d1.push(e1);
+    });
+    return d1;
+  }
+  /**
   * Call to GDAX for historical market data
   */
   getLatestGdaxData(): void {
@@ -174,47 +194,14 @@ export class GdaxDataService {
     if (this.currency === 'ALL') {
       this.http.get<any>(`http://167.99.149.6:3000/history/btc`, {headers, params})
         .subscribe(data1 => {
-          const d1: {}[] = [];
-          data1.forEach(element => {
-            const e1 = element;
-            if (e1['details']
-            && e1['details']['product_id']
-            && e1['details']['product_id'].split('-').length > 1) {
-              e1['product'] = e1['details']['product_id'].split('-')[0];
-            } else {
-              e1['product'] = 'BTC';
-            }
-            d1.push(e1);
-          });
+          const formatedData1 = this.formatProduct(data1);
           this.http.get<any>(`http://167.99.149.6:3000/history/ltc`, {headers, params})
             .subscribe(data2 => {
-              const d2: {}[] = [];
-              data2.forEach(element => {
-                const e2 = element;
-                if (e2['details']
-                && e2['details']['product_id']
-                && e2['details']['product_id'].split('-').length > 1) {
-                  e2['product'] = e2['details']['product_id'].split('-')[0];
-                } else {
-                  e2['product'] = 'LTC';
-                }
-                d2.push(e2);
-              });
+              const formatedData2 = this.formatProduct(data2);
               this.http.get<any>(`http://167.99.149.6:3000/history/eth`, {headers, params})
                 .subscribe(data3 => {
-                  const d3: {}[] = [];
-                  data3.forEach(element => {
-                    const e3 = element;
-                    if (e3['details']
-                    && e3['details']['product_id']
-                    && e3['details']['product_id'].split('-').length > 1) {
-                      e3['product'] = e3['details']['product_id'].split('-')[0];
-                    } else {
-                      e3['product'] = 'ETH';
-                    }
-                    d3.push(e3);
-                  });
-                  this.tableData.next(d1.concat(d2, d3));
+                  const formatedData3 = this.formatProduct(data3);
+                  this.tableData.next(formatedData1.concat(formatedData2, formatedData3));
                   this.isBusy.next(false);
                 });
             });
@@ -223,19 +210,8 @@ export class GdaxDataService {
       const curr: string = this.currency.split('-')[0].toLowerCase();
       this.http.get<any>(`http://167.99.149.6:3000/history/${curr}`, {headers, params})
         .subscribe(data => {
-          const d: {}[] = [];
-          data.forEach(element => {
-            const e = element;
-            if (e['details']
-            && e['details']['product_id']
-            && e['details']['product_id'].split('-').length > 1) {
-              e['product'] = e['details']['product_id'].split('-')[0];
-            } else {
-              e['product'] = curr.toUpperCase();
-            }
-            d.push(e);
-          });
-          this.tableData.next(d);
+          const formatedData = this.formatProduct(data);
+          this.tableData.next(formatedData);
           this.isBusy.next(false);
         });
     }
