@@ -32,11 +32,13 @@
 
 .paginate-box {
   background-color: #353a40;
+  color: #ffc000;
   height: 50px;
 }
 
 .paginate-box .btn {
-  padding-left: 12px;
+  padding-left: 7px;
+  padding-right: 10px;
 }
 
 .btn-no-buffer-right {
@@ -61,4 +63,37 @@
 .disabled {
   opacity: 0.4;
   pointer-events: none;
+}
+
+.page-setter-wrapper {
+  display: inline-block;
+}
+
+.row-setter-wrapper {
+  display: inline-block;
+  margin-left: 20px;
+}
+
+.row-setter-wrapper span {
+  margin-right: 5px;
+}
+
+.row-setter-wrapper .btn {
+  padding-left: 0;
+  padding-right: 7px;
+}
+
+.row-setter {
+  color: #ffc000;
+  padding-bottom: 8px;
+  padding-left: 0;
+  padding-right: 0;
+
+  &.active {
+    color: #fff;
+  }
+
+  &:hover {
+    color: #fff;
+  }
 }

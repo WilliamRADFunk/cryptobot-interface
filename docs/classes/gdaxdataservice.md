@@ -21,6 +21,8 @@
 * [interval](gdaxdataservice.md#markdown-header-interval)
 * [isBusy](gdaxdataservice.md#markdown-header-isbusy)
 * [isRelevant](gdaxdataservice.md#markdown-header-isrelevant)
+* [page](gdaxdataservice.md#markdown-header-page)
+* [rowsPerPage](gdaxdataservice.md#markdown-header-rowsperpage)
 * [startDate](gdaxdataservice.md#markdown-header-startdate)
 * [tableData](gdaxdataservice.md#markdown-header-tabledata)
 
@@ -29,10 +31,14 @@
 
 * [changeCurrencyType](gdaxdataservice.md#markdown-header-changecurrencytype)
 * [changeEndDateTime](gdaxdataservice.md#markdown-header-changeenddatetime)
+* [changePageNumber](gdaxdataservice.md#markdown-header-changepagenumber)
+* [changeRowsPerPage](gdaxdataservice.md#markdown-header-changerowsperpage)
 * [changeStartDateTime](gdaxdataservice.md#markdown-header-changestartdatetime)
 * [changeTimeInterval](gdaxdataservice.md#markdown-header-changetimeinterval)
+* [getLatestCryptoBotData](gdaxdataservice.md#markdown-header-getlatestcryptobotdata)
 * [getLatestGdaxData](gdaxdataservice.md#markdown-header-getlatestgdaxdata)
 * [getLatestGdaxHistoryData](gdaxdataservice.md#markdown-header-getlatestgdaxhistorydata)
+* [getLatestGdaxProfitData](gdaxdataservice.md#markdown-header-getlatestgdaxprofitdata)
 * [refreshData](gdaxdataservice.md#markdown-header-refreshdata)
 
 
@@ -45,7 +51,7 @@
 ### ⊕ **new GdaxDataService**(http: *`HttpClient`*): [GdaxDataService](gdaxdataservice.md)
 
 
-*Defined in [app/services/gdax-data.service.ts:44](https://github.com/WilliamRADFunk/cryptobot-interface/blob/946083e/src/app/services/gdax-data.service.ts#L44)*
+*Defined in [app/services/gdax-data.service.ts:52](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L52)*
 
 
 
@@ -74,7 +80,7 @@ Constructor for the class. Injects Angular's HttpClient service
 
 **●  basePath**:  *`string`*  = "live-view"
 
-*Defined in [app/services/gdax-data.service.ts:20](https://github.com/WilliamRADFunk/cryptobot-interface/blob/946083e/src/app/services/gdax-data.service.ts#L20)*
+*Defined in [app/services/gdax-data.service.ts:10](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L10)*
 
 
 
@@ -91,7 +97,7 @@ ___
 
 **●  chartData**:  *`BehaviorSubject`.<`number`[][]>*  =  new BehaviorSubject<number[][]>([])
 
-*Defined in [app/services/gdax-data.service.ts:11](https://github.com/WilliamRADFunk/cryptobot-interface/blob/946083e/src/app/services/gdax-data.service.ts#L11)*
+*Defined in [app/services/gdax-data.service.ts:15](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L15)*
 
 
 
@@ -108,7 +114,7 @@ ___
 
 **●  currency**:  *`string`*  = "BTC-USD"
 
-*Defined in [app/services/gdax-data.service.ts:24](https://github.com/WilliamRADFunk/cryptobot-interface/blob/946083e/src/app/services/gdax-data.service.ts#L24)*
+*Defined in [app/services/gdax-data.service.ts:19](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L19)*
 
 
 
@@ -125,7 +131,7 @@ ___
 
 **●  endDate**:  *`Date`*  =  new Date()
 
-*Defined in [app/services/gdax-data.service.ts:28](https://github.com/WilliamRADFunk/cryptobot-interface/blob/946083e/src/app/services/gdax-data.service.ts#L28)*
+*Defined in [app/services/gdax-data.service.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L23)*
 
 
 
@@ -142,7 +148,7 @@ ___
 
 **●  http**:  *`HttpClient`* 
 
-*Defined in [app/services/gdax-data.service.ts:50](https://github.com/WilliamRADFunk/cryptobot-interface/blob/946083e/src/app/services/gdax-data.service.ts#L50)*
+*Defined in [app/services/gdax-data.service.ts:58](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L58)*
 
 
 
@@ -159,7 +165,7 @@ ___
 
 **●  interval**:  *`number`*  = 3600
 
-*Defined in [app/services/gdax-data.service.ts:32](https://github.com/WilliamRADFunk/cryptobot-interface/blob/946083e/src/app/services/gdax-data.service.ts#L32)*
+*Defined in [app/services/gdax-data.service.ts:27](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L27)*
 
 
 
@@ -176,7 +182,7 @@ ___
 
 **●  isBusy**:  *`BehaviorSubject`.<`boolean`>*  =  new BehaviorSubject<boolean>(false)
 
-*Defined in [app/services/gdax-data.service.ts:36](https://github.com/WilliamRADFunk/cryptobot-interface/blob/946083e/src/app/services/gdax-data.service.ts#L36)*
+*Defined in [app/services/gdax-data.service.ts:31](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L31)*
 
 
 
@@ -193,7 +199,7 @@ ___
 
 **●  isRelevant**:  *`BehaviorSubject`.<`boolean`>*  =  new BehaviorSubject<boolean>(false)
 
-*Defined in [app/services/gdax-data.service.ts:40](https://github.com/WilliamRADFunk/cryptobot-interface/blob/946083e/src/app/services/gdax-data.service.ts#L40)*
+*Defined in [app/services/gdax-data.service.ts:35](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L35)*
 
 
 
@@ -206,11 +212,45 @@ ___
 
 
 
+###  page
+
+**●  page**:  *`number`*  = 1
+
+*Defined in [app/services/gdax-data.service.ts:39](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L39)*
+
+
+
+The current number for page in results.
+
+
+
+
+___
+
+
+
+###  rowsPerPage
+
+**●  rowsPerPage**:  *`number`*  = 100
+
+*Defined in [app/services/gdax-data.service.ts:43](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L43)*
+
+
+
+The current number for rows per page
+
+
+
+
+___
+
+
+
 ###  startDate
 
 **●  startDate**:  *`Date`*  =  new Date(this.endDate.getTime() - 86400000)
 
-*Defined in [app/services/gdax-data.service.ts:44](https://github.com/WilliamRADFunk/cryptobot-interface/blob/946083e/src/app/services/gdax-data.service.ts#L44)*
+*Defined in [app/services/gdax-data.service.ts:47](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L47)*
 
 
 
@@ -227,7 +267,7 @@ ___
 
 **●  tableData**:  *`BehaviorSubject`.<`__type`[]>*  =  new BehaviorSubject<{}[]>([])
 
-*Defined in [app/services/gdax-data.service.ts:16](https://github.com/WilliamRADFunk/cryptobot-interface/blob/946083e/src/app/services/gdax-data.service.ts#L16)*
+*Defined in [app/services/gdax-data.service.ts:52](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L52)*
 
 
 
@@ -248,7 +288,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:55](https://github.com/WilliamRADFunk/cryptobot-interface/blob/946083e/src/app/services/gdax-data.service.ts#L55)*
+*Defined in [app/services/gdax-data.service.ts:63](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L63)*
 
 
 
@@ -282,7 +322,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:64](https://github.com/WilliamRADFunk/cryptobot-interface/blob/946083e/src/app/services/gdax-data.service.ts#L64)*
+*Defined in [app/services/gdax-data.service.ts:72](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L72)*
 
 
 
@@ -309,13 +349,79 @@ ___
 
 
 
+###  changePageNumber
+
+► **changePageNumber**(page: *`number`*): `void`
+
+
+
+*Defined in [app/services/gdax-data.service.ts:81](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L81)*
+
+
+
+Updates the page number, and refreshes query results.
+
+
+**Parameters:**
+
+| Param | Type | Description |
+| ------ | ------ | ------ |
+| page | `number`   |  the granularity to use |
+
+
+
+
+
+**Returns:** `void`
+
+
+
+
+
+___
+
+
+
+###  changeRowsPerPage
+
+► **changeRowsPerPage**(rowsPerPage: *`number`*): `void`
+
+
+
+*Defined in [app/services/gdax-data.service.ts:90](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L90)*
+
+
+
+Updates the number of rows per page, and refreshes query results.
+
+
+**Parameters:**
+
+| Param | Type | Description |
+| ------ | ------ | ------ |
+| rowsPerPage | `number`   |  the granularity to use |
+
+
+
+
+
+**Returns:** `void`
+
+
+
+
+
+___
+
+
+
 ###  changeStartDateTime
 
 ► **changeStartDateTime**(date: *`Date`*): `void`
 
 
 
-*Defined in [app/services/gdax-data.service.ts:72](https://github.com/WilliamRADFunk/cryptobot-interface/blob/946083e/src/app/services/gdax-data.service.ts#L72)*
+*Defined in [app/services/gdax-data.service.ts:98](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L98)*
 
 
 
@@ -348,7 +454,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:81](https://github.com/WilliamRADFunk/cryptobot-interface/blob/946083e/src/app/services/gdax-data.service.ts#L81)*
+*Defined in [app/services/gdax-data.service.ts:107](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L107)*
 
 
 
@@ -375,13 +481,38 @@ ___
 
 
 
+###  getLatestCryptoBotData
+
+► **getLatestCryptoBotData**(): `void`
+
+
+
+*Defined in [app/services/gdax-data.service.ts:252](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L252)*
+
+
+
+Call to GDAX for cryptobot data
+
+
+
+
+**Returns:** `void`
+
+
+
+
+
+___
+
+
+
 ###  getLatestGdaxData
 
 ► **getLatestGdaxData**(): `void`
 
 
 
-*Defined in [app/services/gdax-data.service.ts:89](https://github.com/WilliamRADFunk/cryptobot-interface/blob/946083e/src/app/services/gdax-data.service.ts#L89)*
+*Defined in [app/services/gdax-data.service.ts:114](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L114)*
 
 
 
@@ -391,8 +522,6 @@ Call to GDAX for historical market data
 
 
 **Returns:** `void`
-an observable that returns market data specific to query params
-
 
 
 
@@ -408,7 +537,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:138](https://github.com/WilliamRADFunk/cryptobot-interface/blob/946083e/src/app/services/gdax-data.service.ts#L138)*
+*Defined in [app/services/gdax-data.service.ts:162](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L162)*
 
 
 
@@ -418,8 +547,31 @@ Call to GDAX for trading history data
 
 
 **Returns:** `void`
-an observable that returns trading history data specific to query params
 
+
+
+
+
+___
+
+
+
+###  getLatestGdaxProfitData
+
+► **getLatestGdaxProfitData**(): `void`
+
+
+
+*Defined in [app/services/gdax-data.service.ts:246](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L246)*
+
+
+
+Call to GDAX for profit data
+
+
+
+
+**Returns:** `void`
 
 
 
@@ -435,7 +587,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:222](https://github.com/WilliamRADFunk/cryptobot-interface/blob/946083e/src/app/services/gdax-data.service.ts#L222)*
+*Defined in [app/services/gdax-data.service.ts:258](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/services/gdax-data.service.ts#L258)*
 
 
 

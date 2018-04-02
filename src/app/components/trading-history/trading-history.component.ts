@@ -64,6 +64,29 @@ export class TradingHistoryComponent implements OnInit {
       .subscribe(this.updateTable.bind(this));
   }
   /**
+  * Called when user clicked next or previous page button
+  * @param direction  'prev' for previous page, 'next' for next page
+  */
+  changedPageNumber(direction: string) {
+    if (direction === 'next' && !this.isNoNextPage) {
+      this.page++;
+      this.gdaxDataService.changePageNumber(this.page);
+    } else if (direction === 'prev' && !this.isNoPrevPage) {
+      this.page--;
+      this.gdaxDataService.changePageNumber(this.page);
+    }
+  }
+  /**
+  * Called when user clicked a different rows per page choice
+  * @param newRowsPerPage  new rows per page choice
+  */
+  changedRowsPerPage(newRowsPerPage: number) {
+    if (this.rowsPerPage !== newRowsPerPage) {
+      this.rowsPerPage = newRowsPerPage;
+      this.gdaxDataService.changeRowsPerPage(this.rowsPerPage);
+    }
+  }
+  /**
   * When new data is received, it's passed to this function.
   * Here the table details are assembled, and the tableReady flag is released.
   * @param data queried trading history data passed from the GdaxDataService.

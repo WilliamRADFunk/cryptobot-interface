@@ -5,19 +5,14 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 @Injectable()
 export class GdaxDataService {
   /**
+  * Used to determine which of the api to refresh.
+  */
+  basePath: string = 'live-view';
+  /**
   * The updated query results for historical trade market data in a format
   * that all of the live views will understand and be able to use.
   */
   chartData: BehaviorSubject<number[][]> = new BehaviorSubject<number[][]>([]);
-  /**
-  * The updated query results for historical trade market data in a format
-  * that all of the live views will understand and be able to use.
-  */
-  tableData: BehaviorSubject<{}[]> = new BehaviorSubject<{}[]>([]);
-  /**
-  * Used to determine which of the api to refresh.
-  */
-  basePath: string = 'live-view';
   /**
   * Currency type which is used as part of the query URL.
   */
@@ -39,9 +34,22 @@ export class GdaxDataService {
   */
   isRelevant: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   /**
+  * The current number for page in results.
+  */
+  page: number = 1;
+  /**
+  * The current number for rows per page
+  */
+  rowsPerPage: number = 100;
+  /**
   * The start datetime used as a parameter in the query URL
   */
   startDate: Date = new Date(this.endDate.getTime() - 86400000);
+  /**
+  * The updated query results for historical trade market data in a format
+  * that all of the live views will understand and be able to use.
+  */
+  tableData: BehaviorSubject<{}[]> = new BehaviorSubject<{}[]>([]);
 
   /**
   * Constructor for the class. Injects Angular's HttpClient service
@@ -66,6 +74,24 @@ export class GdaxDataService {
     this.refreshData();
   }
   /**
+  * Updates the page number,
+  * and refreshes query results.
+  * @param page the granularity to use
+  */
+  changePageNumber(page: number) {
+    this.page = page;
+    this.refreshData();
+  }
+  /**
+  * Updates the number of rows per page,
+  * and refreshes query results.
+  * @param rowsPerPage the granularity to use
+  */
+  changeRowsPerPage(rowsPerPage: number) {
+    this.rowsPerPage = rowsPerPage;
+    this.refreshData();
+  }
+  /**
   * Updates the start datetime being viewed, and refreshes query results.
   * @param date the start datetime object
   */
@@ -84,7 +110,6 @@ export class GdaxDataService {
   }
   /**
   * Call to GDAX for historical market data
-  * @return an observable that returns market data specific to query params
   */
   getLatestGdaxData(): void {
     this.isBusy.next(true);
@@ -133,7 +158,6 @@ export class GdaxDataService {
   }
   /**
   * Call to GDAX for trading history data
-  * @return an observable that returns trading history data specific to query params
   */
   getLatestGdaxHistoryData() {
     this.isBusy.next(true);
@@ -217,6 +241,18 @@ export class GdaxDataService {
     }
   }
   /**
+  * Call to GDAX for profit data
+  */
+  getLatestGdaxProfitData() {
+
+  }
+  /**
+  * Call to GDAX for cryptobot data
+  */
+  getLatestCryptoBotData() {
+
+  }
+  /**
   * Determines which data api to use based off of basePath, and calls it.
   */
   refreshData() {
@@ -228,10 +264,10 @@ export class GdaxDataService {
       this.getLatestGdaxHistoryData();
     } else if (this.basePath === 'profit-portfolio') {
       this.isRelevant.next(false);
-      // this.getLatestGdaxProfitData();
+      this.getLatestGdaxProfitData();
     } else if (this.basePath === 'cryptobot-controls') {
       this.isRelevant.next(false);
-      // this.getLatestCryptoBotData();
+      this.getLatestCryptoBotData();
     }
   }
 }

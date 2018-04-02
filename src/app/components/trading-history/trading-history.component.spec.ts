@@ -41,6 +41,8 @@ describe('TradingHistoryComponent', () => {
           provide: GdaxDataService,
           useValue: {
             changeCurrencyType: () => {},
+            changePageNumber: () => {},
+            changeRowsPerPage: () => {},
             tableData: {
               subscribe: (fn) => {
                 fn([1, 2, 3, 4, 5, 6]);
@@ -62,5 +64,146 @@ describe('TradingHistoryComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+  describe('changedPageNumber', () => {
+    it('should not change page and not call gdaxDataService.changePageNumber', () => {
+      spyOn(gdaxDataService, 'changePageNumber').and.returnValue(true);
+      component.isNoNextPage = true;
+      component.isNoPrevPage = true;
+      component.page = 3;
+      component.changedPageNumber('prev');
+      expect(component.page).toBe(3);
+      expect(gdaxDataService.changePageNumber).not.toHaveBeenCalled();
+    });
+    it('should not change page and not call gdaxDataService.changePageNumber', () => {
+      spyOn(gdaxDataService, 'changePageNumber').and.returnValue(true);
+      component.isNoNextPage = false;
+      component.isNoPrevPage = false;
+      component.page = 1;
+      component.changedPageNumber('bob');
+      expect(component.page).toBe(1);
+      expect(gdaxDataService.changePageNumber).not.toHaveBeenCalled();
+    });
+    it('should change page and call gdaxDataService.changePageNumber', () => {
+      spyOn(gdaxDataService, 'changePageNumber').and.returnValue(true);
+      component.isNoNextPage = true;
+      component.isNoPrevPage = false;
+      component.page = 2;
+      component.changedPageNumber('prev');
+      expect(component.page).toBe(1);
+      expect(gdaxDataService.changePageNumber).toHaveBeenCalled();
+    });
+    it('should change page and call gdaxDataService.changePageNumber', () => {
+      spyOn(gdaxDataService, 'changePageNumber').and.returnValue(true);
+      component.isNoNextPage = false;
+      component.isNoPrevPage = true;
+      component.page = 2;
+      component.changedPageNumber('next');
+      expect(component.page).toBe(3);
+      expect(gdaxDataService.changePageNumber).toHaveBeenCalled();
+    });
+  });
+  describe('changedRowsPerPage', () => {
+    it('should not change rowsPerPage and not call gdaxDataService.changeRowsPerPage', () => {
+      spyOn(gdaxDataService, 'changeRowsPerPage').and.returnValue(true);
+      component.rowsPerPage = 100;
+      component.changedRowsPerPage(100);
+      expect(component.rowsPerPage).toBe(100);
+      expect(gdaxDataService.changeRowsPerPage).not.toHaveBeenCalled();
+    });
+    it('should change rowsPerPage and call gdaxDataService.changeRowsPerPage', () => {
+      spyOn(gdaxDataService, 'changeRowsPerPage').and.returnValue(true);
+      component.rowsPerPage = 100;
+      component.changedRowsPerPage(25);
+      expect(component.rowsPerPage).toBe(25);
+      expect(gdaxDataService.changeRowsPerPage).toHaveBeenCalled();
+    });
+  });
+  describe('updateTable', () => {
+    it('should leave table empty and tableReady to true', () => {
+      component.tableReady = false;
+      component.table = undefined;
+      component.updateTable([]);
+      expect(component.tableReady).toBe(true);
+      expect(component.table).toBe(undefined);
+    });
+    it('should add row to table and tableReady to true', () => {
+      spyOn(gdaxDataService, 'changeRowsPerPage').and.returnValue(true);
+      const date = new Date();
+      const dateOptions = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+      const dateStr = new Date(date).toLocaleString('en-US', dateOptions);
+      component.tableReady = false;
+      component.table = undefined;
+      component.updateTable([{
+        'id': 'bob',
+        'created_at': date,
+        'product': 'BTC-USD',
+        'amount': -10000,
+        'type': 'match',
+        'balance': 60000
+      }]);
+      expect(component.tableReady).toBe(true);
+      expect(component.table).toEqual([{
+        'id': 'bob',
+        'date': dateStr,
+        'product': 'BTC-USD',
+        'amount': 10000,
+        'buysell': 'sell',
+        'type': 'match',
+        'balance': 60000
+      }]);
+    });
+    it('should add row to table and tableReady to true', () => {
+      spyOn(gdaxDataService, 'changeRowsPerPage').and.returnValue(true);
+      const date = new Date();
+      const dateOptions = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+      const dateStr = new Date(date).toLocaleString('en-US', dateOptions);
+      component.tableReady = false;
+      component.table = undefined;
+      component.updateTable([{
+        'id': 'bob',
+        'created_at': date,
+        'product': 'BTC-USD',
+        'amount': 10000,
+        'type': 'transfer',
+        'balance': 60000
+      }]);
+      expect(component.tableReady).toBe(true);
+      expect(component.table).toEqual([{
+        'id': 'bob',
+        'date': dateStr,
+        'product': 'BTC-USD',
+        'amount': 10000,
+        'buysell': '-',
+        'type': 'transfer',
+        'balance': 60000
+      }]);
+    });
+    it('should add row to table and tableReady to true', () => {
+      spyOn(gdaxDataService, 'changeRowsPerPage').and.returnValue(true);
+      const date = new Date();
+      const dateOptions = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+      const dateStr = new Date(date).toLocaleString('en-US', dateOptions);
+      component.tableReady = false;
+      component.table = undefined;
+      component.updateTable([{
+        'id': 'bob',
+        'created_at': date,
+        'product': 'BTC-USD',
+        'amount': 10000,
+        'type': 'match',
+        'balance': 60000
+      }]);
+      expect(component.tableReady).toBe(true);
+      expect(component.table).toEqual([{
+        'id': 'bob',
+        'date': dateStr,
+        'product': 'BTC-USD',
+        'amount': 10000,
+        'buysell': 'buy',
+        'type': 'match',
+        'balance': 60000
+      }]);
+    });
   });
 });
