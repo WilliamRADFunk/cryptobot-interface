@@ -44,7 +44,8 @@
             span {{ page }}
             div.btn.btn-lg(
               (click)="changedPageNumber('next')",
-              [ngClass]="{'disabled': isNoNextPage}")
+              [ngClass]="{'disabled': isNoNextPage}",
+              style="padding-left: 7.5px;")
               span.fa.fa-angle-right.angle-btn-right
           div.row-setter-wrapper
             span Rows / Page:
