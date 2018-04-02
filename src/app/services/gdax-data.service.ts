@@ -124,6 +124,11 @@ export class GdaxDataService {
       } else {
         e1['product'] = 'BTC';
       }
+      if (e1['type'] === 'transfer'
+        && e1['details']
+        && e1['details']['transfer_type']) {
+        e1['type'] = e1['details']['transfer_type'];
+      }
       d1.push(e1);
     });
     return d1;
@@ -189,8 +194,8 @@ export class GdaxDataService {
       .set('Access-Control-Allow-Headers', 'X-PINGOTHER, Content-Type')
       .set('Access-Control-Max-Age', '86400');
     const params = new HttpParams()
-      .set('start', this.startDate.toISOString())
-      .set('end', this.endDate.toISOString());
+      .set(`after`, `1`)
+      .set(`limit`, `${this.rowsPerPage}`);
     if (this.currency === 'ALL') {
       this.http.get<any>(`http://167.99.149.6:3000/history/btc`, {headers, params})
         .subscribe(data1 => {

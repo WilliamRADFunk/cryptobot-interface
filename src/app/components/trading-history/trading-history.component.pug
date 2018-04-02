@@ -8,15 +8,15 @@
       .col-12.col-sm-12.col-md-12.col-lg-12
         .table-responsive-xl.table-view
           table.table.table-dark.table-striped.table-hover(
-            *ngIf="table.length && tableReady")
+            *ngIf="table.length && tableReady && !isBusy")
             tbody
               tr
-                th id
-                th Date
-                th Product
-                th Buy/Sell
-                th Amount
-                th Balance
+                th(style="width: 140px;") id
+                th(style="width: 300px;") Date
+                th(style="width: 130px;") Product
+                th(style="width: 130px;") Buy/Sell
+                th(style="width: 180px;") Amount
+                th(style="width: 180px;") Balance
                 th Type
               tr(*ngFor="let transaction of table")
                 td {{ transaction.id }}
@@ -26,14 +26,36 @@
                 td {{ transaction.amount | number: '.8'}}
                 td {{ transaction.balance | number: '.8' }}
                 td {{ transaction.type }}
-          table.table.table-inverse(*ngIf="!table.length && tableReady")
-            tr
-              td
-                p There is no data matching your criteria
-          table.table.table-inverse(*ngIf="!tableReady")
-            tr
-              td
-                p Building the table of the bot's trading history
+          table.table.table-dark.table-striped(*ngIf="!table.length && tableReady && !isBusy")
+            tbody
+              tr
+                th(style="width: 140px;") id
+                th(style="width: 300px;") Date
+                th(style="width: 130px;") Product
+                th(style="width: 130px;") Buy/Sell
+                th(style="width: 180px;") Amount
+                th(style="width: 180px;") Balance
+                th Type
+          table.table.table-inverse(*ngIf="!table.length && tableReady && !isBusy")
+            tbody
+              tr
+                td
+                  p(style="color: #fff; font-size: 24px;") There is no data matching your criteria
+          table.table.table-dark.table-striped(*ngIf="!tableReady || isBusy")
+            tbody
+              tr
+                th(style="width: 140px;") id
+                th(style="width: 300px;") Date
+                th(style="width: 130px;") Product
+                th(style="width: 130px;") Buy/Sell
+                th(style="width: 180px;") Amount
+                th(style="width: 180px;") Balance
+                th Type
+          table.table.table-inverse(*ngIf="!tableReady || isBusy")
+            tbody
+              tr
+                td
+                  p(style="color: #fff; font-size: 24px;") Building the table of the bot's trading history
         .col-12.col-sm-12.col-md-12.col-lg-12.col-xl-12.paginate-box
           div.page-setter-wrapper
             span Page:

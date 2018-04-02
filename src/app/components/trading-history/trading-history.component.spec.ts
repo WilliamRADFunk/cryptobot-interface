@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -43,6 +43,11 @@ describe('TradingHistoryComponent', () => {
             changeCurrencyType: () => {},
             changePageNumber: () => {},
             changeRowsPerPage: () => {},
+            isBusy: {
+              subscribe: fn => {
+                fn(true);
+              }
+            },
             tableData: {
               subscribe: (fn) => {
                 fn([1, 2, 3, 4, 5, 6]);
@@ -71,8 +76,10 @@ describe('TradingHistoryComponent', () => {
       component.isNoNextPage = true;
       component.isNoPrevPage = true;
       component.page = 3;
+      component.isBusy = false;
       component.changedPageNumber('prev');
       expect(component.page).toBe(3);
+      expect(component.isBusy).toBe(false);
       expect(gdaxDataService.changePageNumber).not.toHaveBeenCalled();
     });
     it('should not change page and not call gdaxDataService.changePageNumber', () => {
@@ -80,8 +87,10 @@ describe('TradingHistoryComponent', () => {
       component.isNoNextPage = false;
       component.isNoPrevPage = false;
       component.page = 1;
+      component.isBusy = false;
       component.changedPageNumber('bob');
       expect(component.page).toBe(1);
+      expect(component.isBusy).toBe(false);
       expect(gdaxDataService.changePageNumber).not.toHaveBeenCalled();
     });
     it('should change page and call gdaxDataService.changePageNumber', () => {
@@ -89,8 +98,10 @@ describe('TradingHistoryComponent', () => {
       component.isNoNextPage = true;
       component.isNoPrevPage = false;
       component.page = 2;
+      component.isBusy = false;
       component.changedPageNumber('prev');
       expect(component.page).toBe(1);
+      expect(component.isBusy).toBe(true);
       expect(gdaxDataService.changePageNumber).toHaveBeenCalled();
     });
     it('should change page and call gdaxDataService.changePageNumber', () => {
@@ -98,8 +109,10 @@ describe('TradingHistoryComponent', () => {
       component.isNoNextPage = false;
       component.isNoPrevPage = true;
       component.page = 2;
+      component.isBusy = false;
       component.changedPageNumber('next');
       expect(component.page).toBe(3);
+      expect(component.isBusy).toBe(true);
       expect(gdaxDataService.changePageNumber).toHaveBeenCalled();
     });
   });
@@ -107,15 +120,19 @@ describe('TradingHistoryComponent', () => {
     it('should not change rowsPerPage and not call gdaxDataService.changeRowsPerPage', () => {
       spyOn(gdaxDataService, 'changeRowsPerPage').and.returnValue(true);
       component.rowsPerPage = 100;
+      component.isBusy = false;
       component.changedRowsPerPage(100);
       expect(component.rowsPerPage).toBe(100);
+      expect(component.isBusy).toBe(false);
       expect(gdaxDataService.changeRowsPerPage).not.toHaveBeenCalled();
     });
     it('should change rowsPerPage and call gdaxDataService.changeRowsPerPage', () => {
       spyOn(gdaxDataService, 'changeRowsPerPage').and.returnValue(true);
       component.rowsPerPage = 100;
+      component.isBusy = false;
       component.changedRowsPerPage(25);
       expect(component.rowsPerPage).toBe(25);
+      expect(component.isBusy).toBe(true);
       expect(gdaxDataService.changeRowsPerPage).toHaveBeenCalled();
     });
   });
@@ -165,7 +182,7 @@ describe('TradingHistoryComponent', () => {
         'created_at': date,
         'product': 'BTC-USD',
         'amount': 10000,
-        'type': 'transfer',
+        'type': 'deposit',
         'balance': 60000
       }]);
       expect(component.tableReady).toBe(true);
@@ -175,7 +192,7 @@ describe('TradingHistoryComponent', () => {
         'product': 'BTC-USD',
         'amount': 10000,
         'buysell': '-',
-        'type': 'transfer',
+        'type': 'deposit',
         'balance': 60000
       }]);
     });

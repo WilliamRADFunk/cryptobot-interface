@@ -34,7 +34,7 @@
 ### ⊕ **new CryptobotControlsComponent**(gdaxDataService: *[GdaxDataService](gdaxdataservice.md)*): [CryptobotControlsComponent](cryptobotcontrolscomponent.md)
 
 
-*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.ts:10](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/components/cryptobot-controls/cryptobot-controls.component.ts#L10)*
+*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.ts:10](https://github.com/WilliamRADFunk/cryptobot-interface/blob/eb9c587/src/app/components/cryptobot-controls/cryptobot-controls.component.ts#L10)*
 
 
 
@@ -63,7 +63,7 @@ Constructor for the CryptobotControlsComponent class.
 
 **●  gdaxDataService**:  *[GdaxDataService](gdaxdataservice.md)* 
 
-*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.ts:15](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/components/cryptobot-controls/cryptobot-controls.component.ts#L15)*
+*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.ts:15](https://github.com/WilliamRADFunk/cryptobot-interface/blob/eb9c587/src/app/components/cryptobot-controls/cryptobot-controls.component.ts#L15)*
 
 
 
@@ -84,7 +84,7 @@ ___
 
 
 
-*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.ts:19](https://github.com/WilliamRADFunk/cryptobot-interface/blob/ade795d/src/app/components/cryptobot-controls/cryptobot-controls.component.ts#L19)*
+*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.ts:19](https://github.com/WilliamRADFunk/cryptobot-interface/blob/eb9c587/src/app/components/cryptobot-controls/cryptobot-controls.component.ts#L19)*
 
 
 

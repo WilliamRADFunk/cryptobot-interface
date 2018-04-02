@@ -10,6 +10,11 @@ import { GdaxDataService } from '../../services/gdax-data.service';
 })
 export class TradingHistoryComponent implements OnInit {
   /**
+  * Checks with service to see if it's busy in a query,
+  * and puts table in standby mode until it's ready.
+  */
+  isBusy: boolean = true;
+  /**
   * Flag to disable next page button if there is no more data.
   */
   isNoNextPage: boolean = false;
@@ -41,6 +46,11 @@ export class TradingHistoryComponent implements OnInit {
   */
   tableReady: boolean = false;
   /**
+  * The main table object to be constructed whenever new
+  * data is returned from the service.
+  */
+  timeoutId: any = null;
+  /**
   * Constructor for the class. Injects Angular's ActivatedRoute, and Router services
   * @param activatedRouter Angular's ActivatedRoute service for knowing current route
   * @param router Angular's Router service for changing route
@@ -55,6 +65,12 @@ export class TradingHistoryComponent implements OnInit {
   * Gets REST path info, and updates the history table.
   */
   ngOnInit() {
+    this.gdaxDataService.isBusy
+      .subscribe(data => {
+        this.timeoutId = setTimeout(() => {
+          this.isBusy = data;
+        }, 1000);
+      });
     this.activatedRouter.url
       .subscribe((segments: UrlSegment[]) => {
         this.pathState = segments[0]['path'];
@@ -70,9 +86,11 @@ export class TradingHistoryComponent implements OnInit {
   changedPageNumber(direction: string) {
     if (direction === 'next' && !this.isNoNextPage) {
       this.page++;
+      this.isBusy = true;
       this.gdaxDataService.changePageNumber(this.page);
     } else if (direction === 'prev' && !this.isNoPrevPage) {
       this.page--;
+      this.isBusy = true;
       this.gdaxDataService.changePageNumber(this.page);
     }
   }
@@ -83,6 +101,7 @@ export class TradingHistoryComponent implements OnInit {
   changedRowsPerPage(newRowsPerPage: number) {
     if (this.rowsPerPage !== newRowsPerPage) {
       this.rowsPerPage = newRowsPerPage;
+      this.isBusy = true;
       this.gdaxDataService.changeRowsPerPage(this.rowsPerPage);
     }
   }
@@ -108,7 +127,9 @@ export class TradingHistoryComponent implements OnInit {
           row['date'] = 'N/A';
         }
         row['product'] = element['product'];
-        if (element['amount'] && element['type'] !== 'transfer') {
+        if (element['amount']
+          && element['type'] !== 'deposit'
+          && element['type'] !== 'withdrawal') {
           row['buysell'] = element['amount'] >= 0 ? 'buy' : 'sell';
         } else if (element['amount']) {
           row['buysell'] = '-';

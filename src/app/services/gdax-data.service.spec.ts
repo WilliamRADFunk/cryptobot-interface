@@ -113,7 +113,7 @@ describe('GdaxDataService', () => {
       expect(service.formatProduct['calls'].count()).toEqual(1);
       expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/btc') > -1).toBe(true);
       expect(httpClient.get.calls.mostRecent().args[1].params.toString())
-        .toEqual('start=2018-03-25T03:55:19.336Z&end=2018-03-25T03:55:19.336Z');
+        .toEqual('after=1&limit=100');
     }));
     it('should callhttpClient.get with expected parameters',
       inject([GdaxDataService], (service: GdaxDataService) => {
@@ -126,7 +126,7 @@ describe('GdaxDataService', () => {
       expect(service.formatProduct['calls'].count()).toEqual(3);
       expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/eth') > -1).toBe(true);
       expect(httpClient.get.calls.mostRecent().args[1].params.toString())
-        .toEqual('start=2018-03-25T03:55:19.336Z&end=2018-03-25T03:55:19.336Z');
+        .toEqual('after=1&limit=100');
     }));
   });
   describe('refreshData', () => {
@@ -249,6 +249,21 @@ describe('GdaxDataService', () => {
           'product_id': 'LTC-USD'
         },
         product: 'LTC'
+      }]);
+    }));
+    it('should return array with "type": "deposit"',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      expect(service.formatProduct([{
+        'details': {
+          'transfer_type': 'deposit'
+        },
+        'type': 'transfer'
+      }])).toEqual([{
+        details: {
+          'transfer_type': 'deposit'
+        },
+        product: 'BTC',
+        type: 'deposit'
       }]);
     }));
   });
