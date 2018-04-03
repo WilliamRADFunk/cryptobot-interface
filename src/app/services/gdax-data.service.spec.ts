@@ -106,19 +106,19 @@ describe('GdaxDataService', () => {
     it('should callhttpClient.get with expected parameters',
       inject([GdaxDataService], (service: GdaxDataService) => {
       spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
-      spyOn(service, 'formatProduct').and.returnValue([{}]);
+      spyOn(service, 'formatProduct').and.returnValue([{'id': 321}]);
       service.startDate = date;
       service.endDate = date;
       service.getLatestGdaxHistoryData();
       expect(service.formatProduct['calls'].count()).toEqual(1);
       expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/btc') > -1).toBe(true);
       expect(httpClient.get.calls.mostRecent().args[1].params.toString())
-        .toEqual('after=1&limit=100');
+        .toEqual('limit=10');
     }));
     it('should callhttpClient.get with expected parameters',
       inject([GdaxDataService], (service: GdaxDataService) => {
       spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
-      spyOn(service, 'formatProduct').and.returnValue([{}]);
+      spyOn(service, 'formatProduct').and.returnValue([{'id': 321}]);
       service.startDate = date;
       service.endDate = date;
       service.currency = 'ALL';
@@ -126,7 +126,7 @@ describe('GdaxDataService', () => {
       expect(service.formatProduct['calls'].count()).toEqual(3);
       expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/eth') > -1).toBe(true);
       expect(httpClient.get.calls.mostRecent().args[1].params.toString())
-        .toEqual('after=1&limit=100');
+        .toEqual('limit=10');
     }));
   });
   describe('refreshData', () => {
@@ -207,6 +207,7 @@ describe('GdaxDataService', () => {
     it('should set page and call refreshData',
       inject([GdaxDataService], (service: GdaxDataService) => {
       spyOn(service, 'refreshData').and.returnValue(true);
+      service.tableData.next([{'id': 321}]);
       service.changePageNumber(2);
       expect(service.page).toBe(2);
       expect(service.refreshData).toHaveBeenCalled();
@@ -216,6 +217,7 @@ describe('GdaxDataService', () => {
     it('should set rowsPerPage and call refreshData',
       inject([GdaxDataService], (service: GdaxDataService) => {
       spyOn(service, 'refreshData').and.returnValue(true);
+      service.tableData.next([{'id': 321}]);
       service.changeRowsPerPage(10);
       expect(service.rowsPerPage).toBe(10);
       expect(service.refreshData).toHaveBeenCalled();

@@ -25,7 +25,7 @@ export class TradingHistoryComponent implements OnInit {
   /**
   * Number of rows to show per page
   */
-  rowsPerPage: number = 100;
+  rowsPerPage: number = 10;
   /**
   * Current page number
   */
@@ -102,6 +102,7 @@ export class TradingHistoryComponent implements OnInit {
     if (this.rowsPerPage !== newRowsPerPage) {
       this.rowsPerPage = newRowsPerPage;
       this.isBusy = true;
+      this.page = 1;
       this.gdaxDataService.changeRowsPerPage(this.rowsPerPage);
     }
   }

@@ -9,6 +9,10 @@ export class GdaxDataService {
   */
   basePath: string = 'live-view';
   /**
+  * Used to keep track of paging
+  */
+  bookmark: number;
+  /**
   * The updated query results for historical trade market data in a format
   * that all of the live views will understand and be able to use.
   */
@@ -40,7 +44,7 @@ export class GdaxDataService {
   /**
   * The current number for rows per page
   */
-  rowsPerPage: number = 100;
+  rowsPerPage: number = 10;
   /**
   * The start datetime used as a parameter in the query URL
   */
@@ -79,6 +83,13 @@ export class GdaxDataService {
   * @param page the granularity to use
   */
   changePageNumber(page: number) {
+    if (page === 1) {
+      this.bookmark = undefined;
+    } else if (page < this.page) {
+      this.bookmark = -this.tableData.value[0]['id'];
+    } else {
+      this.bookmark = this.tableData.value[this.tableData.value.length - 1]['id'];
+    }
     this.page = page;
     this.refreshData();
   }
@@ -89,6 +100,8 @@ export class GdaxDataService {
   */
   changeRowsPerPage(rowsPerPage: number) {
     this.rowsPerPage = rowsPerPage;
+    this.page = 1;
+    this.bookmark = undefined;
     this.refreshData();
   }
   /**
@@ -193,9 +206,19 @@ export class GdaxDataService {
       .set('Access-Control-Allow-Methods', 'POST, GET')
       .set('Access-Control-Allow-Headers', 'X-PINGOTHER, Content-Type')
       .set('Access-Control-Max-Age', '86400');
-    const params = new HttpParams()
-      .set(`after`, `1`)
-      .set(`limit`, `${this.rowsPerPage}`);
+    let params;
+    if (!this.bookmark) {
+      params = new HttpParams()
+        .set(`limit`, `${this.rowsPerPage}`);
+    } else if (this.bookmark < 0) {
+      params = new HttpParams()
+        .set(`before`, `${Math.abs(this.bookmark)}`)
+        .set(`limit`, `${this.rowsPerPage}`);
+    } else {
+      params = new HttpParams()
+        .set(`after`, `${this.bookmark}`)
+        .set(`limit`, `${this.rowsPerPage}`);
+    }
     if (this.currency === 'ALL') {
       this.http.get<any>(`http://167.99.149.6:3000/history/btc`, {headers, params})
         .subscribe(data1 => {
@@ -216,6 +239,7 @@ export class GdaxDataService {
       this.http.get<any>(`http://167.99.149.6:3000/history/${curr}`, {headers, params})
         .subscribe(data => {
           const formatedData = this.formatProduct(data);
+          this.bookmark = formatedData[formatedData.length - 1]['id'];
           this.tableData.next(formatedData);
           this.isBusy.next(false);
         });
