@@ -16,7 +16,7 @@ export class CryptobotControlsComponent implements OnInit {
   /**
   * Triggered when component is loaded, but before it is viewed.
   */
-  ngOnInit() {
+  ngOnInit(): void {
     this.gdaxDataService.changeCurrencyType(null, 'cryptobot-controls');
   }
 

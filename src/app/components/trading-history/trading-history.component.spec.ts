@@ -169,6 +169,7 @@ describe('TradingHistoryComponent', () => {
         'type': 'match',
         'balance': 60000
       }]);
+      expect(component.isNoNextPage).toBe(true);
     });
     it('should add row to table and tableReady to true', () => {
       spyOn(gdaxDataService, 'changeRowsPerPage').and.returnValue(true);
@@ -195,6 +196,7 @@ describe('TradingHistoryComponent', () => {
         'type': 'deposit',
         'balance': 60000
       }]);
+      expect(component.isNoNextPage).toBe(true);
     });
     it('should add row to table and tableReady to true', () => {
       spyOn(gdaxDataService, 'changeRowsPerPage').and.returnValue(true);
@@ -221,6 +223,35 @@ describe('TradingHistoryComponent', () => {
         'type': 'match',
         'balance': 60000
       }]);
+      expect(component.isNoNextPage).toBe(true);
+    });
+    it('should add row to table and tableReady to true', () => {
+      spyOn(gdaxDataService, 'changeRowsPerPage').and.returnValue(true);
+      const date = new Date();
+      const dateOptions = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+      const dateStr = new Date(date).toLocaleString('en-US', dateOptions);
+      component.tableReady = false;
+      component.table = undefined;
+      component.rowsPerPage = 0;
+      component.updateTable([{
+        'id': 'bob',
+        'created_at': date,
+        'product': 'BTC-USD',
+        'amount': 10000,
+        'type': 'match',
+        'balance': 60000
+      }]);
+      expect(component.tableReady).toBe(true);
+      expect(component.table).toEqual([{
+        'id': 'bob',
+        'date': dateStr,
+        'product': 'BTC-USD',
+        'amount': 10000,
+        'buysell': 'buy',
+        'type': 'match',
+        'balance': 60000
+      }]);
+      expect(component.isNoNextPage).toBe(false);
     });
   });
 });

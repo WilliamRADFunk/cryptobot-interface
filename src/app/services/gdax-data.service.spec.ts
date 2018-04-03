@@ -119,6 +119,7 @@ describe('GdaxDataService', () => {
       inject([GdaxDataService], (service: GdaxDataService) => {
       spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
       spyOn(service, 'formatProduct').and.returnValue([{'id': 321}]);
+      service.bookmark = 123;
       service.startDate = date;
       service.endDate = date;
       service.currency = 'ALL';
@@ -126,7 +127,21 @@ describe('GdaxDataService', () => {
       expect(service.formatProduct['calls'].count()).toEqual(3);
       expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/eth') > -1).toBe(true);
       expect(httpClient.get.calls.mostRecent().args[1].params.toString())
-        .toEqual('limit=10');
+        .toEqual('after=123&limit=10');
+    }));
+    it('should callhttpClient.get with expected parameters',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
+      spyOn(service, 'formatProduct').and.returnValue([{'id': 321}]);
+      service.bookmark = -321;
+      service.startDate = date;
+      service.endDate = date;
+      service.currency = 'ALL';
+      service.getLatestGdaxHistoryData();
+      expect(service.formatProduct['calls'].count()).toEqual(3);
+      expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/eth') > -1).toBe(true);
+      expect(httpClient.get.calls.mostRecent().args[1].params.toString())
+        .toEqual('before=321&limit=10');
     }));
   });
   describe('refreshData', () => {
@@ -204,12 +219,32 @@ describe('GdaxDataService', () => {
     }));
   });
   describe('changePageNumber', () => {
-    it('should set page and call refreshData',
+    it('should set page, make bookmark last table item, and call refreshData',
       inject([GdaxDataService], (service: GdaxDataService) => {
       spyOn(service, 'refreshData').and.returnValue(true);
-      service.tableData.next([{'id': 321}]);
+      service.tableData.next([{'id': 321}, {'id': 123}]);
       service.changePageNumber(2);
       expect(service.page).toBe(2);
+      expect(service.bookmark).toBe(123);
+      expect(service.refreshData).toHaveBeenCalled();
+    }));
+    it('should set bookmark to undefined',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      spyOn(service, 'refreshData').and.returnValue(true);
+      service.tableData.next([{'id': 321}, {'id': 123}]);
+      service.changePageNumber(1);
+      expect(service.page).toBe(1);
+      expect(service.bookmark).toBe(undefined);
+      expect(service.refreshData).toHaveBeenCalled();
+    }));
+    it('should set bookmark to table first item',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      spyOn(service, 'refreshData').and.returnValue(true);
+      service.tableData.next([{'id': 321}, {'id': 123}]);
+      service.page = 4;
+      service.changePageNumber(3);
+      expect(service.page).toBe(3);
+      expect(service.bookmark).toBe(-321);
       expect(service.refreshData).toHaveBeenCalled();
     }));
   });

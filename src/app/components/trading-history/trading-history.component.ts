@@ -64,7 +64,7 @@ export class TradingHistoryComponent implements OnInit {
   * Triggered when component is loaded, but before it is viewed.
   * Gets REST path info, and updates the history table.
   */
-  ngOnInit() {
+  ngOnInit(): void {
     this.gdaxDataService.isBusy
       .subscribe(data => {
         this.timeoutId = setTimeout(() => {
@@ -83,7 +83,7 @@ export class TradingHistoryComponent implements OnInit {
   * Called when user clicked next or previous page button
   * @param direction  'prev' for previous page, 'next' for next page
   */
-  changedPageNumber(direction: string) {
+  changedPageNumber(direction: string): void {
     if (direction === 'next' && !this.isNoNextPage) {
       this.page++;
       this.isBusy = true;
@@ -103,7 +103,7 @@ export class TradingHistoryComponent implements OnInit {
   * Called when user clicked a different rows per page choice
   * @param newRowsPerPage  new rows per page choice
   */
-  changedRowsPerPage(newRowsPerPage: number) {
+  changedRowsPerPage(newRowsPerPage: number): void {
     if (this.rowsPerPage !== newRowsPerPage) {
       this.rowsPerPage = newRowsPerPage;
       this.isBusy = true;
@@ -116,7 +116,7 @@ export class TradingHistoryComponent implements OnInit {
   * Here the table details are assembled, and the tableReady flag is released.
   * @param data queried trading history data passed from the GdaxDataService.
   */
-  updateTable(data: {}[]) {
+  updateTable(data: {}[]): void {
     this.tableReady = false;
     if (!data.length) {
       this.tableReady = true;

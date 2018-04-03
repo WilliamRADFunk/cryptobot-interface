@@ -25,7 +25,7 @@ export class SidePanelComponent implements OnInit {
   */
   constructor(private gdaxDataService: GdaxDataService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.gdaxDataService.isBusy
       .subscribe(data => {
         this.isBusy = data;

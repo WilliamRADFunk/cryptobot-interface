@@ -42,7 +42,7 @@ export class LiveViewComponent implements OnInit {
   * Triggered when component is loaded, but before it is viewed.
   * Gets REST path info, and updates the profit chart.
   */
-  ngOnInit() {
+  ngOnInit(): void {
     this.activatedRouter.url
       .subscribe((segments: UrlSegment[]) => {
         this.pathState = segments[0]['path'];
@@ -56,7 +56,7 @@ export class LiveViewComponent implements OnInit {
   * Here the chart details assembled, and the chartReady flag is released.
   * @param data queried market data passed from the GdaxDataService.
   */
-  updateChart(data: number[][]) {
+  updateChart(data: number[][]): void {
     if (!data.length) {
       return;
     }

@@ -36,7 +36,7 @@ export class ProfitPortfolioComponent implements OnInit {
   * Triggered when component is loaded, but before it is viewed.
   * Gets REST path info, and updates the profit chart.
   */
-  ngOnInit() {
+  ngOnInit(): void {
     this.activatedRouter.url
       .subscribe((segments: UrlSegment[]) => {
         this.pathState = segments[0]['path'];

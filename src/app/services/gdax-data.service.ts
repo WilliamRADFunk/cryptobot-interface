@@ -64,7 +64,7 @@ export class GdaxDataService {
   * Updates the currency type being viewed, and refreshes query results.
   * @param currency the currency string (ie. 'BTC-USD')
   */
-  changeCurrencyType(currency: string, basePath: string) {
+  changeCurrencyType(currency: string, basePath: string): void {
     this.basePath = basePath;
     this.currency = currency;
     this.refreshData();
@@ -73,7 +73,7 @@ export class GdaxDataService {
   * Updates the end datetime being viewed, and refreshes query results.
   * @param date the end datetime object
   */
-  changeEndDateTime(date: Date) {
+  changeEndDateTime(date: Date): void {
     this.endDate = date;
     this.refreshData();
   }
@@ -82,7 +82,7 @@ export class GdaxDataService {
   * and refreshes query results.
   * @param page the granularity to use
   */
-  changePageNumber(page: number) {
+  changePageNumber(page: number): void {
     if (page === 1) {
       this.bookmark = undefined;
     } else if (page < this.page) {
@@ -98,7 +98,7 @@ export class GdaxDataService {
   * and refreshes query results.
   * @param rowsPerPage the granularity to use
   */
-  changeRowsPerPage(rowsPerPage: number) {
+  changeRowsPerPage(rowsPerPage: number): void {
     this.rowsPerPage = rowsPerPage;
     this.page = 1;
     this.bookmark = undefined;
@@ -108,7 +108,7 @@ export class GdaxDataService {
   * Updates the start datetime being viewed, and refreshes query results.
   * @param date the start datetime object
   */
-  changeStartDateTime(date: Date) {
+  changeStartDateTime(date: Date): void {
     this.startDate = date;
     this.refreshData();
   }
@@ -117,7 +117,7 @@ export class GdaxDataService {
   * and refreshes query results.
   * @param interval the granularity to use
   */
-  changeTimeInterval(interval: number) {
+  changeTimeInterval(interval: number): void {
     this.interval = interval;
     this.refreshData();
   }
@@ -197,7 +197,7 @@ export class GdaxDataService {
   /**
   * Call to GDAX for trading history data
   */
-  getLatestGdaxHistoryData() {
+  getLatestGdaxHistoryData(): void {
     this.isBusy.next(true);
     const headers = new HttpHeaders()
       .set('Accept', 'application/json')
@@ -248,19 +248,19 @@ export class GdaxDataService {
   /**
   * Call to GDAX for profit data
   */
-  getLatestGdaxProfitData() {
+  getLatestGdaxProfitData(): void {
 
   }
   /**
   * Call to GDAX for cryptobot data
   */
-  getLatestCryptoBotData() {
+  getLatestCryptoBotData(): void {
 
   }
   /**
   * Determines which data api to use based off of basePath, and calls it.
   */
-  refreshData() {
+  refreshData(): void {
     if (this.basePath === 'live-view') {
       this.isRelevant.next(true);
       this.getLatestGdaxData();
