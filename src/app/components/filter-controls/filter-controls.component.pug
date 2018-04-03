@@ -9,13 +9,16 @@
       ngbDropdown,
       role="group",
       aria-label="Button group with nested dropdown")
-      button.btn.btn-outline-primary.btn-intervals.custom-dropdown.margin-middle(
-        *ngIf="isRelevant",
-        [disabled]="isTooltipOpen() || isBusy || !isRelevant",
-        ngbDropdownToggle) {{ timeIntervalLabel }}
-      div.custom-dropdown.margin-middle(ngbTooltip="Granularity has no effect in this view")
+      div.custom-dropdown.margin-middle(*ngIf="isRelevant")
         button.btn.btn-outline-primary.btn-intervals(
-          *ngIf="!isRelevant",
+          [disabled]="isTooltipOpen() || isBusy || !isRelevant",
+          ngbDropdownToggle,
+          [ngClass]="{'disabled': false}",
+          style="width: 100%;") {{ timeIntervalLabel }}
+      div.custom-dropdown.margin-middle(
+        *ngIf="!isRelevant",
+        ngbTooltip="Granularity has no effect in this view")
+        button.btn.btn-outline-primary.btn-intervals(
           ngbDropdownToggle,
           [ngClass]="{'disabled': true}",
           style="width: 100%;") None

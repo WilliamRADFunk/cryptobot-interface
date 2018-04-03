@@ -67,7 +67,7 @@
             div.btn.btn-lg(
               (click)="changedPageNumber('next')",
               [ngClass]="{'disabled': isNoNextPage}",
-              style="padding-left: 12px;")
+              style="padding-left: 12px; padding-right: 0;")
               span.fa.fa-angle-right.angle-btn-right
           div.row-setter-wrapper
             span Rows / Page:
@@ -82,4 +82,5 @@
               [ngClass]="{'active': rowsPerPage === 50}") 50
             div.btn.btn-sm.row-setter(
               (click)="changedRowsPerPage(100)",
-              [ngClass]="{'active': rowsPerPage === 100}") 100
+              [ngClass]="{'active': rowsPerPage === 100}",
+              style="padding-right: 0;") 100
