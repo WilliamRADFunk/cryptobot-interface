@@ -21,7 +21,7 @@ export class TradingHistoryComponent implements OnInit {
   /**
   * Flag to disable previous page button if user is on first page.
   */
-  isNoPrevPage: boolean = false;
+  isNoPrevPage: boolean = true;
   /**
   * Number of rows to show per page
   */
@@ -92,6 +92,11 @@ export class TradingHistoryComponent implements OnInit {
       this.page--;
       this.isBusy = true;
       this.gdaxDataService.changePageNumber(this.page);
+    }
+    if (this.page === 1) {
+      this.isNoPrevPage = true;
+    } else {
+      this.isNoPrevPage = false;
     }
   }
   /**
