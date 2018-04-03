@@ -122,6 +122,11 @@ export class TradingHistoryComponent implements OnInit {
       this.tableReady = true;
       return;
     } else {
+      if (data.length < this.rowsPerPage) {
+        this.isNoNextPage = true;
+      } else {
+        this.isNoNextPage = false;
+      }
       const tempTable: {}[] = [];
       data.forEach(element => {
         const row = {};
