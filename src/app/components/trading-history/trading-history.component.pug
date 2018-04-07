@@ -70,17 +70,13 @@
               style="padding-left: 12px; padding-right: 0;")
               span.fa.fa-angle-right.angle-btn-right
           div.row-setter-wrapper
-            span Rows / Page:
-            div.btn.btn-sm.row-setter(
-              (click)="changedRowsPerPage(10)",
-              [ngClass]="{'active': rowsPerPage === 10}") 10
-            div.btn.btn-sm.row-setter(
-              (click)="changedRowsPerPage(25)",
-              [ngClass]="{'active': rowsPerPage === 25}") 25
-            div.btn.btn-sm.row-setter(
-              (click)="changedRowsPerPage(50)",
-              [ngClass]="{'active': rowsPerPage === 50}") 50
-            div.btn.btn-sm.row-setter(
-              (click)="changedRowsPerPage(100)",
-              [ngClass]="{'active': rowsPerPage === 100}",
-              style="padding-right: 0;") 100
+            label Rows:
+            .btn-group(
+              ngbDropdown,
+              role="group",
+              aria-label="Button group with nested dropdown")
+              button.btn.btn-outline-primary.row-setter(ngbDropdownToggle) {{ rowsPerPage }}
+              .dropdown-menu(ngbDropdownMenu)
+                button.dropdown-item.row-setter(
+                  *ngFor="let rowAmount of rowAmounts",
+                  (click)="changedRowsPerPage(rowAmount)") {{ rowAmount }}

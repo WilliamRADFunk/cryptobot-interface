@@ -23,10 +23,6 @@ export class TradingHistoryComponent implements OnInit {
   */
   isNoPrevPage: boolean = true;
   /**
-  * Number of rows to show per page
-  */
-  rowsPerPage: number = 10;
-  /**
   * Current page number
   */
   page: number = 1;
@@ -35,6 +31,14 @@ export class TradingHistoryComponent implements OnInit {
   * Keeps track of what currency the chart should be viewing.
   */
   pathState: string = 'BTC-USD';
+  /**
+  * Number of rows to show per page
+  */
+  rowsPerPage: number = 10;
+  /**
+  * Options for number of rows to show per page
+  */
+  rowAmounts: number[] = [10, 25, 50, 100];
   /**
   * The main table object to be constructed whenever new
   * data is returned from the service.

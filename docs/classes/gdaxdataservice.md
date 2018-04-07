@@ -53,7 +53,7 @@
 ### ⊕ **new GdaxDataService**(http: *`HttpClient`*): [GdaxDataService](gdaxdataservice.md)
 
 
-*Defined in [app/services/gdax-data.service.ts:56](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L56)*
+*Defined in [app/services/gdax-data.service.ts:56](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L56)*
 
 
 
@@ -82,7 +82,7 @@ Constructor for the class. Injects Angular's HttpClient service
 
 **●  basePath**:  *`string`*  = "live-view"
 
-*Defined in [app/services/gdax-data.service.ts:10](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L10)*
+*Defined in [app/services/gdax-data.service.ts:10](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L10)*
 
 
 
@@ -99,7 +99,7 @@ ___
 
 **●  bookmark**:  *`number`* 
 
-*Defined in [app/services/gdax-data.service.ts:14](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L14)*
+*Defined in [app/services/gdax-data.service.ts:14](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L14)*
 
 
 
@@ -116,7 +116,7 @@ ___
 
 **●  chartData**:  *`BehaviorSubject`.<`number`[][]>*  =  new BehaviorSubject<number[][]>([])
 
-*Defined in [app/services/gdax-data.service.ts:19](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L19)*
+*Defined in [app/services/gdax-data.service.ts:19](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L19)*
 
 
 
@@ -133,7 +133,7 @@ ___
 
 **●  currency**:  *`string`*  = "BTC-USD"
 
-*Defined in [app/services/gdax-data.service.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L23)*
+*Defined in [app/services/gdax-data.service.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L23)*
 
 
 
@@ -150,7 +150,7 @@ ___
 
 **●  endDate**:  *`Date`*  =  new Date()
 
-*Defined in [app/services/gdax-data.service.ts:27](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L27)*
+*Defined in [app/services/gdax-data.service.ts:27](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L27)*
 
 
 
@@ -167,7 +167,7 @@ ___
 
 **●  http**:  *`HttpClient`* 
 
-*Defined in [app/services/gdax-data.service.ts:62](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L62)*
+*Defined in [app/services/gdax-data.service.ts:62](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L62)*
 
 
 
@@ -184,7 +184,7 @@ ___
 
 **●  interval**:  *`number`*  = 3600
 
-*Defined in [app/services/gdax-data.service.ts:31](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L31)*
+*Defined in [app/services/gdax-data.service.ts:31](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L31)*
 
 
 
@@ -201,7 +201,7 @@ ___
 
 **●  isBusy**:  *`BehaviorSubject`.<`boolean`>*  =  new BehaviorSubject<boolean>(false)
 
-*Defined in [app/services/gdax-data.service.ts:35](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L35)*
+*Defined in [app/services/gdax-data.service.ts:35](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L35)*
 
 
 
@@ -218,7 +218,7 @@ ___
 
 **●  isRelevant**:  *`BehaviorSubject`.<`boolean`>*  =  new BehaviorSubject<boolean>(false)
 
-*Defined in [app/services/gdax-data.service.ts:39](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L39)*
+*Defined in [app/services/gdax-data.service.ts:39](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L39)*
 
 
 
@@ -235,7 +235,7 @@ ___
 
 **●  page**:  *`number`*  = 1
 
-*Defined in [app/services/gdax-data.service.ts:43](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L43)*
+*Defined in [app/services/gdax-data.service.ts:43](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L43)*
 
 
 
@@ -252,7 +252,7 @@ ___
 
 **●  rowsPerPage**:  *`number`*  = 10
 
-*Defined in [app/services/gdax-data.service.ts:47](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L47)*
+*Defined in [app/services/gdax-data.service.ts:47](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L47)*
 
 
 
@@ -269,7 +269,7 @@ ___
 
 **●  startDate**:  *`Date`*  =  new Date(this.endDate.getTime() - 86400000)
 
-*Defined in [app/services/gdax-data.service.ts:51](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L51)*
+*Defined in [app/services/gdax-data.service.ts:51](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L51)*
 
 
 
@@ -286,7 +286,7 @@ ___
 
 **●  tableData**:  *`BehaviorSubject`.<`__type`[]>*  =  new BehaviorSubject<{}[]>([])
 
-*Defined in [app/services/gdax-data.service.ts:56](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L56)*
+*Defined in [app/services/gdax-data.service.ts:56](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L56)*
 
 
 
@@ -307,7 +307,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:67](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L67)*
+*Defined in [app/services/gdax-data.service.ts:67](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L67)*
 
 
 
@@ -341,7 +341,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:76](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L76)*
+*Defined in [app/services/gdax-data.service.ts:76](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L76)*
 
 
 
@@ -374,7 +374,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:85](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L85)*
+*Defined in [app/services/gdax-data.service.ts:85](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L85)*
 
 
 
@@ -407,7 +407,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:101](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L101)*
+*Defined in [app/services/gdax-data.service.ts:101](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L101)*
 
 
 
@@ -440,7 +440,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:111](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L111)*
+*Defined in [app/services/gdax-data.service.ts:111](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L111)*
 
 
 
@@ -473,7 +473,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:120](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L120)*
+*Defined in [app/services/gdax-data.service.ts:120](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L120)*
 
 
 
@@ -506,7 +506,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:129](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L129)*
+*Defined in [app/services/gdax-data.service.ts:129](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L129)*
 
 
 
@@ -541,7 +541,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:257](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L257)*
+*Defined in [app/services/gdax-data.service.ts:257](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L257)*
 
 
 
@@ -566,7 +566,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:152](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L152)*
+*Defined in [app/services/gdax-data.service.ts:152](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L152)*
 
 
 
@@ -591,7 +591,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:200](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L200)*
+*Defined in [app/services/gdax-data.service.ts:200](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L200)*
 
 
 
@@ -616,7 +616,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:251](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L251)*
+*Defined in [app/services/gdax-data.service.ts:251](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L251)*
 
 
 
@@ -641,7 +641,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.ts:263](https://github.com/WilliamRADFunk/cryptobot-interface/blob/2cb1c49/src/app/services/gdax-data.service.ts#L263)*
+*Defined in [app/services/gdax-data.service.ts:263](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/services/gdax-data.service.ts#L263)*
 
 
 
