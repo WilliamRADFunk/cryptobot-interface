@@ -57,7 +57,7 @@
                 td
                   p(style="color: #fff; font-size: 24px;") Building the table of the bot's trading history
         .col-12.col-sm-12.col-md-12.col-lg-12.col-xl-12.paginate-box
-          div.page-setter-wrapper
+          .page-setter-wrapper
             label
               span([ngClass]="{'disabled': isBusy}") Page:
             button.btn.btn-outline-primary.btn-left(
@@ -72,7 +72,7 @@
               [disabled]="isNoNextPage || isBusy")
               span.fa.fa-angle-right.angle-btn-right(
               [ngClass]="{'disabled': isNoNextPage || isBusy}")
-          div.row-setter-wrapper
+          .row-setter-wrapper
             label
               span([ngClass]="{'disabled': isBusy}") Rows:
             .btn-group(

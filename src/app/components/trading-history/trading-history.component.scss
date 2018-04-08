@@ -1,3 +1,7 @@
+label {
+  margin-bottom: 0;
+}
+
 .table {
   margin-bottom: 0;
 }
@@ -43,16 +47,10 @@
   padding-right: 10px;
 }
 
-.btn-no-buffer-right {
-  margin-right: 0;
-  padding-right: 0;
-}
-
 .fa-angle-left,
 .fa-angle-right {
   color: #ffc000;
   position: relative;
-  top: -2px;
 }
 
 .disabled {
@@ -61,50 +59,44 @@
 }
 
 .page-setter-wrapper {
+  border: 1px solid #ffc000;
+  border-radius: 0.25rem;
+  box-sizing: border-box;
   display: inline-block;
+  position: relative;
+  top: 4px;
 }
 
 .page-setter-wrapper label {
-  border: 1px solid #ffc000;
-  border-bottom-left-radius: 0.25rem;
-  border-right: 0;
-  border-top-left-radius: 0.25rem;
-  box-sizing: border-box;
-  height: 40px;
+  border: 0;
+  height: 20px;
   left: 5px;
-  line-height: 34px;
   padding-left: 5px;
   padding-right: 5px;
   position: relative;
-  top: 5px;
+  top: 2px;
 
   &.middle-label {
-    border-bottom-left-radius: 0;
-    border-left: 0;
-    border-right: 0;
-    border-top-left-radius: 0;
     left: -5px;
   }
 }
 
 .page-setter-wrapper .btn.btn-outline-primary {
-  border-color: #ffc000;
+  border: 0;
+  box-shadow: 0 0 0 0;
+  outline: none;
   padding-left: 10px;
   padding-right: 10px;
   width: 30px;
 
   &.btn-left {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    border-left: 0;
-    border-right: 0;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+    border: 0;
+    border-radius: 0;
     height: 40px;
+    margin-right: 3px;
     max-height: 40px;
     opacity: 1 !important;
     position: relative;
-    top: 5px;
 
     &.active {
       background-color: #ffc000;
@@ -135,15 +127,17 @@
   }
 
   &.btn-right {
+    border: 0;
     border-bottom-left-radius: 0;
-    border-left: 0;
+    border-bottom-right-radius: 0;
     border-top-left-radius: 0;
+    border-top-right-radius: 0;
     height: 40px;
     left: -10px;
+    margin-left: 3px;
     max-height: 40px;
     opacity: 1 !important;
     position: relative;
-    top: 5px;
 
     &.active {
       background-color: #ffc000;
@@ -175,23 +169,23 @@
 }
 
 .row-setter-wrapper {
+  border: 1px solid #ffc000;
+  border-radius: 0.25rem;
+  box-sizing: border-box;
   display: inline-block;
   margin-left: 20px;
+  position: relative;
+  top: 4px;
 }
 
 .row-setter-wrapper label {
-  border: 1px solid #ffc000;
-  border-bottom-left-radius: 0.25rem;
-  border-right: 0;
-  border-top-left-radius: 0.25rem;
-  box-sizing: border-box;
-  height: 40px;
+  border: 0;
+  height: 20px;
   left: 5px;
-  line-height: 34px;
   padding-left: 5px;
   padding-right: 5px;
   position: relative;
-  top: 5px;
+  top: 2px;
 }
 
 .row-setter-wrapper .btn {
@@ -200,7 +194,7 @@
 }
 
 .row-setter {
-  border-color: #ffc000;
+  border: 0;
   color: #ffc000;
   margin-bottom: 3px;
   padding-bottom: 8px;
@@ -208,7 +202,7 @@
   padding-right: 0;
   position: relative;
   text-align: center;
-  top: 6px;
+  top: 2px;
 
   &.active {
     background-color: #ffc000;
@@ -235,13 +229,17 @@
 }
 
 .show > .btn-outline-primary.dropdown-toggle {
-  background-color: #ffc000;
-  border-color: #ffc000;
-  color: rgb(44, 62, 80);
+  background-color: transparent;
+  border: 0;
+  color: #ffc000;
 
   &:focus {
     box-shadow: 0 0 0 0;
     outline: none;
+  }
+
+  &:hover {
+    color: rgb(44, 62, 80);
   }
 }
 
@@ -256,16 +254,26 @@
 }
 
 .btn-outline-primary:focus {
+  background-color: transparent;
   box-shadow: 0 0 0 0;
   outline: none;
 }
 
+.btn-outline-primary:hover {
+  background-color: transparent;
+}
+
 .dropdown-toggle {
-  border-bottom-left-radius: 0;
-  border-left: 0;
-  border-top-left-radius: 0;
+  border: 0;
 
   &::after {
     display: none;
+  }
+}
+
+.btn-group.dropdown {
+  &:hover {
+    background-color: #ffc000;
+    color: rgb(44, 62, 80);
   }
 }
