@@ -58,25 +58,33 @@
                   p(style="color: #fff; font-size: 24px;") Building the table of the bot's trading history
         .col-12.col-sm-12.col-md-12.col-lg-12.col-xl-12.paginate-box
           div.page-setter-wrapper
-            span Page:
-            div.btn.btn-lg(
+            label
+              span([ngClass]="{'disabled': isBusy}") Page:
+            button.btn.btn-outline-primary.btn-left(
               (click)="changedPageNumber('prev')",
-              [ngClass]="{'disabled': isNoPrevPage}")
-              span.fa.fa-angle-left.angle-btn-left
-            span {{ page }}
-            div.btn.btn-lg(
+              [disabled]="isNoPrevPage || isBusy")
+              span.fa.fa-angle-left.angle-btn-left(
+              [ngClass]="{'disabled': isNoPrevPage || isBusy}")
+            label.middle-label
+              span([ngClass]="{'disabled': isBusy}") {{ page }}
+            button.btn.btn-outline-primary.btn-right(
               (click)="changedPageNumber('next')",
-              [ngClass]="{'disabled': isNoNextPage}",
-              style="padding-left: 12px; padding-right: 0;")
-              span.fa.fa-angle-right.angle-btn-right
+              [disabled]="isNoNextPage || isBusy")
+              span.fa.fa-angle-right.angle-btn-right(
+              [ngClass]="{'disabled': isNoNextPage || isBusy}")
           div.row-setter-wrapper
-            label Rows:
+            label
+              span([ngClass]="{'disabled': isBusy}") Rows:
             .btn-group(
               ngbDropdown,
               role="group",
               aria-label="Button group with nested dropdown")
-              button.btn.btn-outline-primary.row-setter(ngbDropdownToggle) {{ rowsPerPage }}
+              button.btn.btn-outline-primary.row-setter(
+                ngbDropdownToggle,
+                [disabled]="isBusy")
+                span {{ rowsPerPage }}
               .dropdown-menu(ngbDropdownMenu)
                 button.dropdown-item.row-setter(
                   *ngFor="let rowAmount of rowAmounts",
-                  (click)="changedRowsPerPage(rowAmount)") {{ rowAmount }}
+                  (click)="changedRowsPerPage(rowAmount)",
+                  [disabled]="isBusy") {{ rowAmount }}
