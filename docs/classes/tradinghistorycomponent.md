@@ -49,7 +49,7 @@
 ### ⊕ **new TradingHistoryComponent**(activatedRouter: *`ActivatedRoute`*, router: *`Router`*, gdaxDataService: *[GdaxDataService](gdaxdataservice.md)*): [TradingHistoryComponent](tradinghistorycomponent.md)
 
 
-*Defined in [app/components/trading-history/trading-history.component.ts:56](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/components/trading-history/trading-history.component.ts#L56)*
+*Defined in [app/components/trading-history/trading-history.component.ts:56](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/trading-history/trading-history.component.ts#L56)*
 
 
 
@@ -80,7 +80,7 @@ Constructor for the class. Injects Angular's ActivatedRoute, and Router services
 
 **●  activatedRouter**:  *`ActivatedRoute`* 
 
-*Defined in [app/components/trading-history/trading-history.component.ts:64](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/components/trading-history/trading-history.component.ts#L64)*
+*Defined in [app/components/trading-history/trading-history.component.ts:64](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/trading-history/trading-history.component.ts#L64)*
 
 
 
@@ -97,7 +97,7 @@ ___
 
 **●  gdaxDataService**:  *[GdaxDataService](gdaxdataservice.md)* 
 
-*Defined in [app/components/trading-history/trading-history.component.ts:66](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/components/trading-history/trading-history.component.ts#L66)*
+*Defined in [app/components/trading-history/trading-history.component.ts:66](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/trading-history/trading-history.component.ts#L66)*
 
 
 
@@ -114,7 +114,7 @@ ___
 
 **●  isBusy**:  *`boolean`*  = true
 
-*Defined in [app/components/trading-history/trading-history.component.ts:16](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/components/trading-history/trading-history.component.ts#L16)*
+*Defined in [app/components/trading-history/trading-history.component.ts:16](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/trading-history/trading-history.component.ts#L16)*
 
 
 
@@ -131,7 +131,7 @@ ___
 
 **●  isNoNextPage**:  *`boolean`*  = false
 
-*Defined in [app/components/trading-history/trading-history.component.ts:20](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/components/trading-history/trading-history.component.ts#L20)*
+*Defined in [app/components/trading-history/trading-history.component.ts:20](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/trading-history/trading-history.component.ts#L20)*
 
 
 
@@ -148,7 +148,7 @@ ___
 
 **●  isNoPrevPage**:  *`boolean`*  = true
 
-*Defined in [app/components/trading-history/trading-history.component.ts:24](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/components/trading-history/trading-history.component.ts#L24)*
+*Defined in [app/components/trading-history/trading-history.component.ts:24](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/trading-history/trading-history.component.ts#L24)*
 
 
 
@@ -165,7 +165,7 @@ ___
 
 **●  page**:  *`number`*  = 1
 
-*Defined in [app/components/trading-history/trading-history.component.ts:28](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/components/trading-history/trading-history.component.ts#L28)*
+*Defined in [app/components/trading-history/trading-history.component.ts:28](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/trading-history/trading-history.component.ts#L28)*
 
 
 
@@ -182,7 +182,7 @@ ___
 
 **●  pathState**:  *`string`*  = "BTC-USD"
 
-*Defined in [app/components/trading-history/trading-history.component.ts:33](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/components/trading-history/trading-history.component.ts#L33)*
+*Defined in [app/components/trading-history/trading-history.component.ts:33](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/trading-history/trading-history.component.ts#L33)*
 
 
 
@@ -199,7 +199,7 @@ ___
 
 **●  router**:  *`Router`* 
 
-*Defined in [app/components/trading-history/trading-history.component.ts:65](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/components/trading-history/trading-history.component.ts#L65)*
+*Defined in [app/components/trading-history/trading-history.component.ts:65](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/trading-history/trading-history.component.ts#L65)*
 
 
 
@@ -214,9 +214,9 @@ ___
 
 ###  rowAmounts
 
-**●  rowAmounts**:  *`number`[]*  =  [10, 25, 50, 100]
+**●  rowAmounts**:  *`number`[]*  =  [10, 25, 50, 75]
 
-*Defined in [app/components/trading-history/trading-history.component.ts:41](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/components/trading-history/trading-history.component.ts#L41)*
+*Defined in [app/components/trading-history/trading-history.component.ts:41](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/trading-history/trading-history.component.ts#L41)*
 
 
 
@@ -233,7 +233,7 @@ ___
 
 **●  rowsPerPage**:  *`number`*  = 10
 
-*Defined in [app/components/trading-history/trading-history.component.ts:37](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/components/trading-history/trading-history.component.ts#L37)*
+*Defined in [app/components/trading-history/trading-history.component.ts:37](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/trading-history/trading-history.component.ts#L37)*
 
 
 
@@ -250,7 +250,7 @@ ___
 
 **●  table**:  *`__type`[]*  =  []
 
-*Defined in [app/components/trading-history/trading-history.component.ts:46](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/components/trading-history/trading-history.component.ts#L46)*
+*Defined in [app/components/trading-history/trading-history.component.ts:46](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/trading-history/trading-history.component.ts#L46)*
 
 
 
@@ -267,7 +267,7 @@ ___
 
 **●  tableReady**:  *`boolean`*  = false
 
-*Defined in [app/components/trading-history/trading-history.component.ts:51](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/components/trading-history/trading-history.component.ts#L51)*
+*Defined in [app/components/trading-history/trading-history.component.ts:51](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/trading-history/trading-history.component.ts#L51)*
 
 
 
@@ -284,7 +284,7 @@ ___
 
 **●  timeoutId**:  *`any`*  =  null
 
-*Defined in [app/components/trading-history/trading-history.component.ts:56](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/components/trading-history/trading-history.component.ts#L56)*
+*Defined in [app/components/trading-history/trading-history.component.ts:56](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/trading-history/trading-history.component.ts#L56)*
 
 
 
@@ -305,7 +305,7 @@ ___
 
 
 
-*Defined in [app/components/trading-history/trading-history.component.ts:90](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/components/trading-history/trading-history.component.ts#L90)*
+*Defined in [app/components/trading-history/trading-history.component.ts:90](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/trading-history/trading-history.component.ts#L90)*
 
 
 
@@ -338,7 +338,7 @@ ___
 
 
 
-*Defined in [app/components/trading-history/trading-history.component.ts:110](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/components/trading-history/trading-history.component.ts#L110)*
+*Defined in [app/components/trading-history/trading-history.component.ts:110](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/trading-history/trading-history.component.ts#L110)*
 
 
 
@@ -371,7 +371,7 @@ ___
 
 
 
-*Defined in [app/components/trading-history/trading-history.component.ts:71](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/components/trading-history/trading-history.component.ts#L71)*
+*Defined in [app/components/trading-history/trading-history.component.ts:71](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/trading-history/trading-history.component.ts#L71)*
 
 
 
@@ -396,7 +396,7 @@ ___
 
 
 
-*Defined in [app/components/trading-history/trading-history.component.ts:123](https://github.com/WilliamRADFunk/cryptobot-interface/blob/1ce3fc7/src/app/components/trading-history/trading-history.component.ts#L123)*
+*Defined in [app/components/trading-history/trading-history.component.ts:123](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/trading-history/trading-history.component.ts#L123)*
 
 
 

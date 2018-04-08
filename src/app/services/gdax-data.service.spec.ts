@@ -106,6 +106,7 @@ describe('GdaxDataService', () => {
     it('should callhttpClient.get with expected parameters',
       inject([GdaxDataService], (service: GdaxDataService) => {
       spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
+      spyOn(service, 'filterByDate').and.returnValue([{'id': 321}]);
       spyOn(service, 'formatProduct').and.returnValue([{'id': 321}]);
       service.startDate = date;
       service.endDate = date;
@@ -118,6 +119,7 @@ describe('GdaxDataService', () => {
     it('should callhttpClient.get with expected parameters',
       inject([GdaxDataService], (service: GdaxDataService) => {
       spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
+      spyOn(service, 'filterByDate').and.returnValue([{'id': 321}]);
       spyOn(service, 'formatProduct').and.returnValue([{'id': 321}]);
       service.bookmark = 123;
       service.startDate = date;
@@ -132,6 +134,7 @@ describe('GdaxDataService', () => {
     it('should callhttpClient.get with expected parameters',
       inject([GdaxDataService], (service: GdaxDataService) => {
       spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
+      spyOn(service, 'filterByDate').and.returnValue([{'id': 321}]);
       spyOn(service, 'formatProduct').and.returnValue([{'id': 321}]);
       service.bookmark = -321;
       service.startDate = date;
@@ -302,6 +305,22 @@ describe('GdaxDataService', () => {
         product: 'BTC',
         type: 'deposit'
       }]);
+    }));
+  });
+  describe('filterByDate', () => {
+    it('should return array of only the one good value',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+        const badDate = new Date(service.endDate.getTime() + 86000000);
+        const goodDate = new Date(service.endDate.getTime() - 86000000);
+      expect(service.filterByDate([
+        {'created_at': badDate},
+        {'created_at': goodDate},
+        {'no_date': goodDate}
+      ])).toEqual([{'created_at': goodDate}]);
+    }));
+    it('should return empty array',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      expect(service.filterByDate(null)).toEqual([]);
     }));
   });
 });

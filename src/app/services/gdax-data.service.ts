@@ -122,6 +122,25 @@ export class GdaxDataService {
     this.refreshData();
   }
   /**
+  * Only returns elements of data array that fit within user specified time range.
+  * @param data array of data objects to be formatted
+  * @return     filtered data array
+  */
+  filterByDate(data: {}[]): {}[] {
+    data = data || [];
+    const newData: {}[] = [];
+    data.forEach(element => {
+      if (element['created_at']) {
+        const date = new Date(element['created_at']);
+        if (date.getTime() >= this.startDate.getTime()
+          && date.getTime() <= this.endDate.getTime()) {
+          newData.push(element);
+        }
+      }
+    });
+    return newData;
+  }
+  /**
   * Pulls out and formats the product from gdax query results.
   * @param data array of data objects to be formatted
   * @return     formatted data array
@@ -222,12 +241,15 @@ export class GdaxDataService {
     if (this.currency === 'ALL') {
       this.http.get<any>(`http://167.99.149.6:3000/history/btc`, {headers, params})
         .subscribe(data1 => {
+          data1 = this.filterByDate(data1);
           const formatedData1 = this.formatProduct(data1);
           this.http.get<any>(`http://167.99.149.6:3000/history/ltc`, {headers, params})
             .subscribe(data2 => {
+              data2 = this.filterByDate(data2);
               const formatedData2 = this.formatProduct(data2);
               this.http.get<any>(`http://167.99.149.6:3000/history/eth`, {headers, params})
                 .subscribe(data3 => {
+                  data3 = this.filterByDate(data3);
                   const formatedData3 = this.formatProduct(data3);
                   this.tableData.next(formatedData1.concat(formatedData2, formatedData3));
                   this.isBusy.next(false);
@@ -238,6 +260,7 @@ export class GdaxDataService {
       const curr: string = this.currency.split('-')[0].toLowerCase();
       this.http.get<any>(`http://167.99.149.6:3000/history/${curr}`, {headers, params})
         .subscribe(data => {
+          data = this.filterByDate(data);
           const formatedData = this.formatProduct(data);
           this.bookmark = formatedData[formatedData.length - 1]['id'];
           this.tableData.next(formatedData);
