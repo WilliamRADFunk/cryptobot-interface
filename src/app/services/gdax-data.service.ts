@@ -209,15 +209,15 @@ export class GdaxDataService {
     let params;
     if (!this.bookmark) {
       params = new HttpParams()
-        .set(`limit`, `${this.rowsPerPage}`);
+        .set(`limit`, `${this.rowsPerPage + 1}`);
     } else if (this.bookmark < 0) {
       params = new HttpParams()
         .set(`before`, `${Math.abs(this.bookmark)}`)
-        .set(`limit`, `${this.rowsPerPage}`);
+        .set(`limit`, `${this.rowsPerPage + 1}`);
     } else {
       params = new HttpParams()
         .set(`after`, `${this.bookmark}`)
-        .set(`limit`, `${this.rowsPerPage}`);
+        .set(`limit`, `${this.rowsPerPage + 1}`);
     }
     if (this.currency === 'ALL') {
       this.http.get<any>(`http://167.99.149.6:3000/history/btc`, {headers, params})

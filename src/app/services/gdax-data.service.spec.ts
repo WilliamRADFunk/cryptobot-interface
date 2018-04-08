@@ -113,7 +113,7 @@ describe('GdaxDataService', () => {
       expect(service.formatProduct['calls'].count()).toEqual(1);
       expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/btc') > -1).toBe(true);
       expect(httpClient.get.calls.mostRecent().args[1].params.toString())
-        .toEqual('limit=10');
+        .toEqual('limit=11');
     }));
     it('should callhttpClient.get with expected parameters',
       inject([GdaxDataService], (service: GdaxDataService) => {
@@ -127,7 +127,7 @@ describe('GdaxDataService', () => {
       expect(service.formatProduct['calls'].count()).toEqual(3);
       expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/eth') > -1).toBe(true);
       expect(httpClient.get.calls.mostRecent().args[1].params.toString())
-        .toEqual('after=123&limit=10');
+        .toEqual('after=123&limit=11');
     }));
     it('should callhttpClient.get with expected parameters',
       inject([GdaxDataService], (service: GdaxDataService) => {
@@ -141,7 +141,7 @@ describe('GdaxDataService', () => {
       expect(service.formatProduct['calls'].count()).toEqual(3);
       expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/eth') > -1).toBe(true);
       expect(httpClient.get.calls.mostRecent().args[1].params.toString())
-        .toEqual('before=321&limit=10');
+        .toEqual('before=321&limit=11');
     }));
   });
   describe('refreshData', () => {
