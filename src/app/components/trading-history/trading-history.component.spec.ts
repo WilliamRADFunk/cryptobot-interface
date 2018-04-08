@@ -232,17 +232,28 @@ describe('TradingHistoryComponent', () => {
       const dateStr = new Date(date).toLocaleString('en-US', dateOptions);
       component.tableReady = false;
       component.table = undefined;
-      component.rowsPerPage = 0;
-      component.updateTable([{
+      component.rowsPerPage = 1;
+      component.updateTable([
+        {
         'id': 'bob',
         'created_at': date,
         'product': 'BTC-USD',
         'amount': 10000,
         'type': 'match',
         'balance': 60000
-      }]);
+        },
+        {
+          'id': 'nerps',
+          'created_at': date,
+          'product': 'BTC-USD',
+          'amount': 10000,
+          'type': 'match',
+          'balance': 60000
+        }
+      ]);
       expect(component.tableReady).toBe(true);
-      expect(component.table).toEqual([{
+      expect(component.table).toEqual([
+        {
         'id': 'bob',
         'date': dateStr,
         'product': 'BTC-USD',
@@ -250,7 +261,8 @@ describe('TradingHistoryComponent', () => {
         'buysell': 'buy',
         'type': 'match',
         'balance': 60000
-      }]);
+        }
+      ]);
       expect(component.isNoNextPage).toBe(false);
     });
   });

@@ -38,7 +38,7 @@ export class TradingHistoryComponent implements OnInit {
   /**
   * Options for number of rows to show per page
   */
-  rowAmounts: number[] = [10, 25, 50, 100];
+  rowAmounts: number[] = [10, 25, 50, 75];
   /**
   * The main table object to be constructed whenever new
   * data is returned from the service.
@@ -126,10 +126,11 @@ export class TradingHistoryComponent implements OnInit {
       this.tableReady = true;
       return;
     } else {
-      if (data.length < this.rowsPerPage) {
+      if (data.length <= this.rowsPerPage) {
         this.isNoNextPage = true;
       } else {
         this.isNoNextPage = false;
+        data = data.slice(0, -1);
       }
       const tempTable: {}[] = [];
       data.forEach(element => {
