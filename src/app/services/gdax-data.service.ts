@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+const INTERFACE_URL = 'http://www.williamrobertfunk.com';
+
 @Injectable()
 export class GdaxDataService {
   /**
@@ -221,7 +223,7 @@ export class GdaxDataService {
     const headers = new HttpHeaders()
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
-      .set('Access-Control-Allow-Origin', 'http://localhost:4200')
+      .set('Access-Control-Allow-Origin', INTERFACE_URL)
       .set('Access-Control-Allow-Methods', 'POST, GET')
       .set('Access-Control-Allow-Headers', 'X-PINGOTHER, Content-Type')
       .set('Access-Control-Max-Age', '86400');
@@ -243,18 +245,30 @@ export class GdaxDataService {
         .subscribe(data1 => {
           data1 = this.filterByDate(data1);
           const formatedData1 = this.formatProduct(data1);
-          this.http.get<any>(`http://167.99.149.6:3000/history/ltc`, {headers, params})
-            .subscribe(data2 => {
-              data2 = this.filterByDate(data2);
-              const formatedData2 = this.formatProduct(data2);
-              this.http.get<any>(`http://167.99.149.6:3000/history/eth`, {headers, params})
-                .subscribe(data3 => {
-                  data3 = this.filterByDate(data3);
-                  const formatedData3 = this.formatProduct(data3);
-                  this.tableData.next(formatedData1.concat(formatedData2, formatedData3));
+          if (formatedData1.length < (this.rowsPerPage + 1)) {
+            params.set(`limit`, `${this.rowsPerPage + 1 - formatedData1.length}`);
+            this.http.get<any>(`http://167.99.149.6:3000/history/ltc`, {headers, params})
+              .subscribe(data2 => {
+                data2 = this.filterByDate(data2);
+                const formatedData2 = formatedData1.concat(this.formatProduct(data2));
+                if (formatedData2.length < (this.rowsPerPage + 1)) {
+                  params.set(`limit`, `${this.rowsPerPage + 1 - formatedData2.length}`);
+                  this.http.get<any>(`http://167.99.149.6:3000/history/eth`, {headers, params})
+                    .subscribe(data3 => {
+                      data3 = this.filterByDate(data3);
+                      const formatedData3 = formatedData2.concat(this.formatProduct(data3));
+                      this.tableData.next(formatedData3);
+                      this.isBusy.next(false);
+                    });
+                } else {
+                  this.tableData.next(formatedData2);
                   this.isBusy.next(false);
-                });
-            });
+                }
+              });
+          } else {
+            this.tableData.next(formatedData1);
+            this.isBusy.next(false);
+          }
         });
     } else {
       const curr: string = this.currency.split('-')[0].toLowerCase();
@@ -262,7 +276,10 @@ export class GdaxDataService {
         .subscribe(data => {
           data = this.filterByDate(data);
           const formatedData = this.formatProduct(data);
-          this.bookmark = formatedData[formatedData.length - 1]['id'];
+          if (formatedData[formatedData.length - 1]
+            && formatedData[formatedData.length - 1]['id']) {
+            this.bookmark = formatedData[formatedData.length - 1]['id'];
+          }
           this.tableData.next(formatedData);
           this.isBusy.next(false);
         });

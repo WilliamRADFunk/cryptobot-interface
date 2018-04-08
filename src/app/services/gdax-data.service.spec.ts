@@ -146,6 +146,54 @@ describe('GdaxDataService', () => {
       expect(httpClient.get.calls.mostRecent().args[1].params.toString())
         .toEqual('before=321&limit=11');
     }));
+    it('should callhttpClient.get with expected parameters',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
+      spyOn(service, 'filterByDate').and.returnValue([{'id': 321}]);
+      spyOn(service, 'formatProduct').and.returnValue([]);
+      service.bookmark = 321;
+      service.startDate = date;
+      service.endDate = date;
+      service.currency = 'BTC';
+      service.getLatestGdaxHistoryData();
+      expect(service.formatProduct['calls'].count()).toEqual(1);
+      expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/btc') > -1).toBe(true);
+      expect(httpClient.get.calls.mostRecent().args[1].params.toString())
+        .toEqual('after=321&limit=11');
+        expect(service.bookmark).toBe(321);
+    }));
+    it('should callhttpClient.get with expected parameters',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
+      spyOn(service, 'filterByDate').and.returnValue([{'id': 321}]);
+      spyOn(service, 'formatProduct').and.returnValues([{'id': 321}], [{'id': 321}]);
+      service.rowsPerPage = 1;
+      service.bookmark = 321;
+      service.startDate = date;
+      service.endDate = date;
+      service.currency = 'ALL';
+      service.getLatestGdaxHistoryData();
+      expect(service.formatProduct['calls'].count()).toEqual(2);
+      expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/ltc') > -1).toBe(true);
+      expect(httpClient.get.calls.mostRecent().args[1].params.toString())
+        .toEqual('after=321&limit=2');
+    }));
+    it('should callhttpClient.get with expected parameters',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
+      spyOn(service, 'filterByDate').and.returnValue([{'id': 321}]);
+      spyOn(service, 'formatProduct').and.returnValue([{'id': 321}]);
+      service.rowsPerPage = 0;
+      service.bookmark = 321;
+      service.startDate = date;
+      service.endDate = date;
+      service.currency = 'ALL';
+      service.getLatestGdaxHistoryData();
+      expect(service.formatProduct['calls'].count()).toEqual(1);
+      expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/btc') > -1).toBe(true);
+      expect(httpClient.get.calls.mostRecent().args[1].params.toString())
+        .toEqual('after=321&limit=1');
+    }));
   });
   describe('refreshData', () => {
     let service;
