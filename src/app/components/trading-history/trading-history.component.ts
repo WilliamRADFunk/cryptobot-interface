@@ -123,6 +123,7 @@ export class TradingHistoryComponent implements OnInit {
   updateTable(data: {}[]): void {
     this.tableReady = false;
     if (!data.length) {
+      this.table = [];
       this.tableReady = true;
       return;
     } else {

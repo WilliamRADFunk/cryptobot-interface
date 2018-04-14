@@ -142,7 +142,7 @@ describe('TradingHistoryComponent', () => {
       component.table = undefined;
       component.updateTable([]);
       expect(component.tableReady).toBe(true);
-      expect(component.table).toBe(undefined);
+      expect(component.table).toEqual([]);
     });
     it('should add row to table and tableReady to true', () => {
       spyOn(gdaxDataService, 'changeRowsPerPage').and.returnValue(true);

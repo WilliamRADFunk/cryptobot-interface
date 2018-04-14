@@ -60,7 +60,6 @@ export class LiveViewComponent implements OnInit {
     if (!data.length) {
       return;
     }
-    // console.log('updateChart', data);
     const options = {};
     options['chart'] = {
       type: 'line',

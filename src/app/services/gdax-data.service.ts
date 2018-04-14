@@ -69,6 +69,7 @@ export class GdaxDataService {
   changeCurrencyType(currency: string, basePath: string): void {
     this.basePath = basePath;
     this.currency = currency;
+    this.bookmark = undefined;
     this.refreshData();
   }
   /**
@@ -77,6 +78,7 @@ export class GdaxDataService {
   */
   changeEndDateTime(date: Date): void {
     this.endDate = date;
+    this.bookmark = undefined;
     this.refreshData();
   }
   /**
@@ -90,7 +92,7 @@ export class GdaxDataService {
     } else if (page < this.page) {
       this.bookmark = -this.tableData.value[0]['id'];
     } else {
-      this.bookmark = this.tableData.value[this.tableData.value.length - 1]['id'];
+      this.bookmark = this.tableData.value[this.tableData.value.length - 2]['id'];
     }
     this.page = page;
     this.refreshData();
@@ -112,6 +114,7 @@ export class GdaxDataService {
   */
   changeStartDateTime(date: Date): void {
     this.startDate = date;
+    this.bookmark = undefined;
     this.refreshData();
   }
   /**
@@ -242,20 +245,20 @@ export class GdaxDataService {
     }
     if (this.currency === 'ALL') {
       this.http.get<any>(`http://167.99.149.6:3000/history/btc`, {headers, params})
-        .subscribe(data1 => {
-          data1 = this.filterByDate(data1);
+        .subscribe(originalData1 => {
+          const data1 = this.filterByDate(originalData1);
           const formatedData1 = this.formatProduct(data1);
           if (formatedData1.length < (this.rowsPerPage + 1)) {
             params.set(`limit`, `${this.rowsPerPage + 1 - formatedData1.length}`);
             this.http.get<any>(`http://167.99.149.6:3000/history/ltc`, {headers, params})
-              .subscribe(data2 => {
-                data2 = this.filterByDate(data2);
+              .subscribe(originalData2 => {
+                const data2 = this.filterByDate(originalData2);
                 const formatedData2 = formatedData1.concat(this.formatProduct(data2));
                 if (formatedData2.length < (this.rowsPerPage + 1)) {
                   params.set(`limit`, `${this.rowsPerPage + 1 - formatedData2.length}`);
                   this.http.get<any>(`http://167.99.149.6:3000/history/eth`, {headers, params})
-                    .subscribe(data3 => {
-                      data3 = this.filterByDate(data3);
+                    .subscribe(originalData3 => {
+                      const data3 = this.filterByDate(originalData3);
                       const formatedData3 = formatedData2.concat(this.formatProduct(data3));
                       this.tableData.next(formatedData3);
                       this.isBusy.next(false);
@@ -273,16 +276,39 @@ export class GdaxDataService {
     } else {
       const curr: string = this.currency.split('-')[0].toLowerCase();
       this.http.get<any>(`http://167.99.149.6:3000/history/${curr}`, {headers, params})
-        .subscribe(data => {
-          data = this.filterByDate(data);
-          const formatedData = this.formatProduct(data);
-          if (formatedData[formatedData.length - 1]
-            && formatedData[formatedData.length - 1]['id']) {
-            this.bookmark = formatedData[formatedData.length - 1]['id'];
-          }
-          this.tableData.next(formatedData);
-          this.isBusy.next(false);
+        .subscribe(originalData => {
+          this.handleHistoryResults(originalData);
         });
+    }
+  }
+  handleHistoryResults(originalData: {}[]): void {
+    const data = this.filterByDate(originalData);
+    if (originalData[0] && data[0] && originalData[0]['id'] === data[0]['id']) {
+      const formatedData = this.formatProduct(data);
+      if (formatedData[formatedData.length - 1]
+        && formatedData[formatedData.length - 1]['id']) {
+        this.bookmark = formatedData[formatedData.length - 2]['id'];
+      }
+      console.log('3');
+      this.tableData.next(formatedData);
+      this.isBusy.next(false);
+      return;
+    }
+    console.log(data.length, originalData, this.rowsPerPage);
+    if (!data.length && originalData.length >= this.rowsPerPage) {
+      this.bookmark = originalData[originalData.length - 1]['id'];
+      console.log('1', originalData, data, this.bookmark);
+      setTimeout(() => {
+        this.getLatestGdaxHistoryData();
+      }, 500);
+    } else if (data.length < this.rowsPerPage
+      && originalData.length >= this.rowsPerPage) {
+      const index = originalData.length - data.length;
+      this.bookmark = originalData[index] && originalData[index]['id'];
+      console.log('2', originalData, data, this.bookmark);
+      setTimeout(() => {
+        this.getLatestGdaxHistoryData();
+      }, 500);
     }
   }
   /**
