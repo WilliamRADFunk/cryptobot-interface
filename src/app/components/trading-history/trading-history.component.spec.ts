@@ -48,6 +48,11 @@ describe('TradingHistoryComponent', () => {
                 fn(true);
               }
             },
+            page: {
+              subscribe: fn => {
+                fn(1);
+              }
+            },
             tableData: {
               subscribe: (fn) => {
                 fn([1, 2, 3, 4, 5, 6]);

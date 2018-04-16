@@ -80,6 +80,13 @@ export class TradingHistoryComponent implements OnInit {
         this.pathState = segments[0]['path'];
         this.gdaxDataService.changeCurrencyType(this.pathState, 'trading-history');
       });
+      this.gdaxDataService.page
+      .subscribe(data => {
+        this.page = data;
+        if (this.page === 1) {
+          this.isNoPrevPage = true;
+        }
+      });
     this.gdaxDataService.tableData
       .subscribe(this.updateTable.bind(this));
   }
@@ -124,6 +131,7 @@ export class TradingHistoryComponent implements OnInit {
     this.tableReady = false;
     if (!data.length) {
       this.table = [];
+      this.isNoNextPage = true;
       this.tableReady = true;
       return;
     } else {
