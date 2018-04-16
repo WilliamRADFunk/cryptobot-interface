@@ -129,8 +129,8 @@ export class TradingHistoryComponent implements OnInit {
   */
   updateTable(data: {}[]): void {
     this.tableReady = false;
+    this.table = [];
     if (!data.length) {
-      this.table = [];
       this.isNoNextPage = true;
       this.tableReady = true;
       return;

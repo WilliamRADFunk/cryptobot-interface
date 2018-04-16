@@ -342,6 +342,7 @@ export class GdaxDataService {
         const deficit = (this.rowsPerPage + 1) - this.tableResults.length;
         this.tableResults = this.tableResults.concat(formatedData.slice(0, deficit));
         this.bookmark = this.tableResults[this.tableResults.length - 2]['id'];
+        this.tableData.next(this.tableResults);
         this.isBusy.next(false);
         return;
       }
@@ -361,6 +362,7 @@ export class GdaxDataService {
       } else if (deficit > formatedData.length) {
         this.tableResults = this.tableResults.concat(formatedData.slice(0, deficit));
         this.bookmark = this.tableResults[this.tableResults.length - 2]['id'];
+        this.tableData.next(this.tableResults);
         this.isBusy.next(false);
         return;
       }
