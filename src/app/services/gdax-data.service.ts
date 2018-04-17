@@ -173,7 +173,7 @@ export class GdaxDataService {
       && e1['details']['product_id'].split('-').length > 1) {
         e1['product'] = e1['details']['product_id'].split('-')[0];
       } else {
-        e1['product'] = 'BTC';
+        e1['product'] = 'USD';
       }
       if (e1['type'] === 'transfer'
         && e1['details']

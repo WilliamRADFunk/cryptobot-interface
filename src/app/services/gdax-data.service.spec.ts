@@ -315,13 +315,13 @@ describe('GdaxDataService', () => {
   describe('formatProduct', () => {
     it('should return empty array',
       inject([GdaxDataService], (service: GdaxDataService) => {
-      expect(service.formatProduct([{}])).toEqual([{product: 'BTC'}]);
+      expect(service.formatProduct([{}])).toEqual([{product: 'USD'}]);
     }));
     it('should return empty array',
       inject([GdaxDataService], (service: GdaxDataService) => {
       expect(service.formatProduct([{'details': 'nerple'}])).toEqual([{
         details: 'nerple',
-        product: 'BTC'
+        product: 'USD'
       }]);
     }));
     it('should return empty array',
@@ -330,7 +330,7 @@ describe('GdaxDataService', () => {
         details: {
           'product_id': 'derple'
         },
-        product: 'BTC'
+        product: 'USD'
       }]);
     }));
     it('should return array with "product": "BTC"',
@@ -353,7 +353,7 @@ describe('GdaxDataService', () => {
         details: {
           'transfer_type': 'deposit'
         },
-        product: 'BTC',
+        product: 'USD',
         type: 'deposit'
       }]);
     }));
