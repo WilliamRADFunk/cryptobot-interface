@@ -281,6 +281,7 @@ export class GdaxDataService {
       setTimeout(() => {
         this.getLatestGdaxHistoryData();
       }, 500);
+      return;
     // No data returned. No more data.
     // Return what has been collected.
     } else if (!originalData.length) {
@@ -300,6 +301,7 @@ export class GdaxDataService {
         setTimeout(() => {
           this.getLatestGdaxHistoryData();
         }, 500);
+        return;
       } else {
         this.bookmark = undefined;
         this.tableData.next(this.tableResults);
@@ -332,6 +334,7 @@ export class GdaxDataService {
         setTimeout(() => {
           this.getLatestGdaxHistoryData();
         }, 500);
+        return;
       // No previously stored results. Send everything from query.
       } else if (!this.tableResults.length) {
         this.bookmark = formatedData[formatedData.length - 2]['id'];
@@ -352,6 +355,7 @@ export class GdaxDataService {
         setTimeout(() => {
           this.getLatestGdaxHistoryData();
         }, 500);
+        return;
       // Some results previously stored. Take only what's needed.
       } else {
         const deficit = (this.rowsPerPage + 1) - this.tableResults.length;
