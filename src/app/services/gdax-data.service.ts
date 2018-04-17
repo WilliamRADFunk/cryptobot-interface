@@ -57,6 +57,8 @@ export class GdaxDataService {
   */
   tableData: BehaviorSubject<{}[]> = new BehaviorSubject<{}[]>([]);
   tableResults: {}[] = [];
+  currTypes: string[] = ['btc', 'ltc', 'eth'];
+  currIndex: number = 0;
 
   /**
   * Constructor for the class. Injects Angular's HttpClient service
@@ -96,8 +98,7 @@ export class GdaxDataService {
     if (page === 1) {
       this.bookmark = undefined;
     } else if (page < this.page.value) {
-      // TODO: Set currType for trading-history 'ALL' walking to
-      // whatever the curr type of this.tableData.value[0]['id'] is.
+      this.currIndex = this.currTypes.indexOf(this.tableData.value[0]['product'].toLowerCase());
       this.bookmark = -this.tableData.value[0]['id'];
     } else {
       // One extra result is captured, but ignored in table (for isNoNextPage),
@@ -105,7 +106,7 @@ export class GdaxDataService {
       this.bookmark = this.tableData.value[this.tableData.value.length - 2]['id'];
     }
     this.page.next(page);
-    this.refreshData();
+    this.refreshData(true);
   }
   /**
   * Updates the number of rows per page,
@@ -256,39 +257,10 @@ export class GdaxDataService {
         .set(`after`, `${this.bookmark}`)
         .set(`limit`, `${this.rowsPerPage + 1}`);
     }
-    // TODO: reduce query to one that walks an array of currType.
-    // currType increments inside handleHistoryResults under special run out
-    // conditions, and are reset when rowsPerPage, startDate, endDate
-    // or currency type are changed.
     if (this.currency === 'ALL') {
-      this.http.get<any>(`http://167.99.149.6:3000/history/btc`, {headers, params})
-        .subscribe(originalData1 => {
-          const data1 = this.filterByDate(originalData1);
-          const formatedData1 = this.formatProduct(data1);
-          if (formatedData1.length < (this.rowsPerPage + 1)) {
-            params.set(`limit`, `${this.rowsPerPage + 1 - formatedData1.length}`);
-            this.http.get<any>(`http://167.99.149.6:3000/history/ltc`, {headers, params})
-              .subscribe(originalData2 => {
-                const data2 = this.filterByDate(originalData2);
-                const formatedData2 = formatedData1.concat(this.formatProduct(data2));
-                if (formatedData2.length < (this.rowsPerPage + 1)) {
-                  params.set(`limit`, `${this.rowsPerPage + 1 - formatedData2.length}`);
-                  this.http.get<any>(`http://167.99.149.6:3000/history/eth`, {headers, params})
-                    .subscribe(originalData3 => {
-                      const data3 = this.filterByDate(originalData3);
-                      const formatedData3 = formatedData2.concat(this.formatProduct(data3));
-                      this.tableData.next(formatedData3);
-                      this.isBusy.next(false);
-                    });
-                } else {
-                  this.tableData.next(formatedData2);
-                  this.isBusy.next(false);
-                }
-              });
-          } else {
-            this.tableData.next(formatedData1);
-            this.isBusy.next(false);
-          }
+      this.http.get<any>(`http://167.99.149.6:3000/history/${this.currTypes[this.currIndex]}`, {headers, params})
+        .subscribe(originalData => {
+          this.handleHistoryResults(originalData);
         });
     } else {
       const curr: string = this.currency.split('-')[0].toLowerCase();
@@ -298,12 +270,20 @@ export class GdaxDataService {
         });
     }
   }
-  // TODO: When data runs out, but more is needed (and 'ALL' is currency type),
-  // use currType array to increment to next currType.
   handleHistoryResults(originalData: {}[]): void {
     // No data returned. No more data.
+    // If 'ALL' and other currencies left, try those.
+    if (!originalData.length
+      && this.currency === 'ALL'
+      && this.currIndex < this.currTypes.length - 1) {
+      this.currIndex++;
+      this.bookmark = undefined;
+      setTimeout(() => {
+        this.getLatestGdaxHistoryData();
+      }, 500);
+    // No data returned. No more data.
     // Return what has been collected.
-    if (!originalData.length) {
+    } else if (!originalData.length) {
       this.tableData.next(this.tableResults);
       this.isBusy.next(false);
       return;
@@ -314,9 +294,18 @@ export class GdaxDataService {
       originalData[0]
       && originalData[0]['created_at']
       && new Date(originalData[0]['created_at']).getTime() < this.startDate.getTime()) {
-      this.tableData.next(this.tableResults);
-      this.isBusy.next(false);
-      return;
+      if (this.currency === 'ALL' && this.currIndex < this.currTypes.length - 1) {
+        this.currIndex++;
+        this.bookmark = undefined;
+        setTimeout(() => {
+          this.getLatestGdaxHistoryData();
+        }, 500);
+      } else {
+        this.bookmark = undefined;
+        this.tableData.next(this.tableResults);
+        this.isBusy.next(false);
+        return;
+      }
     }
     // See how much of the data is usedful.
     const data = this.filterByDate(originalData);
@@ -331,12 +320,38 @@ export class GdaxDataService {
     // Take what is needed to fill the page.
     } else if (originalData.length === data.length) {
       const formatedData = this.formatProduct(data);
+      // No previously stored results. Results less than needed.
+      // Currency type 'ALL' and still have currencies left.
+      if (!this.tableResults.length
+        && data.length < (this.rowsPerPage + 1)
+        && this.currency === 'ALL'
+        && this.currIndex < this.currTypes.length - 1) {
+        this.currIndex++;
+        this.tableResults = this.tableResults.concat(formatedData);
+        this.bookmark = undefined;
+        setTimeout(() => {
+          this.getLatestGdaxHistoryData();
+        }, 500);
       // No previously stored results. Send everything from query.
-      if (!this.tableResults.length) {
+      } else if (!this.tableResults.length) {
         this.bookmark = formatedData[formatedData.length - 2]['id'];
-        this.tableData.next(formatedData);
+        this.tableResults = this.tableResults.concat(formatedData);
+        this.tableData.next(this.tableResults);
         this.isBusy.next(false);
         return;
+      // Has previously stored results. Results less than needed.
+      // Currency type 'ALL' and still have currencies left.
+      } else if (
+        this.tableResults.length
+        && data.length < (this.rowsPerPage + 1)
+        && this.currency === 'ALL'
+        && this.currIndex < this.currTypes.length - 1) {
+        this.currIndex++;
+        this.tableResults = this.tableResults.concat(formatedData);
+        this.bookmark = undefined;
+        setTimeout(() => {
+          this.getLatestGdaxHistoryData();
+        }, 500);
       // Some results previously stored. Take only what's needed.
       } else {
         const deficit = (this.rowsPerPage + 1) - this.tableResults.length;
@@ -382,12 +397,16 @@ export class GdaxDataService {
   }
   /**
   * Determines which data api to use based off of basePath, and calls it.
+  * @param isPageChange flag to make sure currIndex isn't reset on page change.
   */
-  refreshData(): void {
+  refreshData(isPageChange?: boolean): void {
     if (this.basePath === 'live-view') {
       this.isRelevant.next(true);
       this.getLatestGdaxData();
     } else if (this.basePath === 'trading-history') {
+      if (!isPageChange) {
+        this.currIndex = 0;
+      }
       this.isRelevant.next(false);
       this.getLatestGdaxHistoryData();
     } else if (this.basePath === 'profit-portfolio') {
