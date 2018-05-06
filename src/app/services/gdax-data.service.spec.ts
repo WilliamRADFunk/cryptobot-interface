@@ -423,4 +423,211 @@ describe('GdaxDataService', () => {
       expect(service.filterByDate(null)).toEqual([]);
     }));
   });
+  describe('handleHistoryResults', () => {
+    let service;
+    beforeEach(inject([GdaxDataService], (serv: GdaxDataService) => {
+      service = serv;
+      spyOn(service, 'getLatestGdaxHistoryData').and.returnValue(true);
+    }));
+    it(`should call getLatestGdaxHistoryData,
+      and make bookmark undefined`, fakeAsync(() => {
+      service.currency = 'ALL';
+      service.currIndex = 0;
+      service.bookmark = 2;
+      service.handleHistoryResults([]);
+      tick(600);
+      expect(service.getLatestGdaxHistoryData).toHaveBeenCalled();
+      expect(service.bookmark).toBe(undefined);
+      expect(service.currIndex).toBe(1);
+    }));
+    it(`should not call getLatestGdaxHistoryData, set tabelData,
+      and make isBusy false`, fakeAsync(() => {
+      service.currency = 'BTC';
+      service.currIndex = 0;
+      service.tableResults = [{name: 'doug'}];
+      service.isBusy.next(true);
+      service.handleHistoryResults([]);
+      tick(600);
+      expect(service.getLatestGdaxHistoryData).not.toHaveBeenCalled();
+      expect(service.isBusy.value).toBe(false);
+      expect(service.currIndex).toBe(0);
+      expect(service.tableData.value).toEqual([{name: 'doug'}]);
+    }));
+    it(`should not call getLatestGdaxHistoryData, set tabelData,
+      make bookmark undefined, and make isBusy false`, fakeAsync(() => {
+      service.currency = 'BTC';
+      service.currIndex = 0;
+      service.bookmark = 2;
+      service.tableResults = [{name: 'doug'}];
+      service.isBusy.next(true);
+      service.handleHistoryResults([{'created_at': date}]);
+      tick(600);
+      expect(service.getLatestGdaxHistoryData).not.toHaveBeenCalled();
+      expect(service.isBusy.value).toBe(false);
+      expect(service.bookmark).toBe(undefined);
+      expect(service.tableData.value).toEqual([{name: 'doug'}]);
+    }));
+    it(`should call getLatestGdaxHistoryData, increase currIndex,
+      and make bookmark undefined`, fakeAsync(() => {
+      service.currency = 'ALL';
+      service.currIndex = 0;
+      service.bookmark = 2;
+      service.tableResults = [{name: 'doug'}];
+      service.tableData.next([]);
+      service.isBusy.next(true);
+      service.handleHistoryResults([{'created_at': date}]);
+      tick(600);
+      expect(service.getLatestGdaxHistoryData).toHaveBeenCalled();
+      expect(service.isBusy.value).toBe(true);
+      expect(service.bookmark).toBe(undefined);
+      expect(service.currIndex).toBe(1);
+      expect(service.tableData.value).toEqual([]);
+    }));
+    it(`should call getLatestGdaxHistoryData, increase currIndex,
+      and make bookmark 4321`, fakeAsync(() => {
+      spyOn(service, 'filterByDate').and.returnValue([]);
+      service.currency = 'ALL';
+      service.currIndex = 0;
+      service.bookmark = 2;
+      service.tableResults = [{name: 'doug'}];
+      service.tableData.next([]);
+      service.isBusy.next(true);
+      service.handleHistoryResults([{
+        'created_at': new Date(),
+        'id': 4321
+      }]);
+      tick(600);
+      expect(service.getLatestGdaxHistoryData).toHaveBeenCalled();
+      expect(service.isBusy.value).toBe(true);
+      expect(service.bookmark).toBe(4321);
+      expect(service.currIndex).toBe(0);
+      expect(service.tableData.value).toEqual([]);
+    }));
+    it(`should call getLatestGdaxHistoryData, set tabelData,
+      increase currIndex, and make bookmark undefined`, fakeAsync(() => {
+      const testDate = new Date();
+      spyOn(service, 'filterByDate').and.returnValue([{
+        'created_at': testDate,
+        'id': 4321
+      }]);
+      spyOn(service, 'formatProduct').and.returnValue([{
+        'created_at': testDate,
+        'id': 4321
+      }]);
+      service.currency = 'ALL';
+      service.currIndex = 0;
+      service.bookmark = 2;
+      service.tableResults = [];
+      service.tableData.next([]);
+      service.isBusy.next(true);
+      service.handleHistoryResults([{
+        'created_at': testDate,
+        'id': 4321
+      }]);
+      tick(600);
+      expect(service.getLatestGdaxHistoryData).toHaveBeenCalled();
+      expect(service.isBusy.value).toBe(true);
+      expect(service.bookmark).toBe(undefined);
+      expect(service.currIndex).toBe(1);
+      expect(service.tableResults).toEqual([{
+        'created_at': testDate,
+        'id': 4321
+      }]);
+      expect(service.tableData.value).toEqual([]);
+    }));
+    it(`should not call getLatestGdaxHistoryData, set tabelData,
+      increase currIndex, and make bookmark 1234`, fakeAsync(() => {
+      const testDate = new Date();
+      spyOn(service, 'filterByDate').and.returnValue([{
+        'created_at': testDate,
+        'id': 4321
+      }]);
+      spyOn(service, 'formatProduct').and.returnValue([
+        {
+          'created_at': testDate,
+          'id': 1234
+        },
+        {
+          'created_at': testDate,
+          'id': 4321
+        }
+      ]);
+      service.currency = 'BTC';
+      service.currIndex = 0;
+      service.bookmark = 2;
+      service.tableResults = [];
+      service.tableData.next([]);
+      service.isBusy.next(true);
+      service.handleHistoryResults([{
+        'created_at': testDate,
+        'id': 4321
+      }]);
+      tick(600);
+      expect(service.getLatestGdaxHistoryData).not.toHaveBeenCalled();
+      expect(service.isBusy.value).toBe(false);
+      expect(service.bookmark).toBe(1234);
+      expect(service.currIndex).toBe(0);
+      expect(service.tableResults).toEqual([
+        {
+          'created_at': testDate,
+          'id': 1234
+        },
+        {
+          'created_at': testDate,
+          'id': 4321
+        }
+      ]);
+      expect(service.tableData.value).toEqual([
+        {
+          'created_at': testDate,
+          'id': 1234
+        },
+        {
+          'created_at': testDate,
+          'id': 4321
+        }
+      ]);
+    }));
+    it(`should call getLatestGdaxHistoryData, set tabelData,
+      increase currIndex, and make bookmark undefined`, fakeAsync(() => {
+      const testDate = new Date();
+      spyOn(service, 'filterByDate').and.returnValue([{
+        'created_at': testDate,
+        'id': 4321
+      }]);
+      spyOn(service, 'formatProduct').and.returnValue([{
+        'created_at': testDate,
+        'id': 4321
+      }]);
+      service.currency = 'ALL';
+      service.currIndex = 0;
+      service.bookmark = 2;
+      service.tableResults = [{
+        'created_at': testDate,
+        'id': 2222
+      }];
+      service.tableData.next([]);
+      service.isBusy.next(true);
+      service.handleHistoryResults([{
+        'created_at': testDate,
+        'id': 4321
+      }]);
+      tick(600);
+      expect(service.getLatestGdaxHistoryData).toHaveBeenCalled();
+      expect(service.isBusy.value).toBe(true);
+      expect(service.bookmark).toBe(undefined);
+      expect(service.currIndex).toBe(1);
+      expect(service.tableResults).toEqual([
+        {
+          'created_at': testDate,
+          'id': 2222
+        },
+        {
+          'created_at': testDate,
+          'id': 4321
+        }
+      ]);
+      expect(service.tableData.value).toEqual([]);
+    }));
+  });
 });
