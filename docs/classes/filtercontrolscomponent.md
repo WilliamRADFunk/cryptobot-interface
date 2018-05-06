@@ -17,23 +17,28 @@
 
 ### Properties
 
+* [activatedRouter](filtercontrolscomponent.md#markdown-header-private-activatedrouter)
 * [config](filtercontrolscomponent.md#markdown-header-private-config)
 * [endDate](filtercontrolscomponent.md#markdown-header-enddate)
 * [gdaxDataService](filtercontrolscomponent.md#markdown-header-private-gdaxdataservice)
 * [invalidEndDatetime](filtercontrolscomponent.md#markdown-header-invalidenddatetime)
 * [invalidStartDatetime](filtercontrolscomponent.md#markdown-header-invalidstartdatetime)
 * [isBusy](filtercontrolscomponent.md#markdown-header-isbusy)
+* [isInitialized](filtercontrolscomponent.md#markdown-header-isinitialized)
 * [isInvalid](filtercontrolscomponent.md#markdown-header-isinvalid)
 * [isRelevant](filtercontrolscomponent.md#markdown-header-isrelevant)
 * [maxEndDate](filtercontrolscomponent.md#markdown-header-maxenddate)
 * [maxStartDate](filtercontrolscomponent.md#markdown-header-maxstartdate)
 * [minEndDate](filtercontrolscomponent.md#markdown-header-minenddate)
 * [minStartDate](filtercontrolscomponent.md#markdown-header-minstartdate)
+* [params](filtercontrolscomponent.md#markdown-header-params)
+* [router](filtercontrolscomponent.md#markdown-header-private-router)
 * [startDate](filtercontrolscomponent.md#markdown-header-startdate)
 * [timeInterval](filtercontrolscomponent.md#markdown-header-timeinterval)
 * [timeIntervalLabel](filtercontrolscomponent.md#markdown-header-timeintervallabel)
 * [timeIntervalOptions](filtercontrolscomponent.md#markdown-header-timeintervaloptions)
 * [timeIntervals](filtercontrolscomponent.md#markdown-header-timeintervals)
+* [timeoutId](filtercontrolscomponent.md#markdown-header-timeoutid)
 * [tooltip](filtercontrolscomponent.md#markdown-header-tooltip)
 * [warningMessage](filtercontrolscomponent.md#markdown-header-warningmessage)
 
@@ -50,6 +55,11 @@
 * [checkValidMonth](filtercontrolscomponent.md#markdown-header-checkvalidmonth)
 * [checkValidYear](filtercontrolscomponent.md#markdown-header-checkvalidyear)
 * [closeTooltip](filtercontrolscomponent.md#markdown-header-closetooltip)
+* [handleEndDateTimeParam](filtercontrolscomponent.md#markdown-header-private-handleenddatetimeparam)
+* [handleGranularityParam](filtercontrolscomponent.md#markdown-header-private-handlegranularityparam)
+* [handleIncorrectDateTimeParams](filtercontrolscomponent.md#markdown-header-private-handleincorrectdatetimeparams)
+* [handleInitialParamUpdate](filtercontrolscomponent.md#markdown-header-private-handleinitialparamupdate)
+* [handleStartDateTimeParam](filtercontrolscomponent.md#markdown-header-private-handlestartdatetimeparam)
 * [isTooltipOpen](filtercontrolscomponent.md#markdown-header-istooltipopen)
 * [ngOnInit](filtercontrolscomponent.md#markdown-header-private-ngoninit)
 * [onEndDateChange](filtercontrolscomponent.md#markdown-header-onenddatechange)
@@ -58,6 +68,8 @@
 * [onStartTimeChange](filtercontrolscomponent.md#markdown-header-onstarttimechange)
 * [openTooltip](filtercontrolscomponent.md#markdown-header-opentooltip)
 * [resetMinMax](filtercontrolscomponent.md#markdown-header-resetminmax)
+* [setADateTime](filtercontrolscomponent.md#markdown-header-setadatetime)
+* [updateParams](filtercontrolscomponent.md#markdown-header-updateparams)
 
 
 ### Object literals
@@ -74,10 +86,10 @@
 
 
 
-### ⊕ **new FilterControlsComponent**(gdaxDataService: *[GdaxDataService](gdaxdataservice.md)*, config: *`NgbTimepickerConfig`*): [FilterControlsComponent](filtercontrolscomponent.md)
+### ⊕ **new FilterControlsComponent**(activatedRouter: *`ActivatedRoute`*, router: *`Router`*, gdaxDataService: *[GdaxDataService](gdaxdataservice.md)*, config: *`NgbTimepickerConfig`*): [FilterControlsComponent](filtercontrolscomponent.md)
 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:136](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L136)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:149](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L149)*
 
 
 
@@ -88,8 +100,10 @@ Constructor for the class
 
 | Param | Type | Description |
 | ------ | ------ | ------ |
-| gdaxDataService | [GdaxDataService](gdaxdataservice.md)   |  - |
-| config | `NgbTimepickerConfig`   |  - |
+| activatedRouter | `ActivatedRoute`   |  Angular's ActivatedRoute service for knowing current route |
+| router | `Router`   |  Angular's Router service for changing route |
+| gdaxDataService | [GdaxDataService](gdaxdataservice.md)   |  Internal service to get queried market data. |
+| config | `NgbTimepickerConfig`   |  Configuration service for ngb's timepicker |
 
 
 
@@ -103,12 +117,32 @@ Constructor for the class
 ## Properties
 
 
+### «Private» activatedRouter
+
+**●  activatedRouter**:  *`ActivatedRoute`* 
+
+*Defined in [app/components/filter-controls/filter-controls.component.ts:159](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L159)*
+
+
+
+Angular's ActivatedRoute service for knowing current route
+
+
+
+
+___
+
+
+
 ### «Private» config
 
 **●  config**:  *`NgbTimepickerConfig`* 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:143](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L143)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:162](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L162)*
 
+
+
+Configuration service for ngb's timepicker
 
 
 
@@ -121,7 +155,7 @@ ___
 
 **●  endDate**:  *`Date`*  =  new Date()
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:18](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L18)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:19](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L19)*
 
 
 
@@ -138,8 +172,11 @@ ___
 
 **●  gdaxDataService**:  *[GdaxDataService](gdaxdataservice.md)* 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:142](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L142)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:161](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L161)*
 
+
+
+Internal service to get queried market data.
 
 
 
@@ -152,7 +189,7 @@ ___
 
 **●  invalidEndDatetime**:  *`boolean`*  = false
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:56](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L56)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:61](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L61)*
 
 
 
@@ -169,7 +206,7 @@ ___
 
 **●  invalidStartDatetime**:  *`boolean`*  = false
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:52](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L52)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:57](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L57)*
 
 
 
@@ -186,7 +223,7 @@ ___
 
 **●  isBusy**:  *`boolean`*  = true
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:38](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L38)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:39](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L39)*
 
 
 
@@ -199,11 +236,28 @@ ___
 
 
 
+###  isInitialized
+
+**●  isInitialized**:  *`boolean`*  = false
+
+*Defined in [app/components/filter-controls/filter-controls.component.ts:43](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L43)*
+
+
+
+Skips change detections on start and end dates until inital settings are finished.
+
+
+
+
+___
+
+
+
 ###  isInvalid
 
 **●  isInvalid**:  *`boolean`*  = false
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:48](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L48)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:53](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L53)*
 
 
 
@@ -220,7 +274,7 @@ ___
 
 **●  isRelevant**:  *`boolean`*  = true
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:43](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L43)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:48](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L48)*
 
 
 
@@ -237,7 +291,7 @@ ___
 
 **●  maxEndDate**:  *`object`* 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:60](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L60)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:65](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L65)*
 
 
 
@@ -278,7 +332,7 @@ ___
 
 **●  maxStartDate**:  *`object`* 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:64](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L64)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:69](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L69)*
 
 
 
@@ -319,7 +373,7 @@ ___
 
 **●  minEndDate**:  *`object`* 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:68](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L68)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:73](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L73)*
 
 
 
@@ -360,7 +414,7 @@ ___
 
 **●  minStartDate**:  *`object`* 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:72](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L72)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:77](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L77)*
 
 
 
@@ -397,11 +451,45 @@ ___
 
 
 
+###  params
+
+**●  params**:  *`ParamMap`* 
+
+*Defined in [app/components/filter-controls/filter-controls.component.ts:81](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L81)*
+
+
+
+Holds query params to check against in other parts of component
+
+
+
+
+___
+
+
+
+### «Private» router
+
+**●  router**:  *`Router`* 
+
+*Defined in [app/components/filter-controls/filter-controls.component.ts:160](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L160)*
+
+
+
+Angular's Router service for changing route
+
+
+
+
+___
+
+
+
 ###  startDate
 
 **●  startDate**:  *`Date`*  =  new Date(this.endDate.getTime() - 87600000)
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:76](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L76)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:85](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L85)*
 
 
 
@@ -418,7 +506,7 @@ ___
 
 **●  timeInterval**:  *`number`*  = 3600
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:95](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L95)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:104](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L104)*
 
 
 
@@ -435,7 +523,7 @@ ___
 
 **●  timeIntervalLabel**:  *`string`*  = "1 hour"
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:99](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L99)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:108](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L108)*
 
 
 
@@ -473,7 +561,7 @@ ___
     }
   ]
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:103](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L103)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:112](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L112)*
 
 
 
@@ -490,7 +578,7 @@ ___
 
 **●  timeIntervals**:  *`object`[]*  =  this.timeIntervalOptions.slice()
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:128](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L128)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:137](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L137)*
 
 
 
@@ -503,11 +591,28 @@ ___
 
 
 
+###  timeoutId
+
+**●  timeoutId**:  *`any`*  =  null
+
+*Defined in [app/components/filter-controls/filter-controls.component.ts:141](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L141)*
+
+
+
+Message to use if start datetime is invalid
+
+
+
+
+___
+
+
+
 ###  tooltip
 
 **●  tooltip**:  *`NgbTooltip`* 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:14](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L14)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:15](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L15)*
 
 
 
@@ -525,7 +630,7 @@ ___
     'Datetimes must be less than 299 days apart.'
   ]
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:132](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L132)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:145](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L145)*
 
 
 
@@ -542,15 +647,23 @@ ___
 
 ###  adjustGranularityOptions
 
-► **adjustGranularityOptions**(): `void`
+► **adjustGranularityOptions**(forcedChangedTimeInterval?: *`boolean`*): `void`
 
 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:174](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L174)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:198](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L198)*
 
 
 
 Checks which of the time intervals have no more than the gdax max of 300 results between start and end datetimes
+
+
+**Parameters:**
+
+| Param | Type | Description |
+| ------ | ------ | ------ |
+| forcedChangedTimeInterval | `boolean`   |  signals whether to force a changedTimeInterval call |
+
 
 
 
@@ -567,11 +680,11 @@ ___
 
 ###  changedTimeInterval
 
-► **changedTimeInterval**(event: *`any`*): `void`
+► **changedTimeInterval**(event: *`any`*, initChange?: *`boolean`*): `void`
 
 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:221](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L221)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:253](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L253)*
 
 
 
@@ -583,6 +696,7 @@ Triggered when user changes granularity choice Updates the service variable
 | Param | Type | Description |
 | ------ | ------ | ------ |
 | event | `any`   |  label/value object containing granularity label and value |
+| initChange | `boolean`   |  signals service that this is the OnInit value change. |
 
 
 
@@ -604,7 +718,7 @@ ___
 
 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:230](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L230)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:268](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L268)*
 
 
 
@@ -631,7 +745,7 @@ ___
 
 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:249](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L249)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:287](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L287)*
 
 
 
@@ -658,7 +772,7 @@ ___
 
 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:268](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L268)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:306](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L306)*
 
 
 
@@ -693,7 +807,7 @@ ___
 
 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:281](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L281)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:319](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L319)*
 
 
 
@@ -728,7 +842,7 @@ ___
 
 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:294](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L294)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:332](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L332)*
 
 
 
@@ -763,7 +877,7 @@ ___
 
 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:307](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L307)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:345](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L345)*
 
 
 
@@ -798,7 +912,7 @@ ___
 
 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:320](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L320)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:358](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L358)*
 
 
 
@@ -833,11 +947,126 @@ ___
 
 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:332](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L332)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:370](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L370)*
 
 
 
 Closes the datetime warning tooltip if it's open
+
+
+
+
+**Returns:** `void`
+
+
+
+
+
+___
+
+
+
+### «Private» handleEndDateTimeParam
+
+► **handleEndDateTimeParam**(): `void`
+
+
+
+*Defined in [app/components/filter-controls/filter-controls.component.ts:381](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L381)*
+
+
+
+
+
+
+**Returns:** `void`
+
+
+
+
+
+___
+
+
+
+### «Private» handleGranularityParam
+
+► **handleGranularityParam**(): `void`
+
+
+
+*Defined in [app/components/filter-controls/filter-controls.component.ts:406](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L406)*
+
+
+
+
+
+
+**Returns:** `void`
+
+
+
+
+
+___
+
+
+
+### «Private» handleIncorrectDateTimeParams
+
+► **handleIncorrectDateTimeParams**(): `void`
+
+
+
+*Defined in [app/components/filter-controls/filter-controls.component.ts:424](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L424)*
+
+
+
+
+
+
+**Returns:** `void`
+
+
+
+
+
+___
+
+
+
+### «Private» handleInitialParamUpdate
+
+► **handleInitialParamUpdate**(): `void`
+
+
+
+*Defined in [app/components/filter-controls/filter-controls.component.ts:440](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L440)*
+
+
+
+
+
+
+**Returns:** `void`
+
+
+
+
+
+___
+
+
+
+### «Private» handleStartDateTimeParam
+
+► **handleStartDateTimeParam**(): `void`
+
+
+
+*Defined in [app/components/filter-controls/filter-controls.component.ts:465](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L465)*
+
+
 
 
 
@@ -858,7 +1087,7 @@ ___
 
 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:342](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L342)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:488](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L488)*
 
 
 
@@ -885,7 +1114,7 @@ ___
 
 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:152](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L152)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:171](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L171)*
 
 
 
@@ -908,7 +1137,7 @@ ___
 
 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:349](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L349)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:495](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L495)*
 
 
 
@@ -933,7 +1162,7 @@ ___
 
 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:367](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L367)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:520](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L520)*
 
 
 
@@ -958,7 +1187,7 @@ ___
 
 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:385](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L385)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:545](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L545)*
 
 
 
@@ -983,7 +1212,7 @@ ___
 
 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:403](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L403)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:570](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L570)*
 
 
 
@@ -1008,7 +1237,7 @@ ___
 
 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:420](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L420)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:594](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L594)*
 
 
 
@@ -1033,11 +1262,79 @@ ___
 
 
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:429](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L429)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:603](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L603)*
 
 
 
 Changes the min and max dates for both datepickers when one changes
+
+
+
+
+**Returns:** `void`
+
+
+
+
+
+___
+
+
+
+###  setADateTime
+
+► **setADateTime**(dateObject: *`Date`*, dateVarToUpdate: *`object`*, timeVarToUpdate: *`object`*): `void`
+
+
+
+*Defined in [app/components/filter-controls/filter-controls.component.ts:634](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L634)*
+
+
+
+Updates the date and time objects based on dateObject Date parameter
+
+
+**Parameters:**
+
+| Param | Type | Description |
+| ------ | ------ | ------ |
+| dateObject | `Date`   |  Date used to update the dateVarToUpdate & timeVarToUpdate objects |
+| dateVarToUpdate | `object`   |  ngbDatepicker friendly object used as either start or end date |
+| timeVarToUpdate | `object`   |  ngbTimepicker friendly object used as either start or end time |
+
+
+
+
+
+**Returns:** `void`
+
+
+
+
+
+___
+
+
+
+###  updateParams
+
+► **updateParams**(params: *`__type`*): `void`
+
+
+
+*Defined in [app/components/filter-controls/filter-controls.component.ts:648](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L648)*
+
+
+
+Called when params need updating. Avoids repetition.
+
+
+**Parameters:**
+
+| Param | Type | Description |
+| ------ | ------ | ------ |
+| params | `__type`   |  param object used to update queryParams |
+
 
 
 
@@ -1065,7 +1362,7 @@ Maintains the end date for 'End Date:' datepicker
 
 **●  day**:  *`number`*  =  this.endDate.getDate()
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:25](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L25)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:26](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L26)*
 
 
 
@@ -1078,7 +1375,7 @@ ___
 
 **●  month**:  *`number`*  =  this.endDate.getMonth() + 1
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:24](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L24)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:25](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L25)*
 
 
 
@@ -1091,7 +1388,7 @@ ___
 
 **●  year**:  *`number`*  =  this.endDate.getFullYear()
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L23)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:24](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L24)*
 
 
 
@@ -1113,7 +1410,7 @@ Maintains the end time for 'End Time:' timepicker
 
 **●  hour**:  *`number`*  =  this.endDate.getHours()
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:31](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L31)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:32](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L32)*
 
 
 
@@ -1126,7 +1423,7 @@ ___
 
 **●  minute**:  *`number`*  =  this.endDate.getMinutes()
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:32](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L32)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:33](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L33)*
 
 
 
@@ -1148,7 +1445,7 @@ Maintains the start date for 'Start Date:' datepicker
 
 **●  day**:  *`number`*  =  this.startDate.getDate()
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:83](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L83)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:92](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L92)*
 
 
 
@@ -1161,7 +1458,7 @@ ___
 
 **●  month**:  *`number`*  =  this.startDate.getMonth() + 1
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:82](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L82)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:91](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L91)*
 
 
 
@@ -1174,7 +1471,7 @@ ___
 
 **●  year**:  *`number`*  =  this.startDate.getFullYear()
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:81](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L81)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:90](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L90)*
 
 
 
@@ -1196,7 +1493,7 @@ Maintains the start time for 'Start Time:' timepicker
 
 **●  hour**:  *`number`*  =  this.startDate.getHours()
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:89](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L89)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:98](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L98)*
 
 
 
@@ -1209,7 +1506,7 @@ ___
 
 **●  minute**:  *`number`*  =  this.startDate.getMinutes()
 
-*Defined in [app/components/filter-controls/filter-controls.component.ts:90](https://github.com/WilliamRADFunk/cryptobot-interface/blob/e137f0d/src/app/components/filter-controls/filter-controls.component.ts#L90)*
+*Defined in [app/components/filter-controls/filter-controls.component.ts:99](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.ts#L99)*
 
 
 
