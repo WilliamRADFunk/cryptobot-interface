@@ -222,6 +222,12 @@ export class GdaxDataService {
     return d1;
   }
   /**
+  * Call to GDAX for cryptobot data
+  */
+  getLatestCryptoBotData(): void {
+
+  }
+  /**
   * Call to GDAX for historical market data
   */
   getLatestGdaxData(): void {
@@ -311,6 +317,16 @@ export class GdaxDataService {
         });
     }
   }
+  /**
+  * Call to GDAX for profit data
+  */
+  getLatestGdaxProfitData(): void {
+
+  }
+  /**
+  * Recursive query maker until desired results are found
+  * @param originalData data used to check against to see if current results are sufficient
+  */
   handleHistoryResults(originalData: {}[]): void {
     // No data returned. No more data.
     // If 'ALL' and other currencies left, try those.
@@ -437,18 +453,6 @@ export class GdaxDataService {
         return;
       }
     }
-  }
-  /**
-  * Call to GDAX for profit data
-  */
-  getLatestGdaxProfitData(): void {
-
-  }
-  /**
-  * Call to GDAX for cryptobot data
-  */
-  getLatestCryptoBotData(): void {
-
   }
   /**
   * Determines which data api to use based off of basePath, and calls it.

@@ -1,4 +1,4 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed, inject, fakeAsync, tick } from '@angular/core/testing';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 import { GdaxDataService } from './gdax-data.service';
@@ -52,6 +52,24 @@ describe('GdaxDataService', () => {
       expect(service.basePath).toBe('live-view');
       expect(service.refreshData).toHaveBeenCalled();
     }));
+    it('should change currency to LTC-USD, basePath to live-view, and call refreshData',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      spyOn(service, 'refreshData').and.returnValue(true);
+      service.firstTime = [true, false, false, false];
+      service.changeCurrencyType('LTC-USD', 'live-view', true);
+      expect(service.currency).toBe('LTC-USD');
+      expect(service.basePath).toBe('live-view');
+      expect(service.refreshData).toHaveBeenCalled();
+    }));
+    it('should change currency to LTC-USD, basePath to live-view, and not call refreshData',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      spyOn(service, 'refreshData').and.returnValue(true);
+      service.firstTime = [true, false, false, false];
+      service.changeCurrencyType('LTC-USD', 'live-view', false);
+      expect(service.currency).toBe('LTC-USD');
+      expect(service.basePath).toBe('live-view');
+      expect(service.refreshData).not.toHaveBeenCalled();
+    }));
   });
   describe('changeEndDateTime', () => {
     it('should change end DateTime and call refreshData',
@@ -61,6 +79,22 @@ describe('GdaxDataService', () => {
       service.changeEndDateTime(date, true);
       expect(service.endDate).toEqual(date);
       expect(service.refreshData).toHaveBeenCalled();
+    }));
+    it('should change end DateTime and call refreshData',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      spyOn(service, 'refreshData').and.returnValue(true);
+      service.firstTime = [false, false, false, true];
+      service.changeEndDateTime(date, true);
+      expect(service.endDate).toEqual(date);
+      expect(service.refreshData).toHaveBeenCalled();
+    }));
+    it('should change end DateTime and not call refreshData',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      spyOn(service, 'refreshData').and.returnValue(true);
+      service.firstTime = [false, false, false, true];
+      service.changeEndDateTime(date, false);
+      expect(service.endDate).toEqual(date);
+      expect(service.refreshData).not.toHaveBeenCalled();
     }));
   });
   describe('changeStartDateTime', () => {
@@ -72,6 +106,22 @@ describe('GdaxDataService', () => {
       expect(service.startDate).toEqual(date);
       expect(service.refreshData).toHaveBeenCalled();
     }));
+    it('should change start DateTime and call refreshData',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      spyOn(service, 'refreshData').and.returnValue(true);
+      service.firstTime = [false, false, true, false];
+      service.changeStartDateTime(date, true);
+      expect(service.startDate).toEqual(date);
+      expect(service.refreshData).toHaveBeenCalled();
+    }));
+    it('should change start DateTime and not call refreshData',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      spyOn(service, 'refreshData').and.returnValue(true);
+      service.firstTime = [false, false, true, false];
+      service.changeStartDateTime(date, false);
+      expect(service.startDate).toEqual(date);
+      expect(service.refreshData).not.toHaveBeenCalled();
+    }));
   });
   describe('changeTimeInterval', () => {
     it('should change interval to 300 and call refreshData',
@@ -82,125 +132,89 @@ describe('GdaxDataService', () => {
       expect(service.interval).toBe(300);
       expect(service.refreshData).toHaveBeenCalled();
     }));
+    it('should change interval to 300 and call refreshData',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      spyOn(service, 'refreshData').and.returnValue(true);
+      service.firstTime = [false, true, false, false];
+      service.changeTimeInterval(600, true);
+      expect(service.interval).toBe(600);
+      expect(service.refreshData).toHaveBeenCalled();
+    }));
+    it('should change interval to 300 and not call refreshData',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      spyOn(service, 'refreshData').and.returnValue(true);
+      service.firstTime = [false, true, false, false];
+      service.changeTimeInterval(900, false);
+      expect(service.interval).toBe(900);
+      expect(service.refreshData).not.toHaveBeenCalled();
+    }));
   });
   describe('getLatestGdaxData', () => {
     it('should callhttpClient.get with expected parameters',
-      inject([GdaxDataService], (service: GdaxDataService) => {
+      fakeAsync(inject([GdaxDataService], (service: GdaxDataService) => {
       spyOn(httpClient, 'get').and.callThrough();
       service.startDate = date;
       service.endDate = date;
       service.getLatestGdaxData();
+      tick(400);
       expect(httpClient.get.calls.mostRecent().args[0]).toEqual('https://api.gdax.com/products/BTC-USD/candles');
       expect(httpClient.get.calls.mostRecent().args[1].params.toString())
         .toEqual('granularity=3600&start=2018-03-25T03:55:19.336Z&end=2018-03-25T03:55:19.336Z');
-    }));
+    })));
     it('should callhttpClient.get with expected parameters',
-      inject([GdaxDataService], (service: GdaxDataService) => {
+      fakeAsync(inject([GdaxDataService], (service: GdaxDataService) => {
       spyOn(httpClient, 'get').and.callThrough();
       service.startDate = date;
       service.endDate = date;
       service.currency = 'ALL';
       service.getLatestGdaxData();
+      tick(400);
       expect(httpClient.get.calls.mostRecent().args[0]).toEqual('https://api.gdax.com/products/ETH-USD/candles');
       expect(httpClient.get.calls.mostRecent().args[1].params.toString())
         .toEqual('granularity=3600&start=2018-03-25T03:55:19.336Z&end=2018-03-25T03:55:19.336Z');
-    }));
+    })));
   });
   describe('getLatestGdaxHistoryData', () => {
-    it('should callhttpClient.get with expected parameters',
+    it('should call httpClient.get with expected parameters',
       inject([GdaxDataService], (service: GdaxDataService) => {
       spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
-      spyOn(service, 'filterByDate').and.returnValue([{'created_at': date, 'id': 321}]);
-      spyOn(service, 'formatProduct').and.returnValue([{'created_at': date, 'id': 321}]);
+      spyOn(service, 'handleHistoryResults').and.returnValue(true);
+      service.bookmark = undefined;
       service.startDate = date;
       service.endDate = date;
       service.getLatestGdaxHistoryData();
-      expect(service.formatProduct['calls'].count()).toEqual(1);
       expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/btc') > -1).toBe(true);
       expect(httpClient.get.calls.mostRecent().args[1].params.toString())
         .toEqual('limit=11');
     }));
-    // it('should callhttpClient.get with expected parameters',
-    //   inject([GdaxDataService], (service: GdaxDataService) => {
-    //   spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
-    //   spyOn(service, 'filterByDate').and.returnValue([{'created_at': date, 'id': 123}]);
-    //   spyOn(service, 'formatProduct').and.returnValue([{'created_at': date, 'id': 123}]);
-    //   service.bookmark = 123;
-    //   service.startDate = date;
-    //   service.endDate = date;
-    //   service.currency = 'ALL';
-    //   service.getLatestGdaxHistoryData();
-    //   expect(service.formatProduct['calls'].count()).toEqual(1);
-    //   expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/eth') > -1).toBe(true);
-    //   expect(httpClient.get.calls.mostRecent().args[1].params.toString())
-    //     .toEqual('after=123&limit=11');
-    // }));
-    // it('should callhttpClient.get with expected parameters',
-    //   inject([GdaxDataService], (service: GdaxDataService) => {
-    //   spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
-    //   spyOn(service, 'filterByDate').and.returnValue([{'created_at': date, 'id': 321}]);
-    //   spyOn(service, 'formatProduct').and.returnValue([{'created_at': date, 'id': 321}]);
-    //   service.bookmark = -321;
-    //   service.startDate = date;
-    //   service.endDate = date;
-    //   service.currency = 'ALL';
-    //   service.getLatestGdaxHistoryData();
-    //   expect(service.formatProduct['calls'].count()).toEqual(3);
-    //   expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/eth') > -1).toBe(true);
-    //   expect(httpClient.get.calls.mostRecent().args[1].params.toString())
-    //     .toEqual('before=321&limit=11');
-    // }));
-    // it('should callhttpClient.get with expected parameters',
-    //   inject([GdaxDataService], (service: GdaxDataService) => {
-    //   spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
-    //   spyOn(service, 'filterByDate').and.returnValue([{'created_at': date, 'id': 321}]);
-    //   spyOn(service, 'formatProduct').and.returnValue([]);
-    //   service.bookmark = 321;
-    //   service.startDate = date;
-    //   service.endDate = date;
-    //   service.currency = 'BTC';
-    //   service.getLatestGdaxHistoryData();
-    //   expect(service.formatProduct['calls'].count()).toEqual(1);
-    //   expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/btc') > -1).toBe(true);
-    //   expect(httpClient.get.calls.mostRecent().args[1].params.toString())
-    //     .toEqual('after=321&limit=11');
-    //     expect(service.bookmark).toBe(321);
-    // }));
-    // it('should callhttpClient.get with expected parameters',
-    //   inject([GdaxDataService], (service: GdaxDataService) => {
-    //   spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
-    //   spyOn(service, 'filterByDate').and.returnValue([{'created_at': date, 'id': 321}]);
-    //   spyOn(service, 'formatProduct').and.returnValues(
-    //     [{'created_at': date, 'id': 321}],
-    //     [{'created_at': date, 'id': 321}]
-    //   );
-    //   service.rowsPerPage = 1;
-    //   service.bookmark = 321;
-    //   service.startDate = date;
-    //   service.endDate = date;
-    //   service.currency = 'ALL';
-    //   service.getLatestGdaxHistoryData();
-    //   expect(service.formatProduct['calls'].count()).toEqual(2);
-    //   expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/ltc') > -1).toBe(true);
-    //   expect(httpClient.get.calls.mostRecent().args[1].params.toString())
-    //     .toEqual('after=321&limit=2');
-    // }));
-    // it('should callhttpClient.get with expected parameters',
-    //   inject([GdaxDataService], (service: GdaxDataService) => {
-    //   spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
-    //   spyOn(service, 'filterByDate').and.returnValue([{'created_at': date, 'id': 321}]);
-    //   spyOn(service, 'formatProduct').and.returnValue([{'created_at': date, 'id': 321}]);
-    //   service.rowsPerPage = 0;
-    //   service.bookmark = 321;
-    //   service.startDate = date;
-    //   service.endDate = date;
-    //   service.currency = 'ALL';
-    //   service.getLatestGdaxHistoryData();
-    //   expect(service.formatProduct['calls'].count()).toEqual(1);
-    //   expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/btc') > -1).toBe(true);
-    //   expect(httpClient.get.calls.mostRecent().args[1].params.toString())
-    //     .toEqual('after=321&limit=1');
-    // }));
+    it('should call httpClient.get with expected parameters',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
+      spyOn(service, 'handleHistoryResults').and.returnValue(true);
+      service.bookmark = 123;
+      service.startDate = date;
+      service.endDate = date;
+      service.currIndex = 2;
+      service.currency = 'ALL';
+      service.getLatestGdaxHistoryData();
+      expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/eth') > -1).toBe(true);
+      expect(httpClient.get.calls.mostRecent().args[1].params.toString())
+        .toEqual('after=123&limit=11');
+    }));
+    it('should callhttpClient.get with expected parameters',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
+      spyOn(service, 'handleHistoryResults').and.returnValue(true);
+      service.bookmark = -321;
+      service.startDate = date;
+      service.endDate = date;
+      service.currIndex = 2;
+      service.currency = 'ALL';
+      service.getLatestGdaxHistoryData();
+      expect(httpClient.get.calls.mostRecent().args[0].indexOf('/history/eth') > -1).toBe(true);
+      expect(httpClient.get.calls.mostRecent().args[1].params.toString())
+        .toEqual('before=321&limit=11');
+    }));
   });
   describe('refreshData', () => {
     let service;
@@ -230,6 +244,18 @@ describe('GdaxDataService', () => {
       expect(service.getLatestGdaxProfitData).not.toHaveBeenCalled();
       expect(service.getLatestCryptoBotData).not.toHaveBeenCalled();
       expect(service.isRelevant.value).toBe(false);
+    });
+    it('should call getLatestGdaxHistoryData, change isRelevant, and currIndex', () => {
+      service.basePath = 'trading-history';
+      service.isRelevant.next(true);
+      service.currIndex = 1;
+      service.refreshData(true);
+      expect(service.getLatestGdaxData).not.toHaveBeenCalled();
+      expect(service.getLatestGdaxHistoryData).toHaveBeenCalled();
+      expect(service.getLatestGdaxProfitData).not.toHaveBeenCalled();
+      expect(service.getLatestCryptoBotData).not.toHaveBeenCalled();
+      expect(service.isRelevant.value).toBe(false);
+      expect(service.currIndex).toBe(1);
     });
     it('should call getLatestGdaxProfitData and change isRelevant', () => {
       service.basePath = 'profit-portfolio';
@@ -315,6 +341,24 @@ describe('GdaxDataService', () => {
       service.changeRowsPerPage(10, true);
       expect(service.rowsPerPage).toBe(10);
       expect(service.refreshData).toHaveBeenCalled();
+    }));
+    it('should set rowsPerPage and call refreshData',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      spyOn(service, 'refreshData').and.returnValue(true);
+      service.firstTime = [true, false, false, false];
+      service.tableData.next([{'id': 321}]);
+      service.changeRowsPerPage(10, true);
+      expect(service.rowsPerPage).toBe(10);
+      expect(service.refreshData).toHaveBeenCalled();
+    }));
+    it('should set rowsPerPage and not call refreshData',
+      inject([GdaxDataService], (service: GdaxDataService) => {
+      spyOn(service, 'refreshData').and.returnValue(true);
+      service.firstTime = [true, false, false, false];
+      service.tableData.next([{'id': 321}]);
+      service.changeRowsPerPage(10, false);
+      expect(service.rowsPerPage).toBe(10);
+      expect(service.refreshData).not.toHaveBeenCalled();
     }));
   });
   describe('formatProduct', () => {
