@@ -218,7 +218,6 @@ export class FilterControlsComponent implements OnInit {
           this.setADateTime(this.endDate, this.eDate, this.eTime);
           this.updateParam('startDateTime', this.startDate.toISOString());
           this.updateParam('endDateTime', this.endDate.toISOString());
-          console.log('here');
           this.gdaxDataService.changeStartDateTime(this.startDate, true);
           this.gdaxDataService.changeEndDateTime(this.endDate, true);
         }
@@ -239,6 +238,7 @@ export class FilterControlsComponent implements OnInit {
       });
   }
   updateParam(paramName: string, paramValue: any) {
+    console.log(paramName, paramValue);
     const qParam = {};
     qParam[paramName] = paramValue;
     this.router.navigate([], {

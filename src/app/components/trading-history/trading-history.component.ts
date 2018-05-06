@@ -108,8 +108,7 @@ export class TradingHistoryComponent implements OnInit {
         // and signal the service
         } else if((params.has('rows')
         && (!Number(params.get('rows'))
-        || this.rowAmounts.indexOf(Number(params.get('rows'))) < 0))
-        || !params.has('rows')) {
+        || this.rowAmounts.indexOf(Number(params.get('rows'))) < 0))) {
           this.rowsPerPage = this.rowAmounts[0];
           this.updateParam('rows', this.rowsPerPage);
 
@@ -119,6 +118,16 @@ export class TradingHistoryComponent implements OnInit {
             this.gdaxDataService.changeRowsPerPage(this.rowsPerPage, true);
           }
           console.log('2', this.rowsPerPage);
+        } else {
+          this.rowsPerPage = this.rowAmounts[0];
+          this.updateParam('rows', this.rowsPerPage);
+
+          if (this.firstTime[0]) {
+            this.gdaxDataService.changeRowsPerPage(this.rowsPerPage, false);
+          } else {
+            this.gdaxDataService.changeRowsPerPage(this.rowsPerPage, true);
+          }
+          console.log('0', this.rowsPerPage);
         }
         // Whether rows is a parameter or not, mark the firsttime as false to let
         // currencyType know it's ready for query.
@@ -139,7 +148,8 @@ export class TradingHistoryComponent implements OnInit {
     qParam[paramName] = paramValue;
     
     console.log('3', qParam);
-    this.router.navigate([], {
+    this.router.navigate(['.'], {
+      replaceUrl: true,
       queryParams: qParam,
       queryParamsHandling: "merge"
     });
