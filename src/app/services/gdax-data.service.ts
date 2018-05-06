@@ -435,7 +435,7 @@ export class GdaxDataService {
       const formatedData = this.formatProduct(data);
       // No/some previously stored results, but not enough to fulfil page.
       // Add everything to results and run query again for more.
-      if (!this.tableResults.length || deficit > formatedData.length) {
+      if (!this.tableResults.length && deficit > formatedData.length) {
         this.tableResults = this.tableResults.concat(formatedData);
         this.bookmark = formatedData[formatedData.length - 1]['id'];
         setTimeout(() => {
