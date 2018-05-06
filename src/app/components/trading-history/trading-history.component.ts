@@ -96,18 +96,15 @@ export class TradingHistoryComponent implements OnInit {
     this.activatedRouter.queryParamMap
       .subscribe((params: ParamMap) => {
         this.params = params;
-        console.log('thc', this.params);
         // If valid option for rowsPerPage, use it, and signal the service
         if (params.has('rows')
           && Number(params.get('rows'))
           && this.rowAmounts.indexOf(Number(params.get('rows'))) > -1) {
           this.rowsPerPage = Number(params.get('rows'));
-          console.log('1', this.rowsPerPage);
         // If invalid option for rowsPerPage, or not present in params,
         // fall back to first option, and signal the service
         } else {
           this.rowsPerPage = this.rowAmounts[0];
-          console.log('2', this.rowsPerPage);
         }
 
         this.updateParams({

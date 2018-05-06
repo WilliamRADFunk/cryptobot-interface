@@ -317,11 +317,9 @@ export class GdaxDataService {
     if (!originalData.length
       && this.currency === 'ALL'
       && this.currIndex < this.currTypes.length - 1) {
-      console.log('0');
       this.currIndex++;
       this.bookmark = undefined;
       setTimeout(() => {
-        console.log('-0');
         this.getLatestGdaxHistoryData();
       }, 500);
       return;

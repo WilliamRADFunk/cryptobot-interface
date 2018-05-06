@@ -187,7 +187,6 @@ export class FilterControlsComponent implements OnInit {
     this.activatedRouter.queryParamMap
       .subscribe((params: ParamMap) => {
         this.params = params;
-        console.log('p', params.get('startDateTime'));
         // If valid option for startDateTime, use it, and signal the service
         if (params.has('startDateTime')) {
           const startDateTime = new Date(params.get('startDateTime'));
@@ -227,15 +226,6 @@ export class FilterControlsComponent implements OnInit {
           this.gdaxDataService.changeStartDateTime(this.startDate, true);
           this.gdaxDataService.changeEndDateTime(this.endDate, true);
         }
-        console.log('?', this.endDate.toISOString(),
-        this.startDate.toISOString());
-        // Update the url param for dates only after they've been checked
-        // formatted, and corrected if need be.
-        this.updateParams({
-          ...this.activatedRouter.snapshot.queryParams,
-          endDateTime: this.endDate.toISOString(),
-          startDateTime: this.startDate.toISOString()
-        });
         // Dates are done, release the change detection functions.
         this.isInitialized = true;
         // If valid option for rowsPerPage, use it, and signal the service
@@ -250,6 +240,23 @@ export class FilterControlsComponent implements OnInit {
         }
         this.resetMinMax();
         this.adjustGranularityOptions(true);
+        // Update the url param for dates only after they've been checked
+        // formatted, and corrected if need be.
+        if (this.isRelevant) {
+          this.updateParams({
+            ...this.activatedRouter.snapshot.queryParams,
+            endDateTime: this.endDate.toISOString(),
+            granularity: this.timeInterval,
+            startDateTime: this.startDate.toISOString()
+          });
+        } else {
+          this.updateParams({
+            ...this.activatedRouter.snapshot.queryParams,
+            endDateTime: this.endDate.toISOString(),
+            granularity: null,
+            startDateTime: this.startDate.toISOString()
+          });
+        }
       });
   }
   /**
@@ -315,10 +322,12 @@ export class FilterControlsComponent implements OnInit {
   changedTimeInterval(event, initChange?: boolean): void {
     this.timeInterval = event['value'];
     this.timeIntervalLabel = event['label'];
-    this.updateParams({
-      ...this.activatedRouter.snapshot.queryParams,
-      granularity: event['value']
-    });
+    if (this.isRelevant && !initChange) {
+      this.updateParams({
+        ...this.activatedRouter.snapshot.queryParams,
+        granularity: event['value']
+      });
+    }
     this.gdaxDataService.changeTimeInterval(this.timeInterval, initChange);
   }
   /**
@@ -504,7 +513,6 @@ export class FilterControlsComponent implements OnInit {
       this.closeTooltip();
       this.adjustGranularityOptions();
       const changedDateTime: Date = new Date(this.sDate.year, this.sDate.month - 1, this.sDate.day, this.sTime.hour, this.sTime.minute);
-      console.log(changedDateTime.toISOString());
       this.updateParams({
         ...this.activatedRouter.snapshot.queryParams,
         startDateTime: changedDateTime.toISOString()
