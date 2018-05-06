@@ -80,9 +80,7 @@ export class TradingHistoryComponent implements OnInit {
   ngOnInit(): void {
     this.gdaxDataService.isBusy
       .subscribe(data => {
-        this.timeoutId = setTimeout(() => {
-          this.isBusy = data;
-        }, 1000);
+        this.isBusy = data;
       });
     this.activatedRouter.url
       .subscribe((segments: UrlSegment[]) => {
@@ -97,41 +95,30 @@ export class TradingHistoryComponent implements OnInit {
       });
     this.activatedRouter.queryParamMap
       .subscribe((params: ParamMap) => {
+        this.params = params;
+        console.log('thc', this.params);
         // If valid option for rowsPerPage, use it, and signal the service
         if (params.has('rows')
           && Number(params.get('rows'))
           && this.rowAmounts.indexOf(Number(params.get('rows'))) > -1) {
           this.rowsPerPage = Number(params.get('rows'));
-          if (this.firstTime[0]) {
-            this.gdaxDataService.changeRowsPerPage(this.rowsPerPage, false);
-          } else {
-            this.gdaxDataService.changeRowsPerPage(this.rowsPerPage, true);
-          }
           console.log('1', this.rowsPerPage);
-        // If invalid option for rowsPerPage, fall back to first option,
-        // and signal the service
-        } else if((params.has('rows')
-        && (!Number(params.get('rows'))
-        || this.rowAmounts.indexOf(Number(params.get('rows'))) < 0))) {
-          this.rowsPerPage = this.rowAmounts[0];
-          this.updateParam('rows', this.rowsPerPage);
-
-          if (this.firstTime[0]) {
-            this.gdaxDataService.changeRowsPerPage(this.rowsPerPage, false);
-          } else {
-            this.gdaxDataService.changeRowsPerPage(this.rowsPerPage, true);
-          }
-          console.log('2', this.rowsPerPage);
+        // If invalid option for rowsPerPage, or not present in params,
+        // fall back to first option, and signal the service
         } else {
           this.rowsPerPage = this.rowAmounts[0];
-          this.updateParam('rows', this.rowsPerPage);
+          console.log('2', this.rowsPerPage);
+        }
 
-          if (this.firstTime[0]) {
-            this.gdaxDataService.changeRowsPerPage(this.rowsPerPage, false);
-          } else {
-            this.gdaxDataService.changeRowsPerPage(this.rowsPerPage, true);
-          }
-          console.log('0', this.rowsPerPage);
+        this.updateParams({
+          ...this.activatedRouter.snapshot.queryParams,
+          rows: this.rowsPerPage.toString()
+        });
+
+        if (this.firstTime[0]) {
+          this.gdaxDataService.changeRowsPerPage(this.rowsPerPage, false);
+        } else {
+          this.gdaxDataService.changeRowsPerPage(this.rowsPerPage, true);
         }
         // Whether rows is a parameter or not, mark the firsttime as false to let
         // currencyType know it's ready for query.
@@ -146,16 +133,6 @@ export class TradingHistoryComponent implements OnInit {
       });
     this.gdaxDataService.tableData
       .subscribe(this.updateTable.bind(this));
-  }
-  updateParam(paramName: string, paramValue: any) {
-    const qParam = {};
-    qParam[paramName] = paramValue;
-    
-    console.log('3', qParam);
-    this.router.navigate([], {
-      queryParams: qParam,
-      queryParamsHandling: "merge"
-    });
   }
   /**
   * Called when user clicked next or previous page button
@@ -184,11 +161,24 @@ export class TradingHistoryComponent implements OnInit {
   changedRowsPerPage(newRowsPerPage: number): void {
     if (this.rowsPerPage !== newRowsPerPage) {
       this.rowsPerPage = newRowsPerPage;
-      this.isBusy = true;
       this.page = 1;
-      this.updateParam('rows', this.rowsPerPage);
+      this.isBusy = true;
+      this.updateParams({
+        ...this.activatedRouter.snapshot.queryParams,
+        rows: this.rowsPerPage.toString()
+      });
       this.gdaxDataService.changeRowsPerPage(this.rowsPerPage);
     }
+  }
+  /**
+  * Called when params need updating. Avoids repetition.
+  * @param params param object used to update queryParams
+  */
+  updateParams(params: {}) {
+    this.router.navigate([], {
+      queryParams: params,
+      queryParamsHandling: 'merge'
+    });
   }
   /**
   * When new data is received, it's passed to this function.

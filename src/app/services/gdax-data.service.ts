@@ -125,23 +125,23 @@ export class GdaxDataService {
       this.bookmark = this.tableData.value[this.tableData.value.length - 2]['id'];
     }
     this.page.next(page);
-    this.refreshData();
+    this.refreshData(true);
   }
   /**
   * Updates the number of rows per page,
   * and refreshes query results.
   * @param rowsPerPage the granularity to use
-  * @param refresh flag to refresh the query. Helps to wait until all url details are pulled
+  * @param initChange flag to signal it's an original change (prevents multiple query calls onInit)
   */
-  changeRowsPerPage(rowsPerPage: number, refresh?: boolean): void {
+  changeRowsPerPage(rowsPerPage: number, initChange?: boolean): void {
     this.tableResults = [];
     this.rowsPerPage = rowsPerPage;
     this.page.next(1);
     this.bookmark = undefined;
-    if (refresh) {
+    if (initChange) {
       this.firstTime[0] = false;
     }
-    if (refresh && this.firstTime.indexOf(true) < 0) {
+    if (this.firstTime.indexOf(true) < 0) {
       this.refreshData();
     }
   }
@@ -257,7 +257,9 @@ export class GdaxDataService {
                     data1.push(data3[b]);
                   }
                   this.chartData.next(data1);
-                  this.isBusy.next(false);
+                  setTimeout(() => {
+                    this.isBusy.next(false);
+                  }, 300);
                 });
             });
         });
@@ -265,7 +267,9 @@ export class GdaxDataService {
       this.http.get<any>(`https://api.gdax.com/products/${this.currency}/candles`, {headers, params})
         .subscribe(data => {
           this.chartData.next(data);
-          this.isBusy.next(false);
+          setTimeout(() => {
+            this.isBusy.next(false);
+          }, 300);
         });
     }
   }
@@ -313,9 +317,11 @@ export class GdaxDataService {
     if (!originalData.length
       && this.currency === 'ALL'
       && this.currIndex < this.currTypes.length - 1) {
+      console.log('0');
       this.currIndex++;
       this.bookmark = undefined;
       setTimeout(() => {
+        console.log('-0');
         this.getLatestGdaxHistoryData();
       }, 500);
       return;
@@ -323,7 +329,9 @@ export class GdaxDataService {
     // Return what has been collected.
     } else if (!originalData.length) {
       this.tableData.next(this.tableResults);
-      this.isBusy.next(false);
+      setTimeout(() => {
+        this.isBusy.next(false);
+      }, 300);
       return;
     // Looking at data older than the earliest desired
     // date (passed filter range)
@@ -342,7 +350,9 @@ export class GdaxDataService {
       } else {
         this.bookmark = undefined;
         this.tableData.next(this.tableResults);
-        this.isBusy.next(false);
+        setTimeout(() => {
+          this.isBusy.next(false);
+        }, 300);
         return;
       }
     }
@@ -377,7 +387,9 @@ export class GdaxDataService {
         this.bookmark = formatedData[formatedData.length - 2]['id'];
         this.tableResults = this.tableResults.concat(formatedData);
         this.tableData.next(this.tableResults);
-        this.isBusy.next(false);
+        setTimeout(() => {
+          this.isBusy.next(false);
+        }, 300);
         return;
       // Has previously stored results. Results less than needed.
       // Currency type 'ALL' and still have currencies left.
@@ -399,7 +411,9 @@ export class GdaxDataService {
         this.tableResults = this.tableResults.concat(formatedData.slice(0, deficit));
         this.bookmark = this.tableResults[this.tableResults.length - 2]['id'];
         this.tableData.next(this.tableResults);
-        this.isBusy.next(false);
+        setTimeout(() => {
+          this.isBusy.next(false);
+        }, 300);
         return;
       }
     } else {
@@ -419,7 +433,9 @@ export class GdaxDataService {
         this.tableResults = this.tableResults.concat(formatedData.slice(0, deficit));
         this.bookmark = this.tableResults[this.tableResults.length - 2]['id'];
         this.tableData.next(this.tableResults);
-        this.isBusy.next(false);
+        setTimeout(() => {
+          this.isBusy.next(false);
+        }, 300);
         return;
       }
     }

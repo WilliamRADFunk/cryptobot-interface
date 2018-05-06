@@ -138,6 +138,10 @@ export class FilterControlsComponent implements OnInit {
   /**
   * Message to use if start datetime is invalid
   */
+ timeoutId: any = null;
+  /**
+  * Message to use if start datetime is invalid
+  */
   warningMessage: string[] = [
     'Start datetime must be before End datetime.',
     'Datetimes must be at least more than 10 minutes apart.',
@@ -173,19 +177,23 @@ export class FilterControlsComponent implements OnInit {
       .subscribe(data => {
         this.isRelevant = data;
         if (!data) {
-          this.updateParam({
-            granularity: null
-          });
+          // clearTimeout(this.timeoutId);
+          // this.updateParams({
+          //   ...this.activatedRouter.snapshot.queryParams,
+          //   granularity: null
+          // });
         }
       });
     this.activatedRouter.queryParamMap
       .subscribe((params: ParamMap) => {
         this.params = params;
+        console.log('p', params.get('startDateTime'));
         // If valid option for startDateTime, use it, and signal the service
         if (params.has('startDateTime')) {
-          let startDateTime = new Date(params.get('startDateTime'));
+          const startDateTime = new Date(params.get('startDateTime'));
           if (!isNaN(startDateTime.getTime())) {
             this.setADateTime(startDateTime, this.sDate, this.sTime);
+            this.startDate = startDateTime;
             this.gdaxDataService.changeStartDateTime(startDateTime, true);
           // If invalid option for startDateTime, use fallback,
           // adjust params, and signal the service
@@ -197,9 +205,10 @@ export class FilterControlsComponent implements OnInit {
         }
         // If valid option for endDateTime, use it, and signal the service
         if (params.has('endDateTime')) {
-          let endDateTime = new Date(params.get('endDateTime'));
+          const endDateTime = new Date(params.get('endDateTime'));
           if (!isNaN(endDateTime.getTime())) {
             this.setADateTime(endDateTime, this.eDate, this.eTime);
+            this.endDate = endDateTime;
             this.gdaxDataService.changeEndDateTime(endDateTime, true);
           // If invalid option for endDateTime, use fallback,
           // adjust params, and signal the service
@@ -209,22 +218,29 @@ export class FilterControlsComponent implements OnInit {
         } else {
           this.gdaxDataService.changeEndDateTime(this.endDate, true);
         }
-        // this.endDate = new Date();
-        // this.startDate = new Date(this.endDate.getTime() - 87600000);
-        // this.setADateTime(this.startDate, this.sDate, this.sTime);
-        // this.setADateTime(this.endDate, this.eDate, this.eTime);
-        this.updateParam({
+        // The start and end dates are invalid, fall back to default method
+        if (!this.checkValidDateTime()) {
+          this.endDate = new Date();
+          this.startDate = new Date(this.endDate.getTime() - 87600000);
+          this.setADateTime(this.startDate, this.sDate, this.sTime);
+          this.setADateTime(this.endDate, this.eDate, this.eTime);
+          this.gdaxDataService.changeStartDateTime(this.startDate, true);
+          this.gdaxDataService.changeEndDateTime(this.endDate, true);
+        }
+        console.log('?', this.endDate.toISOString(),
+        this.startDate.toISOString());
+        // Update the url param for dates only after they've been checked
+        // formatted, and corrected if need be.
+        this.updateParams({
+          ...this.activatedRouter.snapshot.queryParams,
           endDateTime: this.endDate.toISOString(),
           startDateTime: this.startDate.toISOString()
         });
-        // this.gdaxDataService.changeStartDateTime(this.startDate, true);
-        // this.gdaxDataService.changeEndDateTime(this.endDate, true);
         // Dates are done, release the change detection functions.
         this.isInitialized = true;
         // If valid option for rowsPerPage, use it, and signal the service
-        if (params.has('granularity') && Number(params.get('granularity')) && this.isRelevant) {
+        if (params.has('granularity') && Number(params.get('granularity') && this.isRelevant)) {
           // Determine if valid granularity
-          console.log(this.isRelevant);
           this.timeIntervalOptions.forEach(element => {
             if (element['value'] === Number(params.get('granularity'))) {
               this.timeInterval = element['value'];
@@ -233,26 +249,8 @@ export class FilterControlsComponent implements OnInit {
           });
         }
         this.resetMinMax();
-        if(this.isRelevant) {
-          this.adjustGranularityOptions(true);
-        }
+        this.adjustGranularityOptions(true);
       });
-  }
-  updateParam(params: {}) {
-    this.router.navigate([], {
-      queryParams: params,
-      queryParamsHandling: "merge"
-    });
-  }
-  setADateTime(
-    dateObject: Date,
-    dateVarToUpdate: { year: number, month: number, day: number},
-    timeVarToUpdate: { hour: number, minute: number }) {
-    dateVarToUpdate.year = dateObject.getFullYear();
-    dateVarToUpdate.month = dateObject.getMonth() + 1;
-    dateVarToUpdate.day = dateObject.getDate();
-    timeVarToUpdate.hour = dateObject.getHours();
-    timeVarToUpdate.minute = dateObject.getMinutes();
   }
   /**
   * Checks which of the time intervals have no more than the gdax max of 300
@@ -317,7 +315,8 @@ export class FilterControlsComponent implements OnInit {
   changedTimeInterval(event, initChange?: boolean): void {
     this.timeInterval = event['value'];
     this.timeIntervalLabel = event['label'];
-    this.updateParam({
+    this.updateParams({
+      ...this.activatedRouter.snapshot.queryParams,
       granularity: event['value']
     });
     this.gdaxDataService.changeTimeInterval(this.timeInterval, initChange);
@@ -455,11 +454,9 @@ export class FilterControlsComponent implements OnInit {
       this.closeTooltip();
       this.adjustGranularityOptions();
       const changedDateTime: Date = new Date(this.eDate.year, this.eDate.month - 1, this.eDate.day, this.eTime.hour, this.eTime.minute);
-      this.router.navigate([], {
-        queryParams: {
-          endDateTime: changedDateTime.toISOString()
-        },
-        queryParamsHandling: "merge"
+      this.updateParams({
+        ...this.activatedRouter.snapshot.queryParams,
+        endDateTime: changedDateTime.toISOString()
       });
       this.gdaxDataService.changeEndDateTime(changedDateTime);
       this.resetMinMax();
@@ -482,11 +479,9 @@ export class FilterControlsComponent implements OnInit {
       this.closeTooltip();
       this.adjustGranularityOptions();
       const changedDateTime: Date = new Date(this.eDate.year, this.eDate.month - 1, this.eDate.day, this.eTime.hour, this.eTime.minute);
-      this.router.navigate([], {
-        queryParams: {
-          endDateTime: changedDateTime.toISOString()
-        },
-        queryParamsHandling: "merge"
+      this.updateParams({
+        ...this.activatedRouter.snapshot.queryParams,
+        endDateTime: changedDateTime.toISOString()
       });
       this.gdaxDataService.changeEndDateTime(changedDateTime);
       this.resetMinMax();
@@ -509,11 +504,10 @@ export class FilterControlsComponent implements OnInit {
       this.closeTooltip();
       this.adjustGranularityOptions();
       const changedDateTime: Date = new Date(this.sDate.year, this.sDate.month - 1, this.sDate.day, this.sTime.hour, this.sTime.minute);
-      this.router.navigate([], {
-        queryParams: {
-          startDateTime: changedDateTime.toISOString()
-        },
-        queryParamsHandling: "merge"
+      console.log(changedDateTime.toISOString());
+      this.updateParams({
+        ...this.activatedRouter.snapshot.queryParams,
+        startDateTime: changedDateTime.toISOString()
       });
       this.gdaxDataService.changeStartDateTime(changedDateTime);
       this.resetMinMax();
@@ -536,16 +530,13 @@ export class FilterControlsComponent implements OnInit {
       this.closeTooltip();
       this.adjustGranularityOptions();
       const changedDateTime: Date = new Date(this.sDate.year, this.sDate.month - 1, this.sDate.day, this.sTime.hour, this.sTime.minute);
-      this.router.navigate([], {
-        queryParams: {
-          startDateTime: changedDateTime.toISOString()
-        },
-        queryParamsHandling: "merge"
+      this.updateParams({
+        ...this.activatedRouter.snapshot.queryParams,
+        startDateTime: changedDateTime.toISOString()
       });
       this.gdaxDataService.changeStartDateTime(changedDateTime);
       this.resetMinMax();
     } else {
-      console.log('hello');
       this.openTooltip();
       this.invalidStartDatetime = true;
     }
@@ -586,5 +577,34 @@ export class FilterControlsComponent implements OnInit {
       month: earliestDate.getMonth() + 1,
       day: earliestDate.getDate()
     };
+  }
+  /**
+  * Updates the date and time objects based on dateObject Date parameter
+  * @param dateObject Date used to update the dateVarToUpdate & timeVarToUpdate objects
+  * @param dateVarToUpdate ngbDatepicker friendly object used as either start or end date
+  * @param timeVarToUpdate ngbTimepicker friendly object used as either start or end time
+  */
+  setADateTime(
+    dateObject: Date,
+    dateVarToUpdate: { year: number, month: number, day: number},
+    timeVarToUpdate: { hour: number, minute: number }) {
+    dateVarToUpdate.year = dateObject.getFullYear();
+    dateVarToUpdate.month = dateObject.getMonth() + 1;
+    dateVarToUpdate.day = dateObject.getDate();
+    timeVarToUpdate.hour = dateObject.getHours();
+    timeVarToUpdate.minute = dateObject.getMinutes();
+  }
+  /**
+  * Called when params need updating. Avoids repetition.
+  * @param params param object used to update queryParams
+  */
+  updateParams(params: {}) {
+    // clearTimeout(this.timeoutId);
+    this.timeoutId = setTimeout(() => {
+      this.router.navigate([], {
+        queryParams: params,
+        queryParamsHandling: 'merge'
+      });
+    }, 100);
   }
 }
