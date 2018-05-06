@@ -489,10 +489,10 @@ export class FilterControlsComponent implements OnInit {
     return this.tooltip.isOpen();
   }
   /**
-  * Triggered when user changes end date choice
+  * Triggered when user changes end datetime choice
   * Updates the service variable
   */
-  onEndDateChange(): void {
+ onEndDateTimeChange(): void {
     if (!this.isInitialized && this.checkValidDateTime()) {
       return;
     }
@@ -514,60 +514,10 @@ export class FilterControlsComponent implements OnInit {
     }
   }
   /**
-  * Triggered when user changes end time choice
+  * Triggered when user changes start datetime choice
   * Updates the service variable
   */
-  onEndTimeChange(): void {
-    if (!this.isInitialized && this.checkValidDateTime()) {
-      return;
-    }
-    if (this.checkValidDateTime()) {
-      this.invalidEndDatetime = false;
-      this.invalidStartDatetime = false;
-      this.closeTooltip();
-      this.adjustGranularityOptions();
-      const changedDateTime: Date = new Date(this.eDate.year, this.eDate.month - 1, this.eDate.day, this.eTime.hour, this.eTime.minute);
-      this.updateParams({
-        ...this.activatedRouter.snapshot.queryParams,
-        endDateTime: changedDateTime.toISOString()
-      });
-      this.gdaxDataService.changeEndDateTime(changedDateTime);
-      this.resetMinMax();
-    } else {
-      this.openTooltip();
-      this.invalidEndDatetime = true;
-    }
-  }
-  /**
-  * Triggered when user changes start date choice
-  * Updates the service variable
-  */
-  onStartDateChange(): void {
-    if (!this.isInitialized && this.checkValidDateTime()) {
-      return;
-    }
-    if (this.checkValidDateTime()) {
-      this.invalidEndDatetime = false;
-      this.invalidStartDatetime = false;
-      this.closeTooltip();
-      this.adjustGranularityOptions();
-      const changedDateTime: Date = new Date(this.sDate.year, this.sDate.month - 1, this.sDate.day, this.sTime.hour, this.sTime.minute);
-      this.updateParams({
-        ...this.activatedRouter.snapshot.queryParams,
-        startDateTime: changedDateTime.toISOString()
-      });
-      this.gdaxDataService.changeStartDateTime(changedDateTime);
-      this.resetMinMax();
-    } else {
-      this.openTooltip();
-      this.invalidStartDatetime = true;
-    }
-  }
-  /**
-  * Triggered when user changes start time choice
-  * Updates the service variable
-  */
-  onStartTimeChange(): void {
+ onStartDateTimeChange(): void {
     if (!this.isInitialized && this.checkValidDateTime()) {
       return;
     }

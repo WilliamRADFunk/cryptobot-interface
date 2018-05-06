@@ -51,7 +51,7 @@
               ngbDatepicker,
               [ngClass]="{'invalid-input': invalidStartDatetime}",
               [(ngModel)]="sDate",
-              (ngModelChange)="onStartDateChange()",
+              (ngModelChange)="onStartDateTimeChange()",
               placeholder="yyyy-mm-dd")
       div(style="display: inline-block;")
         ngb-timepicker(
@@ -60,7 +60,7 @@
           [ngClass]="{'invalid-input': invalidStartDatetime}",
           size="small",
           [(ngModel)]="sTime",
-          (ngModelChange)="onStartTimeChange()")
+          (ngModelChange)="onStartDateTimeChange()")
   .col-12.col-sm-12.col-md-12.col-lg-5.col-xl-5.filter-bottom-gap.d-flex.justify-content-center
     form.form-inline([ngClass]="{'disabled': isBusy}")
       label.label-date.extra-padding.text-center(
@@ -87,7 +87,7 @@
               ngbDatepicker,
               [ngClass]="{'invalid-input': invalidEndDatetime}",
               [(ngModel)]="eDate",
-              (ngModelChange)="onEndDateChange()",
+              (ngModelChange)="onEndDateTimeChange()",
               placeholder="yyyy-mm-dd")
       div(style="display: inline-block;")
         ngb-timepicker(
@@ -96,7 +96,7 @@
           [ngClass]="{'invalid-input': invalidEndDatetime}",
           size="small",
           [(ngModel)]="eTime",
-          (ngModelChange)="onEndTimeChange()")
+          (ngModelChange)="onEndDateTimeChange()")
 ng-template(#tooltip="")
   ol(style="padding-left: 15px; padding-top: 10px;")
     li.text-left(
