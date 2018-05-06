@@ -40,7 +40,7 @@ export class ProfitPortfolioComponent implements OnInit {
     this.activatedRouter.url
       .subscribe((segments: UrlSegment[]) => {
         this.pathState = segments[0]['path'];
-        this.gdaxDataService.changeCurrencyType(this.pathState, 'profit-portfolio');
+        this.gdaxDataService.changeCurrencyType(this.pathState, 'profit-portfolio', true);
       });
     this.chart = new Chart({
       chart: {

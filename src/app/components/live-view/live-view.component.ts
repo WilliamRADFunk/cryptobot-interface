@@ -46,7 +46,7 @@ export class LiveViewComponent implements OnInit {
     this.activatedRouter.url
       .subscribe((segments: UrlSegment[]) => {
         this.pathState = segments[0]['path'];
-        this.gdaxDataService.changeCurrencyType(this.pathState, 'live-view');
+        this.gdaxDataService.changeCurrencyType(this.pathState, 'live-view', true);
       });
     this.gdaxDataService.chartData
       .subscribe(this.updateChart.bind(this));

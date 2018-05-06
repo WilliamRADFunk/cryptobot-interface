@@ -28,6 +28,12 @@ export class GdaxDataService {
   */
   endDate: Date = new Date();
   /**
+  * Array of flags to determine if initial filtering params have called in
+  * the service to query for data. First is route component params.
+  * Second is granularity, Third is startDateTime. Fourth is endDateTime.
+  */
+  firstTime: boolean[] = [true, true, true, true];
+  /**
   * The granularity between data points. Used as a parameter in query URL
   */
   interval: number = 3600;
@@ -68,25 +74,38 @@ export class GdaxDataService {
   /**
   * Updates the currency type being viewed, and refreshes query results.
   * @param currency the currency string (ie. 'BTC-USD')
+  * @param basePath keeps track of basepath to determine which options to turn on and off
+  * @param refresh flag to refresh the query. Helps to wait until all url details are pulled
   */
-  changeCurrencyType(currency: string, basePath: string): void {
+  changeCurrencyType(currency: string, basePath: string, refresh?: boolean): void {
     this.tableResults = [];
     this.page.next(1);
     this.basePath = basePath;
     this.currency = currency;
     this.bookmark = undefined;
-    this.refreshData();
+    if (refresh) {
+      this.firstTime[0] = false;
+    }
+    if (refresh && this.firstTime.indexOf(true) < 0) {
+      this.refreshData();
+    }
   }
   /**
   * Updates the end datetime being viewed, and refreshes query results.
   * @param date the end datetime object
+  * @param initChange flag to signal it's an original change (prevents multiple query calls onInit)
   */
-  changeEndDateTime(date: Date): void {
+  changeEndDateTime(date: Date, initChange?: boolean): void {
     this.tableResults = [];
     this.page.next(1);
     this.endDate = date;
     this.bookmark = undefined;
-    this.refreshData();
+    if (initChange) {
+      this.firstTime[3] = false;
+    }
+    if (this.firstTime.indexOf(true) < 0) {
+      this.refreshData();
+    }
   }
   /**
   * Updates the page number,
@@ -106,39 +125,57 @@ export class GdaxDataService {
       this.bookmark = this.tableData.value[this.tableData.value.length - 2]['id'];
     }
     this.page.next(page);
-    this.refreshData(true);
+    this.refreshData();
   }
   /**
   * Updates the number of rows per page,
   * and refreshes query results.
   * @param rowsPerPage the granularity to use
+  * @param refresh flag to refresh the query. Helps to wait until all url details are pulled
   */
-  changeRowsPerPage(rowsPerPage: number): void {
+  changeRowsPerPage(rowsPerPage: number, refresh?: boolean): void {
     this.tableResults = [];
     this.rowsPerPage = rowsPerPage;
     this.page.next(1);
     this.bookmark = undefined;
-    this.refreshData();
+    if (refresh) {
+      this.firstTime[0] = false;
+    }
+    if (refresh && this.firstTime.indexOf(true) < 0) {
+      this.refreshData();
+    }
   }
   /**
   * Updates the start datetime being viewed, and refreshes query results.
   * @param date the start datetime object
+  * @param initChange flag to signal it's an original change (prevents multiple query calls onInit)
   */
-  changeStartDateTime(date: Date): void {
+  changeStartDateTime(date: Date, initChange?: boolean): void {
     this.tableResults = [];
     this.page.next(1);
     this.startDate = date;
     this.bookmark = undefined;
-    this.refreshData();
+    if (initChange) {
+      this.firstTime[2] = false;
+    }
+    if (this.firstTime.indexOf(true) < 0) {
+      this.refreshData();
+    }
   }
   /**
   * Updates the granularity of the data points,
   * and refreshes query results.
   * @param interval the granularity to use
+  * @param initChange flag to signal it's an original change (prevents multiple query calls onInit)
   */
-  changeTimeInterval(interval: number): void {
+  changeTimeInterval(interval: number, initChange?: boolean): void {
     this.interval = interval;
-    this.refreshData();
+    if (initChange) {
+      this.firstTime[1] = false;
+    }
+    if (this.firstTime.indexOf(true) < 0) {
+      this.refreshData();
+    }
   }
   /**
   * Only returns elements of data array that fit within user specified time range.

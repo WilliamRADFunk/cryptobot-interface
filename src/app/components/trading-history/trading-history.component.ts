@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment, ParamMap } from '@angular/router';
 
 import { GdaxDataService } from '../../services/gdax-data.service';
 
@@ -9,6 +9,11 @@ import { GdaxDataService } from '../../services/gdax-data.service';
   styleUrls: ['./trading-history.component.scss']
 })
 export class TradingHistoryComponent implements OnInit {
+  /**
+  * Array of flags to determine if initial param and url pull is done before triggering
+  * the service to query for data. First is currencyType. Second is rowsPerPage.
+  */
+  firstTime: boolean[] = [true, true];
   /**
   * Checks with service to see if it's busy in a query,
   * and puts table in standby mode until it's ready.
@@ -78,9 +83,48 @@ export class TradingHistoryComponent implements OnInit {
     this.activatedRouter.url
       .subscribe((segments: UrlSegment[]) => {
         this.pathState = segments[0]['path'];
-        this.gdaxDataService.changeCurrencyType(this.pathState, 'trading-history');
+        if (this.firstTime[1]) {
+          this.gdaxDataService.changeCurrencyType(this.pathState, 'trading-history', false);
+        } else {
+          this.gdaxDataService.changeCurrencyType(this.pathState, 'trading-history', true);
+        }
+        // Mark the first time as false to signal rows section query can be made.
+        this.firstTime[0] = false;
       });
-      this.gdaxDataService.page
+    this.activatedRouter.queryParamMap
+      .subscribe((params: ParamMap) => {
+        // If valid option for rowsPerPage, use it, and signal the service
+        if (params.has('rows')
+          && Number(params.get('rows'))
+          && this.rowAmounts.indexOf(Number(params.get('rows'))) > -1) {
+          this.rowsPerPage = Number(params.get('rows'));
+          if (this.firstTime[0]) {
+            this.gdaxDataService.changeRowsPerPage(this.rowsPerPage, false);
+          } else {
+            this.gdaxDataService.changeRowsPerPage(this.rowsPerPage, true);
+          }
+          console.log('1', this.rowsPerPage);
+        // If invalid option for rowsPerPage, fall back to first option,
+        // and signal the service
+        } else if((params.has('rows')
+        && (!Number(params.get('rows'))
+        || this.rowAmounts.indexOf(Number(params.get('rows'))) < 0))
+        || !params.has('rows')) {
+          this.rowsPerPage = this.rowAmounts[0];
+          this.updateParam('rows', this.rowsPerPage);
+
+          if (this.firstTime[0]) {
+            this.gdaxDataService.changeRowsPerPage(this.rowsPerPage, false);
+          } else {
+            this.gdaxDataService.changeRowsPerPage(this.rowsPerPage, true);
+          }
+          console.log('2', this.rowsPerPage);
+        }
+        // Whether rows is a parameter or not, mark the firsttime as false to let
+        // currencyType know it's ready for query.
+        this.firstTime[1] = false;
+      });
+    this.gdaxDataService.page
       .subscribe(data => {
         this.page = data;
         if (this.page === 1) {
@@ -89,6 +133,16 @@ export class TradingHistoryComponent implements OnInit {
       });
     this.gdaxDataService.tableData
       .subscribe(this.updateTable.bind(this));
+  }
+  updateParam(paramName: string, paramValue: any) {
+    const qParam = {};
+    qParam[paramName] = paramValue;
+    
+    console.log('3', qParam);
+    this.router.navigate([], {
+      queryParams: qParam,
+      queryParamsHandling: "merge"
+    });
   }
   /**
   * Called when user clicked next or previous page button
@@ -119,6 +173,7 @@ export class TradingHistoryComponent implements OnInit {
       this.rowsPerPage = newRowsPerPage;
       this.isBusy = true;
       this.page = 1;
+      this.updateParam('rows', this.rowsPerPage);
       this.gdaxDataService.changeRowsPerPage(this.rowsPerPage);
     }
   }

@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbTimepickerConfig, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
 import { GdaxDataService } from '../../services/gdax-data.service';
+import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 
 @Component({
   selector: 'app-filter-controls',
@@ -37,6 +38,10 @@ export class FilterControlsComponent implements OnInit {
   */
   isBusy: boolean = true;
   /**
+  * Skips change detections on start and end dates until inital settings are finished.
+  */
+  isInitialized: boolean = false;
+  /**
   * Checks with service to see if granularity control is relevant in a query,
   * and disables control when it isn't.
   */
@@ -70,6 +75,10 @@ export class FilterControlsComponent implements OnInit {
   * Min date a dropdown from start date ngb-tooltip should show
   */
   minStartDate: { year: number, month: number, day: number};
+  /**
+  * Min date a dropdown from start date ngb-tooltip should show
+  */
+  params: ParamMap;
   /**
   * Maintains the start date in actual Javascript Date form
   */
@@ -137,8 +146,14 @@ export class FilterControlsComponent implements OnInit {
 
   /**
   * Constructor for the class
+  * @param activatedRouter Angular's ActivatedRoute service for knowing current route
+  * @param router Angular's Router service for changing route
+  * @param config Configuration service for ngb's timepicker
+  * @param gdaxDataService Internal service to get queried market data.
   */
   constructor(
+    private activatedRouter: ActivatedRoute,
+    private router: Router,
     private gdaxDataService: GdaxDataService,
     private config: NgbTimepickerConfig) {
       config.seconds = false;
@@ -157,21 +172,96 @@ export class FilterControlsComponent implements OnInit {
     this.gdaxDataService.isRelevant
       .subscribe(data => {
         this.isRelevant = data;
+        if (!data) {
+          this.updateParam('granularity', null);
+        }
       });
-    this.timeIntervals.forEach(element => {
-      if (element['value'] === this.gdaxDataService.interval) {
-        this.timeInterval = this.gdaxDataService.interval;
-        this.timeIntervalLabel = element['label'];
-      }
+    this.activatedRouter.queryParamMap
+      .subscribe((params: ParamMap) => {
+        this.params = params;
+        // If valid option for startDateTime, use it, and signal the service
+        if (params.has('startDateTime')) {
+          let startDateTime = new Date(params.get('startDateTime'));
+          if (!isNaN(startDateTime.getTime())) {
+            this.setADateTime(startDateTime, this.sDate, this.sTime);
+            this.gdaxDataService.changeStartDateTime(startDateTime, true);
+          // If invalid option for startDateTime, use fallback,
+          // adjust params, and signal the service
+          } else {
+            this.updateParam('startDateTime', this.startDate.toISOString());
+            this.gdaxDataService.changeStartDateTime(this.startDate, true);
+          }
+        } else {
+          this.updateParam('startDateTime', this.startDate.toISOString());
+          this.gdaxDataService.changeStartDateTime(this.startDate, true);
+        }
+        // If valid option for endDateTime, use it, and signal the service
+        if (params.has('endDateTime')) {
+          let endDateTime = new Date(params.get('endDateTime'));
+          if (!isNaN(endDateTime.getTime())) {
+            this.setADateTime(endDateTime, this.eDate, this.eTime);
+            this.gdaxDataService.changeEndDateTime(endDateTime, true);
+          // If invalid option for endDateTime, use fallback,
+          // adjust params, and signal the service
+          } else {
+            this.updateParam('endDateTime', this.endDate.toISOString());
+            this.gdaxDataService.changeEndDateTime(this.endDate, true);
+          }
+        } else {
+          this.updateParam('endDateTime', this.endDate.toISOString());
+          this.gdaxDataService.changeEndDateTime(this.endDate, true);
+        }
+        if (!this.checkValidDateTime()) {
+          this.endDate = new Date();
+          this.startDate = new Date(this.endDate.getTime() - 87600000);
+          this.setADateTime(this.startDate, this.sDate, this.sTime);
+          this.setADateTime(this.endDate, this.eDate, this.eTime);
+          this.updateParam('startDateTime', this.startDate.toISOString());
+          this.updateParam('endDateTime', this.endDate.toISOString());
+          console.log('here');
+          this.gdaxDataService.changeStartDateTime(this.startDate, true);
+          this.gdaxDataService.changeEndDateTime(this.endDate, true);
+        }
+        // Dates are done, release the change detection functions.
+        this.isInitialized = true;
+        // If valid option for rowsPerPage, use it, and signal the service
+        if (params.has('granularity') && Number(params.get('granularity')) && this.isRelevant) {
+          // Determine if valid granularity
+          this.timeIntervalOptions.forEach(element => {
+            if (element['value'] === Number(params.get('granularity'))) {
+              this.timeInterval = element['value'];
+              this.timeIntervalLabel = element['label'];
+            }
+          });
+        }
+        this.resetMinMax();
+        this.adjustGranularityOptions(true);
+      });
+  }
+  updateParam(paramName: string, paramValue: any) {
+    const qParam = {};
+    qParam[paramName] = paramValue;
+    this.router.navigate([], {
+      queryParams: qParam,
+      queryParamsHandling: "merge"
     });
-    this.resetMinMax();
-    this.adjustGranularityOptions();
+  }
+  setADateTime(
+    dateObject: Date,
+    dateVarToUpdate: { year: number, month: number, day: number},
+    timeVarToUpdate: { hour: number, minute: number }) {
+    dateVarToUpdate.year = dateObject.getFullYear();
+    dateVarToUpdate.month = dateObject.getMonth() + 1;
+    dateVarToUpdate.day = dateObject.getDate();
+    timeVarToUpdate.hour = dateObject.getHours();
+    timeVarToUpdate.minute = dateObject.getMinutes();
   }
   /**
   * Checks which of the time intervals have no more than the gdax max of 300
   * results between start and end datetimes
+  * @param forcedChangedTimeInterval signals whether to force a changedTimeInterval call
   */
-  adjustGranularityOptions(): void {
+  adjustGranularityOptions(forcedChangedTimeInterval?: boolean): void {
     const timeIntervalLabelOld = this.timeIntervalLabel;
     const tempTimeIntervals = [];
     const endDate = new Date(
@@ -207,21 +297,30 @@ export class FilterControlsComponent implements OnInit {
     if (!isCurrentGranularityValid) {
       this.timeInterval = this.timeIntervals[0]['value'];
       this.timeIntervalLabel = this.timeIntervals[0]['label'];
+    }
+    if (!isCurrentGranularityValid && !forcedChangedTimeInterval) {
       this.changedTimeInterval({
         label: this.timeIntervalLabel,
         value: this.timeInterval
       });
+    } else if (forcedChangedTimeInterval) {
+      this.changedTimeInterval({
+        label: this.timeIntervalLabel,
+        value: this.timeInterval
+      }, true);
     }
   }
   /**
   * Triggered when user changes granularity choice
   * Updates the service variable
   * @param event label/value object containing granularity label and value
+  * @param initChange signals service that this is the OnInit value change.
   */
-  changedTimeInterval(event): void {
+  changedTimeInterval(event, initChange?: boolean): void {
     this.timeInterval = event['value'];
     this.timeIntervalLabel = event['label'];
-    this.gdaxDataService.changeTimeInterval(this.timeInterval);
+    this.updateParam('granularity', event['value']);
+    this.gdaxDataService.changeTimeInterval(this.timeInterval, initChange);
   }
   /**
   * Checks all aspects of both datetimes to make sure everything is valid
@@ -347,12 +446,21 @@ export class FilterControlsComponent implements OnInit {
   * Updates the service variable
   */
   onEndDateChange(): void {
+    if (!this.isInitialized && this.checkValidDateTime()) {
+      return;
+    }
     if (this.checkValidDateTime()) {
       this.invalidEndDatetime = false;
       this.invalidStartDatetime = false;
       this.closeTooltip();
       this.adjustGranularityOptions();
       const changedDateTime: Date = new Date(this.eDate.year, this.eDate.month - 1, this.eDate.day, this.eTime.hour, this.eTime.minute);
+      this.router.navigate([], {
+        queryParams: {
+          endDateTime: changedDateTime.toISOString()
+        },
+        queryParamsHandling: "merge"
+      });
       this.gdaxDataService.changeEndDateTime(changedDateTime);
       this.resetMinMax();
     } else {
@@ -365,12 +473,21 @@ export class FilterControlsComponent implements OnInit {
   * Updates the service variable
   */
   onEndTimeChange(): void {
+    if (!this.isInitialized && this.checkValidDateTime()) {
+      return;
+    }
     if (this.checkValidDateTime()) {
       this.invalidEndDatetime = false;
       this.invalidStartDatetime = false;
       this.closeTooltip();
       this.adjustGranularityOptions();
       const changedDateTime: Date = new Date(this.eDate.year, this.eDate.month - 1, this.eDate.day, this.eTime.hour, this.eTime.minute);
+      this.router.navigate([], {
+        queryParams: {
+          endDateTime: changedDateTime.toISOString()
+        },
+        queryParamsHandling: "merge"
+      });
       this.gdaxDataService.changeEndDateTime(changedDateTime);
       this.resetMinMax();
     } else {
@@ -383,12 +500,21 @@ export class FilterControlsComponent implements OnInit {
   * Updates the service variable
   */
   onStartDateChange(): void {
+    if (!this.isInitialized && this.checkValidDateTime()) {
+      return;
+    }
     if (this.checkValidDateTime()) {
       this.invalidEndDatetime = false;
       this.invalidStartDatetime = false;
       this.closeTooltip();
       this.adjustGranularityOptions();
       const changedDateTime: Date = new Date(this.sDate.year, this.sDate.month - 1, this.sDate.day, this.sTime.hour, this.sTime.minute);
+      this.router.navigate([], {
+        queryParams: {
+          startDateTime: changedDateTime.toISOString()
+        },
+        queryParamsHandling: "merge"
+      });
       this.gdaxDataService.changeStartDateTime(changedDateTime);
       this.resetMinMax();
     } else {
@@ -401,15 +527,25 @@ export class FilterControlsComponent implements OnInit {
   * Updates the service variable
   */
   onStartTimeChange(): void {
+    if (!this.isInitialized && this.checkValidDateTime()) {
+      return;
+    }
     if (this.checkValidDateTime()) {
       this.invalidEndDatetime = false;
       this.invalidStartDatetime = false;
       this.closeTooltip();
       this.adjustGranularityOptions();
       const changedDateTime: Date = new Date(this.sDate.year, this.sDate.month - 1, this.sDate.day, this.sTime.hour, this.sTime.minute);
+      this.router.navigate([], {
+        queryParams: {
+          startDateTime: changedDateTime.toISOString()
+        },
+        queryParamsHandling: "merge"
+      });
       this.gdaxDataService.changeStartDateTime(changedDateTime);
       this.resetMinMax();
     } else {
+      console.log('hello');
       this.openTooltip();
       this.invalidStartDatetime = true;
     }

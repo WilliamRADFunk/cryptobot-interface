@@ -46,7 +46,7 @@ describe('GdaxDataService', () => {
     it('should change currency to LTC-USD, basePath to live-view, and call refreshData',
       inject([GdaxDataService], (service: GdaxDataService) => {
       spyOn(service, 'refreshData').and.returnValue(true);
-      service.changeCurrencyType('LTC-USD', 'live-view');
+      service.changeCurrencyType('LTC-USD', 'live-view', true);
       expect(service.currency).toBe('LTC-USD');
       expect(service.basePath).toBe('live-view');
       expect(service.refreshData).toHaveBeenCalled();
@@ -56,7 +56,7 @@ describe('GdaxDataService', () => {
     it('should change end DateTime and call refreshData',
       inject([GdaxDataService], (service: GdaxDataService) => {
         spyOn(service, 'refreshData').and.returnValue(true);
-      service.changeEndDateTime(date);
+      service.changeEndDateTime(date, true);
       expect(service.endDate).toEqual(date);
       expect(service.refreshData).toHaveBeenCalled();
     }));
@@ -65,7 +65,7 @@ describe('GdaxDataService', () => {
     it('should change start DateTime and call refreshData',
       inject([GdaxDataService], (service: GdaxDataService) => {
         spyOn(service, 'refreshData').and.returnValue(true);
-      service.changeStartDateTime(date);
+      service.changeStartDateTime(date, true);
       expect(service.startDate).toEqual(date);
       expect(service.refreshData).toHaveBeenCalled();
     }));
@@ -74,7 +74,7 @@ describe('GdaxDataService', () => {
     it('should change interval to 300 and call refreshData',
       inject([GdaxDataService], (service: GdaxDataService) => {
         spyOn(service, 'refreshData').and.returnValue(true);
-      service.changeTimeInterval(300);
+      service.changeTimeInterval(300, true);
       expect(service.interval).toBe(300);
       expect(service.refreshData).toHaveBeenCalled();
     }));
@@ -307,7 +307,7 @@ describe('GdaxDataService', () => {
       inject([GdaxDataService], (service: GdaxDataService) => {
       spyOn(service, 'refreshData').and.returnValue(true);
       service.tableData.next([{'id': 321}]);
-      service.changeRowsPerPage(10);
+      service.changeRowsPerPage(10, true);
       expect(service.rowsPerPage).toBe(10);
       expect(service.refreshData).toHaveBeenCalled();
     }));
