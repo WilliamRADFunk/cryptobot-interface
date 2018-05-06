@@ -76,7 +76,7 @@ export class FilterControlsComponent implements OnInit {
   */
   minStartDate: { year: number, month: number, day: number};
   /**
-  * Min date a dropdown from start date ngb-tooltip should show
+  * Holds query params to check against in other parts of component
   */
   params: ParamMap;
   /**
@@ -173,7 +173,9 @@ export class FilterControlsComponent implements OnInit {
       .subscribe(data => {
         this.isRelevant = data;
         if (!data) {
-          this.updateParam('granularity', null);
+          this.updateParam({
+            granularity: null
+          });
         }
       });
     this.activatedRouter.queryParamMap
@@ -188,11 +190,9 @@ export class FilterControlsComponent implements OnInit {
           // If invalid option for startDateTime, use fallback,
           // adjust params, and signal the service
           } else {
-            this.updateParam('startDateTime', this.startDate.toISOString());
             this.gdaxDataService.changeStartDateTime(this.startDate, true);
           }
         } else {
-          this.updateParam('startDateTime', this.startDate.toISOString());
           this.gdaxDataService.changeStartDateTime(this.startDate, true);
         }
         // If valid option for endDateTime, use it, and signal the service
@@ -204,28 +204,27 @@ export class FilterControlsComponent implements OnInit {
           // If invalid option for endDateTime, use fallback,
           // adjust params, and signal the service
           } else {
-            this.updateParam('endDateTime', this.endDate.toISOString());
             this.gdaxDataService.changeEndDateTime(this.endDate, true);
           }
         } else {
-          this.updateParam('endDateTime', this.endDate.toISOString());
           this.gdaxDataService.changeEndDateTime(this.endDate, true);
         }
-        if (!this.checkValidDateTime()) {
-          this.endDate = new Date();
-          this.startDate = new Date(this.endDate.getTime() - 87600000);
-          this.setADateTime(this.startDate, this.sDate, this.sTime);
-          this.setADateTime(this.endDate, this.eDate, this.eTime);
-          this.updateParam('startDateTime', this.startDate.toISOString());
-          this.updateParam('endDateTime', this.endDate.toISOString());
-          this.gdaxDataService.changeStartDateTime(this.startDate, true);
-          this.gdaxDataService.changeEndDateTime(this.endDate, true);
-        }
+        // this.endDate = new Date();
+        // this.startDate = new Date(this.endDate.getTime() - 87600000);
+        // this.setADateTime(this.startDate, this.sDate, this.sTime);
+        // this.setADateTime(this.endDate, this.eDate, this.eTime);
+        this.updateParam({
+          endDateTime: this.endDate.toISOString(),
+          startDateTime: this.startDate.toISOString()
+        });
+        // this.gdaxDataService.changeStartDateTime(this.startDate, true);
+        // this.gdaxDataService.changeEndDateTime(this.endDate, true);
         // Dates are done, release the change detection functions.
         this.isInitialized = true;
         // If valid option for rowsPerPage, use it, and signal the service
         if (params.has('granularity') && Number(params.get('granularity')) && this.isRelevant) {
           // Determine if valid granularity
+          console.log(this.isRelevant);
           this.timeIntervalOptions.forEach(element => {
             if (element['value'] === Number(params.get('granularity'))) {
               this.timeInterval = element['value'];
@@ -234,15 +233,14 @@ export class FilterControlsComponent implements OnInit {
           });
         }
         this.resetMinMax();
-        this.adjustGranularityOptions(true);
+        if(this.isRelevant) {
+          this.adjustGranularityOptions(true);
+        }
       });
   }
-  updateParam(paramName: string, paramValue: any) {
-    console.log(paramName, paramValue);
-    const qParam = {};
-    qParam[paramName] = paramValue;
+  updateParam(params: {}) {
     this.router.navigate([], {
-      queryParams: qParam,
+      queryParams: params,
       queryParamsHandling: "merge"
     });
   }
@@ -319,7 +317,9 @@ export class FilterControlsComponent implements OnInit {
   changedTimeInterval(event, initChange?: boolean): void {
     this.timeInterval = event['value'];
     this.timeIntervalLabel = event['label'];
-    this.updateParam('granularity', event['value']);
+    this.updateParam({
+      granularity: event['value']
+    });
     this.gdaxDataService.changeTimeInterval(this.timeInterval, initChange);
   }
   /**

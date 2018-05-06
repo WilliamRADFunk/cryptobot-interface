@@ -32,6 +32,10 @@ export class TradingHistoryComponent implements OnInit {
   */
   page: number = 1;
   /**
+  * Holds query params to check against in other parts of component
+  */
+  params: ParamMap;
+  /**
   * The initial path state passed in by the activatedRouter.
   * Keeps track of what currency the chart should be viewing.
   */
@@ -148,8 +152,7 @@ export class TradingHistoryComponent implements OnInit {
     qParam[paramName] = paramValue;
     
     console.log('3', qParam);
-    this.router.navigate(['.'], {
-      replaceUrl: true,
+    this.router.navigate([], {
       queryParams: qParam,
       queryParamsHandling: "merge"
     });
