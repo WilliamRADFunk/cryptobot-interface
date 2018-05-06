@@ -176,87 +176,18 @@ export class FilterControlsComponent implements OnInit {
     this.gdaxDataService.isRelevant
       .subscribe(data => {
         this.isRelevant = data;
-        if (!data) {
-          // clearTimeout(this.timeoutId);
-          // this.updateParams({
-          //   ...this.activatedRouter.snapshot.queryParams,
-          //   granularity: null
-          // });
-        }
       });
     this.activatedRouter.queryParamMap
       .subscribe((params: ParamMap) => {
         this.params = params;
-        // If valid option for startDateTime, use it, and signal the service
-        if (params.has('startDateTime')) {
-          const startDateTime = new Date(params.get('startDateTime'));
-          if (!isNaN(startDateTime.getTime())) {
-            this.setADateTime(startDateTime, this.sDate, this.sTime);
-            this.startDate = startDateTime;
-            this.gdaxDataService.changeStartDateTime(startDateTime, true);
-          // If invalid option for startDateTime, use fallback,
-          // adjust params, and signal the service
-          } else {
-            this.gdaxDataService.changeStartDateTime(this.startDate, true);
-          }
-        } else {
-          this.gdaxDataService.changeStartDateTime(this.startDate, true);
-        }
-        // If valid option for endDateTime, use it, and signal the service
-        if (params.has('endDateTime')) {
-          const endDateTime = new Date(params.get('endDateTime'));
-          if (!isNaN(endDateTime.getTime())) {
-            this.setADateTime(endDateTime, this.eDate, this.eTime);
-            this.endDate = endDateTime;
-            this.gdaxDataService.changeEndDateTime(endDateTime, true);
-          // If invalid option for endDateTime, use fallback,
-          // adjust params, and signal the service
-          } else {
-            this.gdaxDataService.changeEndDateTime(this.endDate, true);
-          }
-        } else {
-          this.gdaxDataService.changeEndDateTime(this.endDate, true);
-        }
-        // The start and end dates are invalid, fall back to default method
-        if (!this.checkValidDateTime()) {
-          this.endDate = new Date();
-          this.startDate = new Date(this.endDate.getTime() - 87600000);
-          this.setADateTime(this.startDate, this.sDate, this.sTime);
-          this.setADateTime(this.endDate, this.eDate, this.eTime);
-          this.gdaxDataService.changeStartDateTime(this.startDate, true);
-          this.gdaxDataService.changeEndDateTime(this.endDate, true);
-        }
+        this.handleStartDateTimeParam();
+        this.handleEndDateTimeParam();
+        this.handleIncorrectDateTimeParams();
         // Dates are done, release the change detection functions.
         this.isInitialized = true;
-        // If valid option for rowsPerPage, use it, and signal the service
-        if (params.has('granularity') && Number(params.get('granularity') && this.isRelevant)) {
-          // Determine if valid granularity
-          this.timeIntervalOptions.forEach(element => {
-            if (element['value'] === Number(params.get('granularity'))) {
-              this.timeInterval = element['value'];
-              this.timeIntervalLabel = element['label'];
-            }
-          });
-        }
+        this.handleGranularityParam();
         this.resetMinMax();
-        this.adjustGranularityOptions(true);
-        // Update the url param for dates only after they've been checked
-        // formatted, and corrected if need be.
-        if (this.isRelevant) {
-          this.updateParams({
-            ...this.activatedRouter.snapshot.queryParams,
-            endDateTime: this.endDate.toISOString(),
-            granularity: this.timeInterval,
-            startDateTime: this.startDate.toISOString()
-          });
-        } else {
-          this.updateParams({
-            ...this.activatedRouter.snapshot.queryParams,
-            endDateTime: this.endDate.toISOString(),
-            granularity: null,
-            startDateTime: this.startDate.toISOString()
-          });
-        }
+        this.handleInitialParamUpdate();
       });
   }
   /**
@@ -440,6 +371,114 @@ export class FilterControlsComponent implements OnInit {
     const isOpen = this.tooltip.isOpen();
     if (isOpen) {
       this.tooltip.close();
+    }
+  }
+  /**
+  * @private
+  * Checks if url params contain endDateTime and use it if valid.
+  * If invalid or not present, fallback to the component default.
+  */
+  handleEndDateTimeParam(): void {
+    // If valid option for endDateTime, use it, and signal the service
+    if (this.params.has('endDateTime')) {
+      const endDateTime = new Date(this.params.get('endDateTime'));
+      if (!isNaN(endDateTime.getTime())) {
+        this.setADateTime(endDateTime, this.eDate, this.eTime);
+        this.endDate = endDateTime;
+        this.gdaxDataService.changeEndDateTime(endDateTime, true);
+      // If invalid option for endDateTime, use fallback,
+      // adjust params, and signal the service
+      } else {
+        this.gdaxDataService.changeEndDateTime(this.endDate, true);
+      }
+    // If no url param option for endDateTime, use fallback,
+    // adjust params, and signal the service
+    } else {
+      this.gdaxDataService.changeEndDateTime(this.endDate, true);
+    }
+  }
+  /**
+  * @private
+  * Checks if url params contain granularity and use it if valid.
+  * If invalid or not present, fallback to the component default
+  * through the use of adjustGranularityOptions(true), which self-corrects.
+  */
+  handleGranularityParam(): void {
+    // If valid option for rowsPerPage, use it, and signal the service
+    if (this.params.has('granularity') && Number(this.params.get('granularity') && this.isRelevant)) {
+      // Determine if valid granularity
+      this.timeIntervalOptions.forEach(element => {
+        if (element['value'] === Number(this.params.get('granularity'))) {
+          this.timeInterval = element['value'];
+          this.timeIntervalLabel = element['label'];
+        }
+      });
+    }
+    this.adjustGranularityOptions(true);
+  }
+  /**
+  * @private
+  * After a final check if start and end datetime fit all criteria, and are
+  * found lacking, this calculates a fallback for both before the param update.
+  */
+  handleIncorrectDateTimeParams(): void {
+    // The start and end dates are invalid, fall back to default method
+    if (!this.checkValidDateTime()) {
+      this.endDate = new Date();
+      this.startDate = new Date(this.endDate.getTime() - 87600000);
+      this.setADateTime(this.startDate, this.sDate, this.sTime);
+      this.setADateTime(this.endDate, this.eDate, this.eTime);
+      this.gdaxDataService.changeStartDateTime(this.startDate, true);
+      this.gdaxDataService.changeEndDateTime(this.endDate, true);
+    }
+  }
+  /**
+  * @private
+  * Called when all initialization of url param pulling is complete and
+  * it's time to update the parameters relevant to the current component view.
+  */
+  handleInitialParamUpdate(): void {
+    // Update the url params only after they've been checked
+    // formatted, and corrected if need be.
+    if (this.isRelevant) {
+      this.updateParams({
+        ...this.activatedRouter.snapshot.queryParams,
+        endDateTime: this.endDate.toISOString(),
+        granularity: this.timeInterval,
+        startDateTime: this.startDate.toISOString()
+      });
+    // If on a component view that can't use granularity, remove it.
+    } else {
+      this.updateParams({
+        ...this.activatedRouter.snapshot.queryParams,
+        endDateTime: this.endDate.toISOString(),
+        granularity: null,
+        startDateTime: this.startDate.toISOString()
+      });
+    }
+  }
+  /**
+  * @private
+  * Checks if url params contain startDateTime and use it if valid.
+  * If invalid or not present, fallback to the component default.
+  */
+  handleStartDateTimeParam(): void {
+    // If valid option for startDateTime, use it, and signal the service
+    if (this.params.has('startDateTime')) {
+      const startDateTime = new Date(this.params.get('startDateTime'));
+      if (!isNaN(startDateTime.getTime())) {
+        this.setADateTime(startDateTime, this.sDate, this.sTime);
+        this.startDate = startDateTime;
+        this.gdaxDataService.changeStartDateTime(startDateTime, true);
+      // If invalid option for startDateTime, use fallback,
+      // adjust params, and signal the service
+      } else {
+        this.gdaxDataService.changeStartDateTime(this.startDate, true);
+      }
+    // If no url param option for startDateTime, use fallback,
+    // adjust params, and signal the service
+    } else {
+      this.gdaxDataService.changeStartDateTime(this.startDate, true);
     }
   }
   /**

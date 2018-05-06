@@ -96,27 +96,7 @@ export class TradingHistoryComponent implements OnInit {
     this.activatedRouter.queryParamMap
       .subscribe((params: ParamMap) => {
         this.params = params;
-        // If valid option for rowsPerPage, use it, and signal the service
-        if (params.has('rows')
-          && Number(params.get('rows'))
-          && this.rowAmounts.indexOf(Number(params.get('rows'))) > -1) {
-          this.rowsPerPage = Number(params.get('rows'));
-        // If invalid option for rowsPerPage, or not present in params,
-        // fall back to first option, and signal the service
-        } else {
-          this.rowsPerPage = this.rowAmounts[0];
-        }
-
-        this.updateParams({
-          ...this.activatedRouter.snapshot.queryParams,
-          rows: this.rowsPerPage.toString()
-        });
-
-        if (this.firstTime[0]) {
-          this.gdaxDataService.changeRowsPerPage(this.rowsPerPage, false);
-        } else {
-          this.gdaxDataService.changeRowsPerPage(this.rowsPerPage, true);
-        }
+        this.handleRowsPerPageParam();
         // Whether rows is a parameter or not, mark the firsttime as false to let
         // currencyType know it's ready for query.
         this.firstTime[1] = false;
@@ -165,6 +145,35 @@ export class TradingHistoryComponent implements OnInit {
         rows: this.rowsPerPage.toString()
       });
       this.gdaxDataService.changeRowsPerPage(this.rowsPerPage);
+    }
+  }
+  /**
+  * @private
+  * Checks if url params contain rows and use it if valid.
+  * If invalid or not present, fallback to the component default.
+  * Then update the params and service to know the outcome.
+  */
+  handleRowsPerPageParam() {
+    // If valid option for rowsPerPage, use it, and signal the service
+    if (this.params.has('rows')
+    && Number(this.params.get('rows'))
+    && this.rowAmounts.indexOf(Number(this.params.get('rows'))) > -1) {
+    this.rowsPerPage = Number(this.params.get('rows'));
+    // If invalid option for rowsPerPage, or not present in params,
+    // fall back to first option, and signal the service
+    } else {
+      this.rowsPerPage = this.rowAmounts[0];
+    }
+
+    this.updateParams({
+      ...this.activatedRouter.snapshot.queryParams,
+      rows: this.rowsPerPage.toString()
+    });
+
+    if (this.firstTime[0]) {
+      this.gdaxDataService.changeRowsPerPage(this.rowsPerPage, false);
+    } else {
+      this.gdaxDataService.changeRowsPerPage(this.rowsPerPage, true);
     }
   }
   /**
