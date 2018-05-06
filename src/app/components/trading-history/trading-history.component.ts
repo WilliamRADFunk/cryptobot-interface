@@ -106,6 +106,8 @@ export class TradingHistoryComponent implements OnInit {
         this.page = data;
         if (this.page === 1) {
           this.isNoPrevPage = true;
+        } else {
+          this.isNoPrevPage = false;
         }
       });
     this.gdaxDataService.tableData

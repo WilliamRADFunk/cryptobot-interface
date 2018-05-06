@@ -1,14 +1,17 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment, ParamMap } from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChartModule } from 'angular-highcharts';
 
 import { TradingHistoryComponent } from './trading-history.component';
 import { GdaxDataService } from '../../services/gdax-data.service';
+import 'rxjs/add/observable/of';
+import { Observable } from 'rxjs/Observable';
 
 let gdaxDataService;
+let activatedRouter;
 
 describe('TradingHistoryComponent', () => {
   let component: TradingHistoryComponent;
@@ -30,7 +33,19 @@ describe('TradingHistoryComponent', () => {
               subscribe: fn => {
                 fn([{path: 'BTC-USD'}]);
               }
-            }
+            },
+            queryParamMap: Observable.of({
+              get: (key) => {
+                if (key === 'rows') {
+                  return 10;
+                }
+              },
+              has: (key) => {
+                if (key === 'rows') {
+                  return true;
+                }
+              }
+            })
           }
         },
         {
@@ -64,6 +79,7 @@ describe('TradingHistoryComponent', () => {
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     });
     gdaxDataService = TestBed.get(GdaxDataService);
+    activatedRouter = TestBed.get(ActivatedRoute);
   }));
 
   beforeEach(() => {
@@ -74,6 +90,62 @@ describe('TradingHistoryComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+  describe('ngOnInit', () => {
+    it('should call changeCurrencyType with false', () => {
+      spyOn(gdaxDataService, 'changeCurrencyType').and.returnValue(true);
+      spyOn(component, 'handleRowsPerPageParam').and.returnValue(true);
+      component.firstTime[1] = true;
+      component.ngOnInit();
+      fixture.detectChanges();
+      expect(gdaxDataService.changeCurrencyType).toHaveBeenCalledWith(
+        component.pathState,
+        'trading-history',
+        false);
+      expect(component.firstTime[0]).toBe(false);
+    });
+    it('should call changeCurrencyType with true', () => {
+      spyOn(gdaxDataService, 'changeCurrencyType').and.returnValue(true);
+      spyOn(component, 'handleRowsPerPageParam').and.returnValue(true);
+      component.firstTime[1] = false;
+      component.ngOnInit();
+      fixture.detectChanges();
+      expect(gdaxDataService.changeCurrencyType).toHaveBeenCalledWith(
+        component.pathState,
+        'trading-history',
+        true);
+      expect(component.firstTime[0]).toBe(false);
+    });
+    it('should call handleRowsPerPageParam and set firstTime[1] to false', () => {
+      spyOn(gdaxDataService, 'changeCurrencyType').and.returnValue(true);
+      spyOn(component, 'handleRowsPerPageParam').and.returnValue(true);
+      component.firstTime[1] = true;
+      component.ngOnInit();
+      fixture.detectChanges();
+      expect(component.handleRowsPerPageParam).toHaveBeenCalled();
+      expect(component.firstTime[1]).toBe(false);
+    });
+    it('should set page to 1 and isNoPrevPage to true', () => {
+      spyOn(gdaxDataService, 'changeCurrencyType').and.returnValue(true);
+      spyOn(component, 'handleRowsPerPageParam').and.returnValue(true);
+      component.isNoPrevPage = false;
+      component.ngOnInit();
+      fixture.detectChanges();
+      expect(component.page).toBe(1);
+      expect(component.isNoPrevPage).toBe(true);
+    });
+    it('should set page to 2 and isNoPrevPage to false', () => {
+      spyOn(gdaxDataService, 'changeCurrencyType').and.returnValue(true);
+      spyOn(component, 'handleRowsPerPageParam').and.returnValue(true);
+      component.isNoPrevPage = true;
+      gdaxDataService.page.subscribe = fn => {
+        fn(2);
+      };
+      component.ngOnInit();
+      fixture.detectChanges();
+      expect(component.page).toBe(2);
+      expect(component.isNoPrevPage).toBe(false);
+    });
   });
   describe('changedPageNumber', () => {
     it('should not change page and not call gdaxDataService.changePageNumber', () => {
@@ -139,6 +211,58 @@ describe('TradingHistoryComponent', () => {
       expect(component.rowsPerPage).toBe(25);
       expect(component.isBusy).toBe(true);
       expect(gdaxDataService.changeRowsPerPage).toHaveBeenCalled();
+    });
+  });
+  describe('handleRowsPerPageParam', () => {
+    it(`should set rowsPerPage to 10.
+      Call updateParams & then changeCurrencyType with 10, false`, () => {
+      spyOn(component, 'updateParams').and.returnValue(true);
+      spyOn(gdaxDataService, 'changeRowsPerPage').and.returnValue(true);
+      component.params = {
+        get: (key) => {
+          if (key === 'bob') {
+            return '25';
+          }
+        },
+        has: (key) => {
+          if (key === 'bob') {
+            return true;
+          }
+        },
+        getAll: () => [''],
+        keys: ['']
+      };
+      component.rowsPerPage = 200;
+      component.firstTime[0] = false;
+      component.handleRowsPerPageParam();
+      expect(component.updateParams).toHaveBeenCalled();
+      expect(gdaxDataService.changeRowsPerPage).toHaveBeenCalledWith(10, true);
+      expect(component.rowsPerPage).toBe(10);
+    });
+    it(`should set rowsPerPage to 25.
+      Call updateParams & then changeCurrencyType with 25, true`, () => {
+      spyOn(component, 'updateParams').and.returnValue(true);
+      spyOn(gdaxDataService, 'changeRowsPerPage').and.returnValue(true);
+      component.params = {
+        get: (key) => {
+          if (key === 'rows') {
+            return '25';
+          }
+        },
+        has: (key) => {
+          if (key === 'rows') {
+            return true;
+          }
+        },
+        getAll: () => [''],
+        keys: ['']
+      };
+      component.rowsPerPage = 200;
+      component.firstTime[0] = true;
+      component.handleRowsPerPageParam();
+      expect(component.updateParams).toHaveBeenCalled();
+      expect(gdaxDataService.changeRowsPerPage).toHaveBeenCalledWith(25, false);
+      expect(component.rowsPerPage).toBe(25);
     });
   });
   describe('updateTable', () => {
