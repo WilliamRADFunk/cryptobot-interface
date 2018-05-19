@@ -14,6 +14,8 @@ label {
 
 .table-view {
   background-color: rgb(44, 62, 80);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
   display: block;
   height: 406px;
   max-height: 406px;
@@ -38,6 +40,8 @@ label {
 
 .paginate-box {
   background-color: #353a40;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
   color: #ffc000;
   height: 50px;
 }
@@ -279,4 +283,17 @@ label {
     background-color: #ffc000;
     color: rgb(44, 62, 80);
   }
+}
+
+::-webkit-scrollbar {
+  // Width of vertical scroll bar
+  width: 8px;
+  // Height of horizontal scroll bar
+  height: 10px;
+
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: #c2c9d2;
 }
