@@ -180,6 +180,7 @@ export class FilterControlsComponent implements OnInit {
     this.activatedRouter.queryParamMap
       .subscribe((params: ParamMap) => {
         this.params = params;
+        console.log(params);
         this.handleStartDateTimeParam();
         this.handleEndDateTimeParam();
         this.handleIncorrectDateTimeParams();
@@ -256,7 +257,9 @@ export class FilterControlsComponent implements OnInit {
     if (this.isRelevant && !initChange) {
       this.updateParams({
         ...this.activatedRouter.snapshot.queryParams,
-        granularity: event['value']
+        endDateTime: this.endDate.toISOString(),
+        granularity: this.timeInterval,
+        startDateTime: this.startDate.toISOString()
       });
     }
     this.gdaxDataService.changeTimeInterval(this.timeInterval, initChange);
@@ -463,6 +466,7 @@ export class FilterControlsComponent implements OnInit {
   * If invalid or not present, fallback to the component default.
   */
   handleStartDateTimeParam(): void {
+    console.log(this.params.has('startDateTime'));
     // If valid option for startDateTime, use it, and signal the service
     if (this.params.has('startDateTime')) {
       const startDateTime = new Date(this.params.get('startDateTime'));
@@ -473,11 +477,13 @@ export class FilterControlsComponent implements OnInit {
       // If invalid option for startDateTime, use fallback,
       // adjust params, and signal the service
       } else {
+        console.log('1');
         this.gdaxDataService.changeStartDateTime(this.startDate, true);
       }
     // If no url param option for startDateTime, use fallback,
     // adjust params, and signal the service
     } else {
+      console.log('2');
       this.gdaxDataService.changeStartDateTime(this.startDate, true);
     }
   }
@@ -597,11 +603,15 @@ export class FilterControlsComponent implements OnInit {
   */
   updateParams(params: {}) {
     // clearTimeout(this.timeoutId);
-    this.timeoutId = setTimeout(() => {
-      this.router.navigate([], {
-        queryParams: params,
-        queryParamsHandling: 'merge'
-      });
-    }, 100);
+    // this.timeoutId = setTimeout(() => {
+    //   this.router.navigate([], {
+    //     queryParams: params,
+    //     queryParamsHandling: 'merge'
+    //   });
+    // }, 100);
+    this.router.navigate([], {
+      queryParams: params,
+      queryParamsHandling: 'merge'
+    });
   }
 }

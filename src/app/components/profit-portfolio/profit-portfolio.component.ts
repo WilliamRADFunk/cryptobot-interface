@@ -42,20 +42,74 @@ export class ProfitPortfolioComponent implements OnInit {
         this.pathState = segments[0]['path'];
         this.gdaxDataService.changeCurrencyType(this.pathState, 'profit-portfolio', true);
       });
-    this.chart = new Chart({
-      chart: {
-        type: 'line'
-      },
-      title: {
-        text: 'BTC-USD'
-      },
-      credits: {
-        enabled: false
-      },
-      series: [{
-        name: 'BTC-USD',
-        data: [1, 2, 3]
-      }]
-    });
+    // this.gdaxDataService.chartData
+    //   .subscribe(this.updateChart.bind(this));
+  }
+  /**
+  * When new data is received, it's passed to this function.
+  * Here the chart details assembled, and the chartReady flag is released.
+  * @param data queried market data passed from the GdaxDataService.
+  */
+  updateChart(data: number[][]): void {
+    // console.log(data);
+    const options = {};
+    options['chart'] = {
+      type: 'column',
+      backgroundColor: 'rgba(255, 255, 255, 0)'
+    };
+    options['title'] = {
+      text: this.pathState
+    };
+    options['credits'] = {
+      enabled: false
+    };
+    if (this.pathState === 'ALL') {
+      options['series'] = [
+        {
+          name: 'BTC-USD',
+          color: '#2d2d31',
+          data: []
+        },
+        {
+          name: 'LTC-USD',
+          color: '#ff0000',
+          data: []
+        },
+        {
+          name: 'ETH-USD',
+          color: '#ffff00',
+          data: []
+        }
+      ];
+    } else {
+      options['series'] = [
+      {
+        name: '$ Spent',
+        data: [5, 3, 4, 7, 2, 5, 3, 4, 7, 2, 4, 2]
+      }, {
+        name: '$ Earned',
+        data: [2, -2, -3, 2, 1, 2, -2, -3, 2, 1, 8, 1]
+      }, {
+        name: '$ Profit',
+        data: [3, 4, 4, -2, 5, 3, 4, 4, -2, 5, 3, 6]
+      }];
+    }
+    options['xAxis'] = {
+      categories: [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December'
+      ]
+    }
+    this.chart = new Chart(options);
   }
 }

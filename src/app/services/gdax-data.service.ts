@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 const INTERFACE_URL = 'http://www.williamrobertfunk.com';
+const DATA_URL = 'http://167.99.149.6:3000/';
 
 @Injectable()
 export class GdaxDataService {
@@ -23,6 +24,17 @@ export class GdaxDataService {
   * Currency type which is used as part of the query URL.
   */
   currency: string = 'BTC-USD';
+  /**
+  * Keeps track of the index for current currency within currTypes for
+  * trading history 'ALL' fetches.
+  */
+  currIndex: number = 0;
+  /**
+  * Contains the types of currency, which allows trading history fetch to iterate
+  * through all currencies in the 'ALL' currency type. Dynamically switches API
+  * params when one currency type runs out but more results are needed.
+  */
+  currTypes: string[] = ['btc', 'ltc', 'eth'];
   /**
   * The end datetime used as a parameter in the query URL
   */
@@ -50,6 +62,10 @@ export class GdaxDataService {
   */
   page: BehaviorSubject<number> = new BehaviorSubject<number>(1);
   /**
+  * Temporary holder for profit portfolio data until recursive search is completed.
+  */
+  profitChartData: number[][] = [];
+  /**
   * The current number for rows per page
   */
   rowsPerPage: number = 10;
@@ -62,9 +78,15 @@ export class GdaxDataService {
   * that all of the live views will understand and be able to use.
   */
   tableData: BehaviorSubject<{}[]> = new BehaviorSubject<{}[]>([]);
+  /**
+  * Temporary holder for trading history table data until recursive search is completed.
+  */
   tableResults: {}[] = [];
-  currTypes: string[] = ['btc', 'ltc', 'eth'];
-  currIndex: number = 0;
+  /**
+  * Contains list of profit results that reside inside filter zone.
+  * Used later in organizeProfitData function.
+  */
+  validProfitResults: {}[] = [];
 
   /**
   * Constructor for the class. Injects Angular's HttpClient service
@@ -78,11 +100,13 @@ export class GdaxDataService {
   * @param refresh flag to refresh the query. Helps to wait until all url details are pulled
   */
   changeCurrencyType(currency: string, basePath: string, refresh?: boolean): void {
+    this.profitChartData = [];
+    this.validProfitResults = [];
     this.tableResults = [];
     this.page.next(1);
     this.basePath = basePath;
     this.currency = currency;
-    this.bookmark = undefined;
+    this.bookmark = null;
     if (refresh) {
       this.firstTime[0] = false;
     }
@@ -96,10 +120,12 @@ export class GdaxDataService {
   * @param initChange flag to signal it's an original change (prevents multiple query calls onInit)
   */
   changeEndDateTime(date: Date, initChange?: boolean): void {
+    this.profitChartData = [];
+    this.validProfitResults = [];
     this.tableResults = [];
     this.page.next(1);
     this.endDate = date;
-    this.bookmark = undefined;
+    this.bookmark = null;
     if (initChange) {
       this.firstTime[3] = false;
     }
@@ -113,9 +139,11 @@ export class GdaxDataService {
   * @param page the granularity to use
   */
   changePageNumber(page: number): void {
+    this.profitChartData = [];
+    this.validProfitResults = [];
     this.tableResults = [];
     if (page === 1) {
-      this.bookmark = undefined;
+      this.bookmark = null;
     } else if (page < this.page.value) {
       this.currIndex = this.currTypes.indexOf(this.tableData.value[0]['product'].toLowerCase());
       this.bookmark = -this.tableData.value[0]['id'];
@@ -134,10 +162,12 @@ export class GdaxDataService {
   * @param initChange flag to signal it's an original change (prevents multiple query calls onInit)
   */
   changeRowsPerPage(rowsPerPage: number, initChange?: boolean): void {
+    this.profitChartData = [];
+    this.validProfitResults = [];
     this.tableResults = [];
     this.rowsPerPage = rowsPerPage;
     this.page.next(1);
-    this.bookmark = undefined;
+    this.bookmark = null;
     if (initChange) {
       this.firstTime[0] = false;
     }
@@ -151,10 +181,12 @@ export class GdaxDataService {
   * @param initChange flag to signal it's an original change (prevents multiple query calls onInit)
   */
   changeStartDateTime(date: Date, initChange?: boolean): void {
+    this.profitChartData = [];
+    this.validProfitResults = [];
     this.tableResults = [];
     this.page.next(1);
     this.startDate = date;
-    this.bookmark = undefined;
+    this.bookmark = null;
     if (initChange) {
       this.firstTime[2] = false;
     }
@@ -305,13 +337,13 @@ export class GdaxDataService {
         .set(`limit`, `${this.rowsPerPage + 1}`);
     }
     if (this.currency === 'ALL') {
-      this.http.get<any>(`http://167.99.149.6:3000/history/${this.currTypes[this.currIndex]}`, {headers, params})
+      this.http.get<any>(`${DATA_URL}history/${this.currTypes[this.currIndex]}`, {headers, params})
         .subscribe(originalData => {
           this.handleHistoryResults(originalData);
         });
     } else {
       const curr: string = this.currency.split('-')[0].toLowerCase();
-      this.http.get<any>(`http://167.99.149.6:3000/history/${curr}`, {headers, params})
+      this.http.get<any>(`${DATA_URL}history/${curr}`, {headers, params})
         .subscribe(originalData => {
           this.handleHistoryResults(originalData);
         });
@@ -321,7 +353,83 @@ export class GdaxDataService {
   * Call to GDAX for profit data
   */
   getLatestGdaxProfitData(): void {
+    this.isBusy.next(true);
+    this.chartData.next([]);
+    const headers = new HttpHeaders()
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .set('Access-Control-Allow-Origin', INTERFACE_URL)
+      .set('Access-Control-Allow-Methods', 'POST, GET')
+      .set('Access-Control-Allow-Headers', 'X-PINGOTHER, Content-Type')
+      .set('Access-Control-Max-Age', '86400');
+    let params;
+    if (!this.bookmark) {
+      params = new HttpParams();
+    } else {
+      params = new HttpParams()
+        .set(`after`, `${this.bookmark}`);
+    }
+    if (this.currency === 'ALL') {
 
+    } else {
+      const curr: string = this.currency.split('-')[0].toLowerCase();
+      this.http.get<any>(`${DATA_URL}history/${curr}`, {headers, params})
+        .subscribe(originalData => {
+          this.handleProfitResults(originalData);
+        });
+    }
+  }
+  organizeProfitData() {
+    console.log(this.validProfitResults); 
+    this.validProfitResults = [];
+  }
+  /**
+  * Recursive query maker until desired results are found
+  * @param originalData data used to check against to see if current results are sufficient
+  */
+  handleProfitResults(originalData: {}[]): void {
+    // Unexpectedly ran out of for-loop results.
+    // Compute what's there and return.
+    if (!originalData.length) {
+      this.organizeProfitData();
+      this.chartData.next(this.profitChartData);
+      setTimeout(() => {
+        this.isBusy.next(false);
+      }, 300);
+      return;
+    }
+    for (let i = 0; i < originalData.length; i++) {
+      const date = originalData[i]['created_at'] || null;
+      const id = originalData[i]['id'] || null;
+      // If it has no "create_at" or "id" it's garbage.
+      // Move onto next result to avoid errors.
+      if (!date || !id) {
+        continue;
+      }
+      // Comparative value of the date value.
+      const dateTime = new Date(date).getTime();
+      // Stop looking. We've exceeded our search
+      if (dateTime > this.endDate.getTime()) {
+        this.organizeProfitData();
+        this.chartData.next(this.profitChartData);
+        setTimeout(() => {
+          this.isBusy.next(false);
+        }, 300);
+        return;
+      // Found a valid result, add it to the pile.
+      } else if (dateTime > this.startDate.getTime()) {
+        this.bookmark = id;
+        this.validProfitResults.push(originalData[i]);
+      // Result is too early, mark it and move on.
+      } else {
+        this.bookmark = id;
+      }
+    }
+    // Ran out of results for this pull, but haven't hit an end case.
+    // Call the query, which will use the updated bookmark to grab newer batch.
+    setTimeout(() => {
+      this.getLatestGdaxProfitData();
+    }, 400);
   }
   /**
   * Recursive query maker until desired results are found
@@ -334,7 +442,7 @@ export class GdaxDataService {
       && this.currency === 'ALL'
       && this.currIndex < this.currTypes.length - 1) {
       this.currIndex++;
-      this.bookmark = undefined;
+      this.bookmark = null;
       setTimeout(() => {
         this.getLatestGdaxHistoryData();
       }, 500);
@@ -356,13 +464,13 @@ export class GdaxDataService {
       && new Date(originalData[0]['created_at']).getTime() < this.startDate.getTime()) {
       if (this.currency === 'ALL' && this.currIndex < this.currTypes.length - 1) {
         this.currIndex++;
-        this.bookmark = undefined;
+        this.bookmark = null;
         setTimeout(() => {
           this.getLatestGdaxHistoryData();
         }, 500);
         return;
       } else {
-        this.bookmark = undefined;
+        this.bookmark = null;
         this.tableData.next(this.tableResults);
         setTimeout(() => {
           this.isBusy.next(false);
@@ -391,7 +499,7 @@ export class GdaxDataService {
         && this.currIndex < this.currTypes.length - 1) {
         this.currIndex++;
         this.tableResults = this.tableResults.concat(formatedData);
-        this.bookmark = undefined;
+        this.bookmark = null;
         setTimeout(() => {
           this.getLatestGdaxHistoryData();
         }, 500);
@@ -414,7 +522,7 @@ export class GdaxDataService {
         && this.currIndex < this.currTypes.length - 1) {
         this.currIndex++;
         this.tableResults = this.tableResults.concat(formatedData);
-        this.bookmark = undefined;
+        this.bookmark = null;
         setTimeout(() => {
           this.getLatestGdaxHistoryData();
         }, 500);
