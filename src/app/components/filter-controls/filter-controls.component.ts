@@ -180,15 +180,16 @@ export class FilterControlsComponent implements OnInit {
     this.activatedRouter.queryParamMap
       .subscribe((params: ParamMap) => {
         this.params = params;
-        console.log(params);
-        this.handleStartDateTimeParam();
-        this.handleEndDateTimeParam();
-        this.handleIncorrectDateTimeParams();
-        // Dates are done, release the change detection functions.
-        this.isInitialized = true;
-        this.handleGranularityParam();
-        this.resetMinMax();
-        this.handleInitialParamUpdate();
+        if (!this.isInitialized) {
+          this.handleStartDateTimeParam();
+          this.handleEndDateTimeParam();
+          this.handleIncorrectDateTimeParams();
+          // Dates are done, release the change detection functions.
+          this.isInitialized = true;
+          this.handleGranularityParam();
+          this.resetMinMax();
+          this.handleInitialParamUpdate();
+        }
       });
   }
   /**
@@ -382,6 +383,7 @@ export class FilterControlsComponent implements OnInit {
   * If invalid or not present, fallback to the component default.
   */
   handleEndDateTimeParam(): void {
+    const prevDateTime = this.gdaxDataService.getEndDateTime();
     // If valid option for endDateTime, use it, and signal the service
     if (this.params.has('endDateTime')) {
       const endDateTime = new Date(this.params.get('endDateTime'));
@@ -389,12 +391,24 @@ export class FilterControlsComponent implements OnInit {
         this.setADateTime(endDateTime, this.eDate, this.eTime);
         this.endDate = endDateTime;
         this.gdaxDataService.changeEndDateTime(endDateTime, true);
-      // If invalid option for endDateTime, use fallback,
+      // If no url param option for endDateTime,
+      // but the service does. Use it.
+      } else if (prevDateTime) {
+        this.setADateTime(prevDateTime, this.eDate, this.eTime);
+        this.endDate = prevDateTime;
+      // If no url param option for endDateTime, and service
+      // has no previous endDateTime, use fallback,
       // adjust params, and signal the service
       } else {
-        this.gdaxDataService.changeEndDateTime(this.endDate, true);
+        this.gdaxDataService.changeStartDateTime(this.endDate, true);
       }
-    // If no url param option for endDateTime, use fallback,
+    // If no url param option for endDateTime,
+    // but the service does. Use it.
+    } else if (prevDateTime) {
+      this.setADateTime(prevDateTime, this.eDate, this.eTime);
+      this.endDate = prevDateTime;
+    // If no url param option for endDateTime, and service
+    // has no previous endDateTime, use fallback,
     // adjust params, and signal the service
     } else {
       this.gdaxDataService.changeEndDateTime(this.endDate, true);
@@ -466,7 +480,7 @@ export class FilterControlsComponent implements OnInit {
   * If invalid or not present, fallback to the component default.
   */
   handleStartDateTimeParam(): void {
-    console.log(this.params.has('startDateTime'));
+    const prevDateTime = this.gdaxDataService.getStartDateTime();
     // If valid option for startDateTime, use it, and signal the service
     if (this.params.has('startDateTime')) {
       const startDateTime = new Date(this.params.get('startDateTime'));
@@ -474,16 +488,27 @@ export class FilterControlsComponent implements OnInit {
         this.setADateTime(startDateTime, this.sDate, this.sTime);
         this.startDate = startDateTime;
         this.gdaxDataService.changeStartDateTime(startDateTime, true);
-      // If invalid option for startDateTime, use fallback,
+      // If no url param option for startDateTime,
+      // but the service does. Use it.
+      } else if (prevDateTime) {
+        this.setADateTime(prevDateTime, this.sDate, this.sTime);
+        this.startDate = prevDateTime;
+      // If no url param option for startDateTime, and service
+      // has no previous startDateTime, use fallback,
       // adjust params, and signal the service
       } else {
-        console.log('1');
         this.gdaxDataService.changeStartDateTime(this.startDate, true);
       }
-    // If no url param option for startDateTime, use fallback,
+    // If no url param option for startDateTime,
+    // but the service does. Use it.
+    } else if (prevDateTime) {
+      this.setADateTime(prevDateTime, this.sDate, this.sTime);
+      this.startDate = prevDateTime;
+      console.log(prevDateTime);
+    // If no url param option for startDateTime, and service
+    // has no previous startDateTime, use fallback,
     // adjust params, and signal the service
     } else {
-      console.log('2');
       this.gdaxDataService.changeStartDateTime(this.startDate, true);
     }
   }

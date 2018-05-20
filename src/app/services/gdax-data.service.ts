@@ -254,6 +254,13 @@ export class GdaxDataService {
     return d1;
   }
   /**
+  * Returns the service stored endDatetime
+  * @return endDate stored on service from previous entry.
+  */
+  getEndDateTime(): Date {
+    return this.endDate;
+  }
+  /**
   * Call to GDAX for cryptobot data
   */
   getLatestCryptoBotData(): void {
@@ -307,7 +314,7 @@ export class GdaxDataService {
           this.chartData.next(data);
           setTimeout(() => {
             this.isBusy.next(false);
-          }, 300);
+          }, 1000);
         });
     }
   }
@@ -379,8 +386,15 @@ export class GdaxDataService {
         });
     }
   }
+  /**
+  * Returns the service stored startDatetime
+  * @return startDate stored on service from previous entry.
+  */
+  getStartDateTime(): Date {
+    return this.startDate;
+  }
   organizeProfitData() {
-    console.log(this.validProfitResults); 
+    console.log(this.validProfitResults);
     this.validProfitResults = [];
   }
   /**
