@@ -17,6 +17,11 @@ export class ProfitPortfolioComponent implements OnInit {
   */
   chart: Chart;
   /**
+  * Checks with service to see if it's busy in a query,
+  * and puts table in standby mode until it's ready.
+  */
+  isBusy: boolean = true;
+  /**
   * The initial path state passed in by the activatedRouter.
   * Keeps track of what currency the chart should be viewing.
   */
@@ -37,13 +42,17 @@ export class ProfitPortfolioComponent implements OnInit {
   * Gets REST path info, and updates the profit chart.
   */
   ngOnInit(): void {
+    this.gdaxDataService.isBusy
+      .subscribe(data => {
+        this.isBusy = data;
+      });
     this.activatedRouter.url
       .subscribe((segments: UrlSegment[]) => {
         this.pathState = segments[0]['path'];
         this.gdaxDataService.changeCurrencyType(this.pathState, 'profit-portfolio', true);
       });
-    // this.gdaxDataService.chartData
-    //   .subscribe(this.updateChart.bind(this));
+    this.gdaxDataService.chartData
+      .subscribe(this.updateChart.bind(this));
   }
   /**
   * When new data is received, it's passed to this function.
@@ -109,7 +118,7 @@ export class ProfitPortfolioComponent implements OnInit {
         'November',
         'December'
       ]
-    }
+    };
     this.chart = new Chart(options);
   }
 }

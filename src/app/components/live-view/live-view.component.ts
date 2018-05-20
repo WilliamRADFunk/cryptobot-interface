@@ -23,6 +23,11 @@ export class LiveViewComponent implements OnInit {
   */
   chartReady: boolean = false;
   /**
+  * Checks with service to see if it's busy in a query,
+  * and puts table in standby mode until it's ready.
+  */
+  isBusy: boolean = true;
+  /**
   * The initial path state passed in by the activatedRouter.
   * Keeps track of what currency the chart should be viewing.
   */
@@ -43,6 +48,10 @@ export class LiveViewComponent implements OnInit {
   * Gets REST path info, and updates the profit chart.
   */
   ngOnInit(): void {
+    this.gdaxDataService.isBusy
+      .subscribe(data => {
+        this.isBusy = data;
+      });
     this.activatedRouter.url
       .subscribe((segments: UrlSegment[]) => {
         this.pathState = segments[0]['path'];

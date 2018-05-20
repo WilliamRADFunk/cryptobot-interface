@@ -286,13 +286,13 @@ label {
 }
 
 ::-webkit-scrollbar {
-  // Width of vertical scroll bar
-  width: 8px;
   // Height of horizontal scroll bar
   height: 10px;
+  // Width of vertical scroll bar
+  width: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-  border-radius: 8px;
   background: #c2c9d2;
+  border-radius: 8px;
 }

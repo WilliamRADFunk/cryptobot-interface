@@ -504,7 +504,6 @@ export class FilterControlsComponent implements OnInit {
     } else if (prevDateTime) {
       this.setADateTime(prevDateTime, this.sDate, this.sTime);
       this.startDate = prevDateTime;
-      console.log(prevDateTime);
     // If no url param option for startDateTime, and service
     // has no previous startDateTime, use fallback,
     // adjust params, and signal the service
@@ -627,13 +626,6 @@ export class FilterControlsComponent implements OnInit {
   * @param params param object used to update queryParams
   */
   updateParams(params: {}) {
-    // clearTimeout(this.timeoutId);
-    // this.timeoutId = setTimeout(() => {
-    //   this.router.navigate([], {
-    //     queryParams: params,
-    //     queryParamsHandling: 'merge'
-    //   });
-    // }, 100);
     this.router.navigate([], {
       queryParams: params,
       queryParamsHandling: 'merge'

@@ -6,4 +6,12 @@
       .col-12.col-sm-12.col-md-12.col-lg-12
         app-filter-controls
       .col-12.col-sm-12.col-md-12.col-lg-12
-        div([chart]="chart")
+        div(
+          [chart]="chart",
+          *ngIf="!isBusy")
+        div.text-center(*ngIf="isBusy")
+          img(
+            height=200,
+            src="assets/images/loading.gif",
+            style="margin-top: 25px;"
+            width=200)

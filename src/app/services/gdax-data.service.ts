@@ -38,7 +38,7 @@ export class GdaxDataService {
   /**
   * The end datetime used as a parameter in the query URL
   */
-  endDate: Date = new Date();
+  endDate: Date = null;
   /**
   * Array of flags to determine if initial filtering params have called in
   * the service to query for data. First is route component params.
@@ -72,7 +72,7 @@ export class GdaxDataService {
   /**
   * The start datetime used as a parameter in the query URL
   */
-  startDate: Date = new Date(this.endDate.getTime() - 86400000);
+  startDate: Date = null;
   /**
   * The updated query results for historical trade market data in a format
   * that all of the live views will understand and be able to use.
