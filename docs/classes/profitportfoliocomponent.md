@@ -20,6 +20,7 @@
 * [activatedRouter](profitportfoliocomponent.md#markdown-header-private-activatedrouter)
 * [chart](profitportfoliocomponent.md#markdown-header-chart)
 * [gdaxDataService](profitportfoliocomponent.md#markdown-header-private-gdaxdataservice)
+* [isBusy](profitportfoliocomponent.md#markdown-header-isbusy)
 * [pathState](profitportfoliocomponent.md#markdown-header-pathstate)
 * [router](profitportfoliocomponent.md#markdown-header-private-router)
 
@@ -27,6 +28,7 @@
 ### Methods
 
 * [ngOnInit](profitportfoliocomponent.md#markdown-header-ngoninit)
+* [updateChart](profitportfoliocomponent.md#markdown-header-updatechart)
 
 
 
@@ -38,7 +40,7 @@
 ### ⊕ **new ProfitPortfolioComponent**(activatedRouter: *`ActivatedRoute`*, router: *`Router`*, gdaxDataService: *[GdaxDataService](gdaxdataservice.md)*): [ProfitPortfolioComponent](profitportfoliocomponent.md)
 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/profit-portfolio/profit-portfolio.component.ts#L23)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:28](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/profit-portfolio/profit-portfolio.component.ts#L28)*
 
 
 
@@ -69,7 +71,7 @@ Constructor for the class. Injects Angular's ActivatedRoute, and Router services
 
 **●  activatedRouter**:  *`ActivatedRoute`* 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:32](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/profit-portfolio/profit-portfolio.component.ts#L32)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:37](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/profit-portfolio/profit-portfolio.component.ts#L37)*
 
 
 
@@ -86,7 +88,7 @@ ___
 
 **●  chart**:  *`Chart`* 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:18](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/profit-portfolio/profit-portfolio.component.ts#L18)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:18](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/profit-portfolio/profit-portfolio.component.ts#L18)*
 
 
 
@@ -103,7 +105,7 @@ ___
 
 **●  gdaxDataService**:  *[GdaxDataService](gdaxdataservice.md)* 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:34](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/profit-portfolio/profit-portfolio.component.ts#L34)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:39](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/profit-portfolio/profit-portfolio.component.ts#L39)*
 
 
 
@@ -116,11 +118,28 @@ ___
 
 
 
+###  isBusy
+
+**●  isBusy**:  *`boolean`*  = true
+
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/profit-portfolio/profit-portfolio.component.ts#L23)*
+
+
+
+Checks with service to see if it's busy in a query, and puts table in standby mode until it's ready.
+
+
+
+
+___
+
+
+
 ###  pathState
 
 **●  pathState**:  *`string`*  = "BTC-USD"
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/profit-portfolio/profit-portfolio.component.ts#L23)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:28](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/profit-portfolio/profit-portfolio.component.ts#L28)*
 
 
 
@@ -137,7 +156,7 @@ ___
 
 **●  router**:  *`Router`* 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:33](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/profit-portfolio/profit-portfolio.component.ts#L33)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:38](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/profit-portfolio/profit-portfolio.component.ts#L38)*
 
 
 
@@ -158,11 +177,44 @@ ___
 
 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:39](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/profit-portfolio/profit-portfolio.component.ts#L39)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:44](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/profit-portfolio/profit-portfolio.component.ts#L44)*
 
 
 
 Triggered when component is loaded, but before it is viewed. Gets REST path info, and updates the profit chart.
+
+
+
+
+**Returns:** `void`
+
+
+
+
+
+___
+
+
+
+###  updateChart
+
+► **updateChart**(data: *`number`[][]*): `void`
+
+
+
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:62](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/profit-portfolio/profit-portfolio.component.ts#L62)*
+
+
+
+When new data is received, it's passed to this function. Here the chart details assembled, and the chartReady flag is released.
+
+
+**Parameters:**
+
+| Param | Type | Description |
+| ------ | ------ | ------ |
+| data | `number`[][]   |  queried market data passed from the GdaxDataService. |
+
 
 
 

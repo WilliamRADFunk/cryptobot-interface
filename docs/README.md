@@ -19,7 +19,9 @@
 
 ### Variables
 
+* [DATA_URL](#markdown-header-const-data-url)
 * [INTERFACE_URL](#markdown-header-const-interface-url)
+* [activatedRouter](#markdown-header-let-activatedrouter)
 * [appRoutes](#markdown-header-const-approutes)
 * [context](#markdown-header-const-context)
 * [date](#markdown-header-const-date)
@@ -49,11 +51,40 @@
 # Variables
 
 
+### «Const» DATA_URL
+
+**●  DATA_URL**:  *"http://167.99.149.6:3000/"*  = "http://167.99.149.6:3000/"
+
+*Defined in [app/services/gdax-data.service.ts:6](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/services/gdax-data.service.ts#L6)*
+
+
+
+
+
+___
+
+
+
 ### «Const» INTERFACE_URL
 
 **●  INTERFACE_URL**:  *"http://www.williamrobertfunk.com"*  = "http://www.williamrobertfunk.com"
 
-*Defined in [app/services/gdax-data.service.ts:5](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/services/gdax-data.service.ts#L5)*
+*Defined in [app/services/gdax-data.service.ts:5](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/services/gdax-data.service.ts#L5)*
+
+
+
+
+
+___
+
+
+
+### «Let» activatedRouter
+
+**●  activatedRouter**:  *`any`* 
+
+*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:15](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/filter-controls/filter-controls.component.spec.ts#L15)*
+*Defined in [app/components/trading-history/trading-history.component.spec.ts:14](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/trading-history/trading-history.component.spec.ts#L14)*
 
 
 
@@ -97,7 +128,7 @@ ___
   ] }
 ]
 
-*Defined in [app/app-routing.module.ts:9](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/app-routing.module.ts#L9)*
+*Defined in [app/app-routing.module.ts:9](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/app-routing.module.ts#L9)*
 
 
 
@@ -111,7 +142,7 @@ ___
 
 **●  context**:  *`any`*  =  require.context('./', true, /\.spec\.ts$/)
 
-*Defined in [test.ts:18](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/test.ts#L18)*
+*Defined in [test.ts:18](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/test.ts#L18)*
 
 
 
@@ -125,7 +156,7 @@ ___
 
 **●  date**:  *`Date`*  =  new Date('2018-03-25T03:55:19.336Z')
 
-*Defined in [app/services/gdax-data.service.spec.ts:6](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/services/gdax-data.service.spec.ts#L6)*
+*Defined in [app/services/gdax-data.service.spec.ts:6](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/services/gdax-data.service.spec.ts#L6)*
 
 
 
@@ -139,7 +170,7 @@ ___
 
 **●  date1**:  *`Date`*  =  new Date('2018-03-25T03:55:00.000Z')
 
-*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:12](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.spec.ts#L12)*
+*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:16](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/filter-controls/filter-controls.component.spec.ts#L16)*
 
 
 
@@ -153,7 +184,7 @@ ___
 
 **●  date2**:  *`Date`*  =  new Date('2018-03-26T03:55:00.000Z')
 
-*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:13](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.spec.ts#L13)*
+*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:17](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/filter-controls/filter-controls.component.spec.ts#L17)*
 
 
 
@@ -167,11 +198,11 @@ ___
 
 **●  gdaxDataService**:  *`any`* 
 
-*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.spec.ts:11](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/cryptobot-controls/cryptobot-controls.component.spec.ts#L11)*
-*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:11](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.spec.ts#L11)*
-*Defined in [app/components/live-view/live-view.component.spec.ts:11](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/live-view/live-view.component.spec.ts#L11)*
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.spec.ts:11](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/profit-portfolio/profit-portfolio.component.spec.ts#L11)*
-*Defined in [app/components/trading-history/trading-history.component.spec.ts:11](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/trading-history/trading-history.component.spec.ts#L11)*
+*Defined in [app/components/cryptobot-controls/cryptobot-controls.component.spec.ts:11](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/cryptobot-controls/cryptobot-controls.component.spec.ts#L11)*
+*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:14](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/filter-controls/filter-controls.component.spec.ts#L14)*
+*Defined in [app/components/live-view/live-view.component.spec.ts:11](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/live-view/live-view.component.spec.ts#L11)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.spec.ts:11](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/profit-portfolio/profit-portfolio.component.spec.ts#L11)*
+*Defined in [app/components/trading-history/trading-history.component.spec.ts:13](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/trading-history/trading-history.component.spec.ts#L13)*
 
 
 
@@ -185,7 +216,7 @@ ___
 
 **●  httpClient**:  *`any`* 
 
-*Defined in [app/services/gdax-data.service.spec.ts:22](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/services/gdax-data.service.spec.ts#L22)*
+*Defined in [app/services/gdax-data.service.spec.ts:22](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/services/gdax-data.service.spec.ts#L22)*
 
 
 
@@ -201,7 +232,7 @@ ___
   new Date('2018-03-26T03:55:00.000Z').getTime()
   - 25833600000)
 
-*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:14](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.spec.ts#L14)*
+*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:18](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/filter-controls/filter-controls.component.spec.ts#L18)*
 
 
 
@@ -215,7 +246,7 @@ ___
 
 **●  require**:  *`any`* 
 
-*Defined in [test.ts:10](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/test.ts#L10)*
+*Defined in [test.ts:10](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/test.ts#L10)*
 
 
 
@@ -235,8 +266,8 @@ ___
 
 **●  production**:  *`boolean`*  = false
 
-*Defined in [environments/environment.prod.ts:2](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/environments/environment.prod.ts#L2)*
-*Defined in [environments/environment.ts:7](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/environments/environment.ts#L7)*
+*Defined in [environments/environment.prod.ts:2](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/environments/environment.prod.ts#L2)*
+*Defined in [environments/environment.ts:7](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/environments/environment.ts#L7)*
 
 
 
@@ -255,7 +286,7 @@ ___
 
 **●  day**:  *`null`*  =  null
 
-*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:20](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.spec.ts#L20)*
+*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:24](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/filter-controls/filter-controls.component.spec.ts#L24)*
 
 
 
@@ -268,7 +299,7 @@ ___
 
 **●  month**:  *`null`*  =  null
 
-*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:19](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.spec.ts#L19)*
+*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/filter-controls/filter-controls.component.spec.ts#L23)*
 
 
 
@@ -281,7 +312,7 @@ ___
 
 **●  year**:  *`null`*  =  null
 
-*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:18](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.spec.ts#L18)*
+*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:22](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/filter-controls/filter-controls.component.spec.ts#L22)*
 
 
 
@@ -300,7 +331,7 @@ ___
 
 **●  day**:  *`null`*  =  null
 
-*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:38](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.spec.ts#L38)*
+*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:42](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/filter-controls/filter-controls.component.spec.ts#L42)*
 
 
 
@@ -313,7 +344,7 @@ ___
 
 **●  month**:  *`null`*  =  null
 
-*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:37](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.spec.ts#L37)*
+*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:41](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/filter-controls/filter-controls.component.spec.ts#L41)*
 
 
 
@@ -326,7 +357,7 @@ ___
 
 **●  year**:  *`null`*  =  null
 
-*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:36](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.spec.ts#L36)*
+*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:40](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/filter-controls/filter-controls.component.spec.ts#L40)*
 
 
 
@@ -345,7 +376,7 @@ ___
 
 **●  day**:  *`number`*  =  reallyOldDate.getDate()
 
-*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:56](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.spec.ts#L56)*
+*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:60](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/filter-controls/filter-controls.component.spec.ts#L60)*
 
 
 
@@ -358,7 +389,7 @@ ___
 
 **●  month**:  *`number`*  =  reallyOldDate.getMonth() + 1
 
-*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:55](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.spec.ts#L55)*
+*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:59](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/filter-controls/filter-controls.component.spec.ts#L59)*
 
 
 
@@ -371,7 +402,7 @@ ___
 
 **●  year**:  *`number`*  =  reallyOldDate.getFullYear()
 
-*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:54](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.spec.ts#L54)*
+*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:58](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/filter-controls/filter-controls.component.spec.ts#L58)*
 
 
 
@@ -390,7 +421,7 @@ ___
 
 **●  hour**:  *`null`*  =  null
 
-*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:28](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.spec.ts#L28)*
+*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:32](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/filter-controls/filter-controls.component.spec.ts#L32)*
 
 
 
@@ -403,7 +434,7 @@ ___
 
 **●  minute**:  *`null`*  =  null
 
-*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:29](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.spec.ts#L29)*
+*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:33](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/filter-controls/filter-controls.component.spec.ts#L33)*
 
 
 
@@ -422,7 +453,7 @@ ___
 
 **●  hour**:  *`null`*  =  null
 
-*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:46](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.spec.ts#L46)*
+*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:50](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/filter-controls/filter-controls.component.spec.ts#L50)*
 
 
 
@@ -435,7 +466,7 @@ ___
 
 **●  minute**:  *`null`*  =  null
 
-*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:47](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.spec.ts#L47)*
+*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:51](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/filter-controls/filter-controls.component.spec.ts#L51)*
 
 
 
@@ -454,7 +485,7 @@ ___
 
 **●  hour**:  *`number`*  =  reallyOldDate.getHours()
 
-*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:59](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.spec.ts#L59)*
+*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:63](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/filter-controls/filter-controls.component.spec.ts#L63)*
 
 
 
@@ -467,7 +498,7 @@ ___
 
 **●  minute**:  *`number`*  =  reallyOldDate.getMinutes()
 
-*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:60](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/components/filter-controls/filter-controls.component.spec.ts#L60)*
+*Defined in [app/components/filter-controls/filter-controls.component.spec.ts:64](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/filter-controls/filter-controls.component.spec.ts#L64)*
 
 
 
@@ -488,7 +519,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.spec.ts:8](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/services/gdax-data.service.spec.ts#L8)*
+*Defined in [app/services/gdax-data.service.spec.ts:8](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/services/gdax-data.service.spec.ts#L8)*
 
 
 
@@ -523,7 +554,7 @@ ___
 
 
 
-*Defined in [app/services/gdax-data.service.spec.ts:13](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/services/gdax-data.service.spec.ts#L13)*
+*Defined in [app/services/gdax-data.service.spec.ts:13](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/services/gdax-data.service.spec.ts#L13)*
 
 
 

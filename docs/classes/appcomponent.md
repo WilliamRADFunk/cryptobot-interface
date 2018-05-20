@@ -27,7 +27,7 @@
 
 **●  showState**:  *`boolean`* 
 
-*Defined in [app/app.component.ts:9](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/app.component.ts#L9)*
+*Defined in [app/app.component.ts:9](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/app.component.ts#L9)*
 
 
 
@@ -41,7 +41,7 @@ ___
 
 **●  title**:  *`string`*  = "app"
 
-*Defined in [app/app.component.ts:10](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/app.component.ts#L10)*
+*Defined in [app/app.component.ts:10](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/app.component.ts#L10)*
 
 
 
@@ -59,7 +59,7 @@ ___
 
 
 
-*Defined in [app/app.component.ts:14](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/app.component.ts#L14)*
+*Defined in [app/app.component.ts:14](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/app.component.ts#L14)*
 
 
 
@@ -81,7 +81,7 @@ ___
 
 
 
-*Defined in [app/app.component.ts:19](https://github.com/WilliamRADFunk/cryptobot-interface/blob/b6d7879/src/app/app.component.ts#L19)*
+*Defined in [app/app.component.ts:19](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/app.component.ts#L19)*
 
 
 
