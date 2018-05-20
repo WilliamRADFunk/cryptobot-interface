@@ -119,6 +119,12 @@ describe('FilterControlsComponent', () => {
             changeEndDateTime: () => {
               return { };
             },
+            getEndDateTime: () => {
+              return null;
+            },
+            getStartDateTime: () => {
+              return null;
+            },
             interval: 3600,
             isBusy: {
               subscribe: fn => {

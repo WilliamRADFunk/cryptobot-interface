@@ -156,7 +156,7 @@ describe('GdaxDataService', () => {
       service.startDate = date;
       service.endDate = date;
       service.getLatestGdaxData();
-      tick(400);
+      tick(1001);
       expect(httpClient.get.calls.mostRecent().args[0]).toEqual('https://api.gdax.com/products/BTC-USD/candles');
       expect(httpClient.get.calls.mostRecent().args[1].params.toString())
         .toEqual('granularity=3600&start=2018-03-25T03:55:19.336Z&end=2018-03-25T03:55:19.336Z');
@@ -168,7 +168,7 @@ describe('GdaxDataService', () => {
       service.endDate = date;
       service.currency = 'ALL';
       service.getLatestGdaxData();
-      tick(400);
+      tick(1001);
       expect(httpClient.get.calls.mostRecent().args[0]).toEqual('https://api.gdax.com/products/ETH-USD/candles');
       expect(httpClient.get.calls.mostRecent().args[1].params.toString())
         .toEqual('granularity=3600&start=2018-03-25T03:55:19.336Z&end=2018-03-25T03:55:19.336Z');
@@ -179,7 +179,7 @@ describe('GdaxDataService', () => {
       inject([GdaxDataService], (service: GdaxDataService) => {
       spyOn(httpClient, 'get').and.returnValue(subscribeReturn2);
       spyOn(service, 'handleHistoryResults').and.returnValue(true);
-      service.bookmark = undefined;
+      service.bookmark = null;
       service.startDate = date;
       service.endDate = date;
       service.getLatestGdaxHistoryData();
@@ -318,7 +318,7 @@ describe('GdaxDataService', () => {
       service.tableData.next([{'id': 321}, {'id': 123}]);
       service.changePageNumber(1);
       expect(service.page.value).toBe(1);
-      expect(service.bookmark).toBe(undefined);
+      expect(service.bookmark).toBe(null);
       expect(service.refreshData).toHaveBeenCalled();
     }));
     it('should set bookmark to table first item',
@@ -410,6 +410,8 @@ describe('GdaxDataService', () => {
   describe('filterByDate', () => {
     it('should return array of only the one good value',
       inject([GdaxDataService], (service: GdaxDataService) => {
+        service.endDate = new Date();
+        service.startDate = new Date(service.endDate.getTime() - 86000000);
         const badDate = new Date(service.endDate.getTime() + 86000000);
         const goodDate = new Date(service.endDate.getTime() - 86000000);
       expect(service.filterByDate([
@@ -437,7 +439,7 @@ describe('GdaxDataService', () => {
       service.handleHistoryResults([]);
       tick(600);
       expect(service.getLatestGdaxHistoryData).toHaveBeenCalled();
-      expect(service.bookmark).toBe(undefined);
+      expect(service.bookmark).toBe(null);
       expect(service.currIndex).toBe(1);
     }));
     it(`should not call getLatestGdaxHistoryData, set tabelData,
@@ -460,11 +462,13 @@ describe('GdaxDataService', () => {
       service.bookmark = 2;
       service.tableResults = [{name: 'doug'}];
       service.isBusy.next(true);
+      service.endDate = new Date();
+      service.startDate = new Date(service.endDate.getTime() - 86000000);
       service.handleHistoryResults([{'created_at': date}]);
       tick(600);
       expect(service.getLatestGdaxHistoryData).not.toHaveBeenCalled();
       expect(service.isBusy.value).toBe(false);
-      expect(service.bookmark).toBe(undefined);
+      expect(service.bookmark).toBe(null);
       expect(service.tableData.value).toEqual([{name: 'doug'}]);
     }));
     it(`should call getLatestGdaxHistoryData, increase currIndex,
@@ -475,11 +479,13 @@ describe('GdaxDataService', () => {
       service.tableResults = [{name: 'doug'}];
       service.tableData.next([]);
       service.isBusy.next(true);
+      service.endDate = new Date();
+      service.startDate = new Date(service.endDate.getTime() - 86000000);
       service.handleHistoryResults([{'created_at': date}]);
       tick(600);
       expect(service.getLatestGdaxHistoryData).toHaveBeenCalled();
       expect(service.isBusy.value).toBe(true);
-      expect(service.bookmark).toBe(undefined);
+      expect(service.bookmark).toBe(null);
       expect(service.currIndex).toBe(1);
       expect(service.tableData.value).toEqual([]);
     }));
@@ -492,6 +498,8 @@ describe('GdaxDataService', () => {
       service.tableResults = [{name: 'doug'}];
       service.tableData.next([]);
       service.isBusy.next(true);
+      service.endDate = new Date();
+      service.startDate = new Date(service.endDate.getTime() - 86000000);
       service.handleHistoryResults([{
         'created_at': new Date(),
         'id': 4321
@@ -520,6 +528,8 @@ describe('GdaxDataService', () => {
       service.tableResults = [];
       service.tableData.next([]);
       service.isBusy.next(true);
+      service.endDate = new Date();
+      service.startDate = new Date(service.endDate.getTime() - 86000000);
       service.handleHistoryResults([{
         'created_at': testDate,
         'id': 4321
@@ -527,7 +537,7 @@ describe('GdaxDataService', () => {
       tick(600);
       expect(service.getLatestGdaxHistoryData).toHaveBeenCalled();
       expect(service.isBusy.value).toBe(true);
-      expect(service.bookmark).toBe(undefined);
+      expect(service.bookmark).toBe(null);
       expect(service.currIndex).toBe(1);
       expect(service.tableResults).toEqual([{
         'created_at': testDate,
@@ -558,6 +568,8 @@ describe('GdaxDataService', () => {
       service.tableResults = [];
       service.tableData.next([]);
       service.isBusy.next(true);
+      service.endDate = new Date();
+      service.startDate = new Date(service.endDate.getTime() - 86000000);
       service.handleHistoryResults([{
         'created_at': testDate,
         'id': 4321
@@ -608,6 +620,8 @@ describe('GdaxDataService', () => {
       }];
       service.tableData.next([]);
       service.isBusy.next(true);
+      service.endDate = new Date();
+      service.startDate = new Date(service.endDate.getTime() - 86000000);
       service.handleHistoryResults([{
         'created_at': testDate,
         'id': 4321
@@ -615,7 +629,7 @@ describe('GdaxDataService', () => {
       tick(600);
       expect(service.getLatestGdaxHistoryData).toHaveBeenCalled();
       expect(service.isBusy.value).toBe(true);
-      expect(service.bookmark).toBe(undefined);
+      expect(service.bookmark).toBe(null);
       expect(service.currIndex).toBe(1);
       expect(service.tableResults).toEqual([
         {
@@ -655,6 +669,8 @@ describe('GdaxDataService', () => {
       }];
       service.tableData.next([]);
       service.isBusy.next(true);
+      service.endDate = new Date();
+      service.startDate = new Date(service.endDate.getTime() - 86000000);
       service.handleHistoryResults([{
         'created_at': testDate,
         'id': 4321
@@ -725,6 +741,8 @@ describe('GdaxDataService', () => {
       }];
       service.tableData.next([]);
       service.isBusy.next(true);
+      service.endDate = new Date();
+      service.startDate = new Date(service.endDate.getTime() - 86000000);
       service.handleHistoryResults([{
         'created_at': testDate,
         'id': 4321
@@ -769,6 +787,8 @@ describe('GdaxDataService', () => {
       service.tableResults = [];
       service.tableData.next([]);
       service.isBusy.next(true);
+      service.endDate = new Date();
+      service.startDate = new Date(service.endDate.getTime() - 86000000);
       service.handleHistoryResults([{
         'created_at': testDate,
         'id': 4321
@@ -828,6 +848,8 @@ describe('GdaxDataService', () => {
       ];
       service.tableData.next([]);
       service.isBusy.next(true);
+      service.endDate = new Date();
+      service.startDate = new Date(service.endDate.getTime() - 86000000);
       service.handleHistoryResults([{
         'created_at': testDate,
         'id': 4321
