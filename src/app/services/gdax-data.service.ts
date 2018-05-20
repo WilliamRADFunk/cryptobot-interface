@@ -393,10 +393,6 @@ export class GdaxDataService {
   getStartDateTime(): Date {
     return this.startDate;
   }
-  organizeProfitData() {
-    console.log(this.validProfitResults);
-    this.validProfitResults = [];
-  }
   /**
   * Recursive query maker until desired results are found
   * @param originalData data used to check against to see if current results are sufficient
@@ -575,6 +571,13 @@ export class GdaxDataService {
         return;
       }
     }
+  }
+  /**
+  * Assembles the data into a format suitable for the profit portfolio page.
+  */
+  organizeProfitData() {
+    console.log(this.validProfitResults);
+    this.validProfitResults = [];
   }
   /**
   * Determines which data api to use based off of basePath, and calls it.
