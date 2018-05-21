@@ -87,6 +87,11 @@ export class GdaxDataService {
   * Used later in organizeProfitData function.
   */
   validProfitResults: {}[] = [];
+  /**
+  * Contains list of usd transaction results that reside inside filter zone.
+  * Used later for price of purchase or sale in organizeProfitData function.
+  */
+  validUSDResults: {}[] = [];
 
   /**
   * Constructor for the class. Injects Angular's HttpClient service
@@ -101,6 +106,7 @@ export class GdaxDataService {
   */
   changeCurrencyType(currency: string, basePath: string, refresh?: boolean): void {
     this.profitChartData = [];
+    this.validUSDResults = [];
     this.validProfitResults = [];
     this.tableResults = [];
     this.page.next(1);
@@ -121,6 +127,7 @@ export class GdaxDataService {
   */
   changeEndDateTime(date: Date, initChange?: boolean): void {
     this.profitChartData = [];
+    this.validUSDResults = [];
     this.validProfitResults = [];
     this.tableResults = [];
     this.page.next(1);
@@ -140,6 +147,7 @@ export class GdaxDataService {
   */
   changePageNumber(page: number): void {
     this.profitChartData = [];
+    this.validUSDResults = [];
     this.validProfitResults = [];
     this.tableResults = [];
     if (page === 1) {
@@ -163,6 +171,7 @@ export class GdaxDataService {
   */
   changeRowsPerPage(rowsPerPage: number, initChange?: boolean): void {
     this.profitChartData = [];
+    this.validUSDResults = [];
     this.validProfitResults = [];
     this.tableResults = [];
     this.rowsPerPage = rowsPerPage;
@@ -182,6 +191,7 @@ export class GdaxDataService {
   */
   changeStartDateTime(date: Date, initChange?: boolean): void {
     this.profitChartData = [];
+    this.validUSDResults = [];
     this.validProfitResults = [];
     this.tableResults = [];
     this.page.next(1);
@@ -387,59 +397,40 @@ export class GdaxDataService {
     }
   }
   /**
+  * Call to GDAX for USD results to later
+  * compare crypto profit data against
+  */
+  getLatestGdaxUSDData(): void {
+    this.isBusy.next(true);
+    const headers = new HttpHeaders()
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .set('Access-Control-Allow-Origin', INTERFACE_URL)
+      .set('Access-Control-Allow-Methods', 'POST, GET')
+      .set('Access-Control-Allow-Headers', 'X-PINGOTHER, Content-Type')
+      .set('Access-Control-Max-Age', '86400');
+    let params;
+    if (!this.bookmark) {
+      params = new HttpParams();
+    } else {
+      params = new HttpParams()
+        .set(`after`, `${this.bookmark}`);
+    }
+    if (this.currency === 'ALL') {
+
+    } else {
+      this.http.get<any>(`${DATA_URL}history/usd`, {headers, params})
+        .subscribe(originalData => {
+          this.handleUSDResults(originalData);
+        });
+    }
+  }
+  /**
   * Returns the service stored startDatetime
   * @return startDate stored on service from previous entry.
   */
   getStartDateTime(): Date {
     return this.startDate;
-  }
-  /**
-  * Recursive query maker until desired results are found
-  * @param originalData data used to check against to see if current results are sufficient
-  */
-  handleProfitResults(originalData: {}[]): void {
-    // Unexpectedly ran out of for-loop results.
-    // Compute what's there and return.
-    if (!originalData.length) {
-      this.organizeProfitData();
-      this.chartData.next(this.profitChartData);
-      setTimeout(() => {
-        this.isBusy.next(false);
-      }, 300);
-      return;
-    }
-    for (let i = 0; i < originalData.length; i++) {
-      const date = originalData[i]['created_at'] || null;
-      const id = originalData[i]['id'] || null;
-      // If it has no "create_at" or "id" it's garbage.
-      // Move onto next result to avoid errors.
-      if (!date || !id) {
-        continue;
-      }
-      // Comparative value of the date value.
-      const dateTime = new Date(date).getTime();
-      // Stop looking. We've exceeded our search
-      if (dateTime > this.endDate.getTime()) {
-        this.organizeProfitData();
-        this.chartData.next(this.profitChartData);
-        setTimeout(() => {
-          this.isBusy.next(false);
-        }, 300);
-        return;
-      // Found a valid result, add it to the pile.
-      } else if (dateTime > this.startDate.getTime()) {
-        this.bookmark = id;
-        this.validProfitResults.push(originalData[i]);
-      // Result is too early, mark it and move on.
-      } else {
-        this.bookmark = id;
-      }
-    }
-    // Ran out of results for this pull, but haven't hit an end case.
-    // Call the query, which will use the updated bookmark to grab newer batch.
-    setTimeout(() => {
-      this.getLatestGdaxProfitData();
-    }, 400);
   }
   /**
   * Recursive query maker until desired results are found
@@ -573,10 +564,187 @@ export class GdaxDataService {
     }
   }
   /**
+  * Recursive query maker until desired results are found
+  * @param originalData data used to check against to see if current results are sufficient
+  */
+  handleProfitResults(originalData: {}[]): void {
+    // Unexpectedly ran out of for-loop results.
+    // Compute what's there and return.
+    if (!originalData.length) {
+      this.organizeProfitData();
+      this.chartData.next(this.profitChartData);
+      this.bookmark = null;
+      setTimeout(() => {
+        this.isBusy.next(false);
+      }, 300);
+      return;
+    }
+    for (let i = 0; i < originalData.length; i++) {
+      const date = originalData[i]['created_at'] || null;
+      const id = originalData[i]['id'] || null;
+      // If it has no "create_at" or "id" it's garbage.
+      // Move onto next result to avoid errors.
+      if (!date || !id) {
+        continue;
+      }
+      // Comparative value of the date value.
+      const dateTime = new Date(date).getTime();
+      // Stop looking. We've exceeded our search
+      if (dateTime < this.startDate.getTime()) {
+        this.organizeProfitData();
+        this.chartData.next(this.profitChartData);
+        this.bookmark = null;
+        setTimeout(() => {
+          this.isBusy.next(false);
+        }, 300);
+        return;
+      // Found a valid result, add it to the pile.
+      } else if (dateTime < this.endDate.getTime()) {
+        this.bookmark = id;
+        this.validProfitResults.push(originalData[i]);
+      // Result is too early, mark it and move on.
+      } else {
+        this.bookmark = id;
+      }
+    }
+    // Ran out of results for this pull, but haven't hit an end case.
+    // Call the query, which will use the updated bookmark to grab newer batch.
+    setTimeout(() => {
+      this.getLatestGdaxProfitData();
+    }, 400);
+  }
+  /**
+  * Recursive query maker until desired results are found
+  * @param originalData data used to check against to see if current results are sufficient
+  */
+  handleUSDResults(originalData: {}[]): void {
+    // Unexpectedly ran out of for-loop results. Move on.
+    if (!originalData.length) {
+      this.bookmark = null;
+      this.getLatestGdaxProfitData();
+      return;
+    }
+    for (let i = 0; i < originalData.length; i++) {
+      const date = originalData[i]['created_at'] || null;
+      const id = originalData[i]['id'] || null;
+      // If it has no "create_at" or "id" it's garbage.
+      // Move onto next result to avoid errors.
+      if (!date || !id) {
+        this.bookmark = null;
+        continue;
+      }
+      // Comparative value of the date value.
+      const dateTime = new Date(date).getTime();
+      // Stop looking. We've exceeded our search.
+      if (dateTime < this.startDate.getTime()) {
+        this.bookmark = null;
+        this.getLatestGdaxProfitData();
+        return;
+      // Found a valid result, add it to the pile.
+      } else if (dateTime < this.endDate.getTime()) {
+        this.bookmark = id;
+        this.validUSDResults.push(originalData[i]);
+      // Result is too early, mark it and move on.
+      } else {
+        this.bookmark = id;
+      }
+    }
+    // Ran out of results for this pull, but haven't hit an end case.
+    // Call the query, which will use the updated bookmark to grab newer batch.
+    setTimeout(() => {
+      this.getLatestGdaxUSDData();
+    }, 400);
+  }
+  /**
   * Assembles the data into a format suitable for the profit portfolio page.
   */
   organizeProfitData() {
+    let usdIndex = 0;
+    let costGainTally = 0;
+    // GDAX API still leaves much to be desired when it comes to transaction
+    // history. It doesn't actually say how much USD was gained or spent in
+    // the purchase or sale of the cryptocurrency. This takes data from the USD
+    // account and matches by date. Adds up balance change and fees, then injects
+    // the "profit" value into the cryptocurrency transaction.
+    for (let i = 0; i < this.validProfitResults.length; i++) {
+      let found = false;
+      for (let j = usdIndex; j < this.validUSDResults.length; j++) {
+        if (this.validProfitResults[i]['created_at'] === this.validUSDResults[j]['created_at']) {
+          found = true;
+          usdIndex = j + 1;
+          costGainTally += Number(this.validUSDResults[j]['amount']);
+        } else if (found) {
+          usdIndex = j + 1;
+          this.validProfitResults[i]['profit'] = costGainTally;
+          costGainTally = 0;
+          break;
+        }
+      }
+    }
     console.log(this.validProfitResults);
+    // TODO: Fill in blank months that come before first result.
+    for (; false;) {
+
+    }
+    // TODO: Fill in blank months that come after last result.
+    for (; false;) {
+
+    }
+    // Now that the profit/loss amount is tied into the transaction,
+    // we can sort the data by time category (month).
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    let currMonth = -1;
+    let currYear = -1;
+    let monthlySpendTally = 0;
+    let monthlyEarnTally = 0;
+    for (let k = 0; k < this.validProfitResults.length; k++) {
+      const date = new Date(this.validProfitResults[k]['created_at']);
+      // First iteration. Set current month and year for the first time.
+      if (currMonth < 0) {
+        currMonth = date.getMonth();
+        currYear = date.getFullYear();
+      }
+      // It's a new month. Tally up the month and send it in before resetting
+      // everything and establishing the new current month and year.
+      if (currMonth !== date.getMonth() || currYear !== date.getFullYear()) {
+        const datapoint = [];
+        datapoint[0] = monthlySpendTally;
+        datapoint[1] = monthlyEarnTally;
+        datapoint[2] = monthlyEarnTally - monthlySpendTally;
+        datapoint[3] = `${monthNames[currMonth].substr(0, 3)}-${currYear}`;
+        this.profitChartData.push(datapoint);
+        currMonth = date.getMonth();
+        currYear = date.getFullYear();
+        monthlySpendTally = 0;
+        monthlyEarnTally = 0;
+      }
+      // Just a normal iteration. The following if-elseif prevents
+      // null or undefined from making its way into the calculation.
+      const profit = this.validProfitResults[k]['profit'];
+      if (profit < 0) {
+        monthlySpendTally += Math.abs(profit);
+      } else if (profit >= 0) {
+        monthlyEarnTally += Math.abs(profit);
+      }
+      // Last result. Capture data before leaving the for-loop
+      if (k >= this.validProfitResults.length - 1) {
+        currMonth = date.getMonth();
+        currYear = date.getFullYear();
+        const datapoint = [];
+        datapoint[0] = monthlySpendTally;
+        datapoint[1] = monthlyEarnTally;
+        datapoint[2] = monthlyEarnTally - monthlySpendTally;
+        datapoint[3] = `${monthNames[currMonth].substr(0, 3)}-${currYear}`;
+        this.profitChartData.push(datapoint);
+      }
+    }
+    console.log(this.profitChartData);
+    // Rest temp variables, though this is handled elsewhere in the code.
+    // Better to be safe in case one of those things accidentally changes.
+    this.validUSDResults = [];
     this.validProfitResults = [];
   }
   /**
@@ -595,7 +763,7 @@ export class GdaxDataService {
       this.getLatestGdaxHistoryData();
     } else if (this.basePath === 'profit-portfolio') {
       this.isRelevant.next(false);
-      this.getLatestGdaxProfitData();
+      this.getLatestGdaxUSDData();
     } else if (this.basePath === 'cryptobot-controls') {
       this.isRelevant.next(false);
       this.getLatestCryptoBotData();
