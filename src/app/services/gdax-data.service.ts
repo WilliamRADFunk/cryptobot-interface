@@ -5,6 +5,11 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 const INTERFACE_URL = 'http://www.williamrobertfunk.com';
 const DATA_URL = 'http://167.99.149.6:3000/';
 
+const MONTH_NAMES = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
+
 @Injectable()
 export class GdaxDataService {
   /**
@@ -127,8 +132,6 @@ export class GdaxDataService {
   */
   changeEndDateTime(date: Date, initChange?: boolean): void {
     this.profitChartData = [];
-    this.validUSDResults = [];
-    this.validProfitResults = [];
     this.tableResults = [];
     this.page.next(1);
     this.endDate = date;
@@ -147,8 +150,6 @@ export class GdaxDataService {
   */
   changePageNumber(page: number): void {
     this.profitChartData = [];
-    this.validUSDResults = [];
-    this.validProfitResults = [];
     this.tableResults = [];
     if (page === 1) {
       this.bookmark = null;
@@ -171,8 +172,6 @@ export class GdaxDataService {
   */
   changeRowsPerPage(rowsPerPage: number, initChange?: boolean): void {
     this.profitChartData = [];
-    this.validUSDResults = [];
-    this.validProfitResults = [];
     this.tableResults = [];
     this.rowsPerPage = rowsPerPage;
     this.page.next(1);
@@ -191,8 +190,6 @@ export class GdaxDataService {
   */
   changeStartDateTime(date: Date, initChange?: boolean): void {
     this.profitChartData = [];
-    this.validUSDResults = [];
-    this.validProfitResults = [];
     this.tableResults = [];
     this.page.next(1);
     this.startDate = date;
@@ -659,6 +656,9 @@ export class GdaxDataService {
   * Assembles the data into a format suitable for the profit portfolio page.
   */
   organizeProfitData() {
+    if (!this.validProfitResults.length) {
+      return;
+    }
     let usdIndex = 0;
     let costGainTally = 0;
     // GDAX API still leaves much to be desired when it comes to transaction
@@ -681,21 +681,10 @@ export class GdaxDataService {
         }
       }
     }
-    console.log(this.validProfitResults);
-    // TODO: Fill in blank months that come before first result.
-    for (; false;) {
-
-    }
-    // TODO: Fill in blank months that come after last result.
-    for (; false;) {
-
-    }
+    // Fill in blank months that come after last result.
+    this.profitChartData = this.profitChartData.concat(this.calculateAfterProfitMonths());
     // Now that the profit/loss amount is tied into the transaction,
     // we can sort the data by time category (month).
-    const monthNames = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
     let currMonth = -1;
     let currYear = -1;
     let monthlySpendTally = 0;
@@ -714,7 +703,7 @@ export class GdaxDataService {
         datapoint[0] = monthlySpendTally;
         datapoint[1] = monthlyEarnTally;
         datapoint[2] = monthlyEarnTally - monthlySpendTally;
-        datapoint[3] = `${monthNames[currMonth].substr(0, 3)}-${currYear}`;
+        datapoint[3] = `${MONTH_NAMES[currMonth].substr(0, 3)}-${currYear}`;
         this.profitChartData.push(datapoint);
         currMonth = date.getMonth();
         currYear = date.getFullYear();
@@ -737,15 +726,84 @@ export class GdaxDataService {
         datapoint[0] = monthlySpendTally;
         datapoint[1] = monthlyEarnTally;
         datapoint[2] = monthlyEarnTally - monthlySpendTally;
-        datapoint[3] = `${monthNames[currMonth].substr(0, 3)}-${currYear}`;
+        datapoint[3] = `${MONTH_NAMES[currMonth].substr(0, 3)}-${currYear}`;
         this.profitChartData.push(datapoint);
       }
     }
-    console.log(this.profitChartData);
+    // Fill in blank months that come before first result.
+    this.profitChartData = this.profitChartData.concat(this.calculateBeforeProfitMonths());
     // Rest temp variables, though this is handled elsewhere in the code.
     // Better to be safe in case one of those things accidentally changes.
     this.validUSDResults = [];
     this.validProfitResults = [];
+  }
+  /**
+  * Calculates the months after the last profit transaction, adds 0 values
+  * and the label, which allows the user to have data for the range they want
+  * even if there was no profit or loss during those months. Prettier charts.
+  * @return the compiled array of blank data and month-year label
+  */
+  calculateAfterProfitMonths() {
+    let diffYears;
+    let diffMonths;
+    const lastResult = this.validProfitResults[0];
+    const date = new Date(lastResult['created_at']);
+    if (date.getFullYear() === this.endDate.getFullYear()) {
+      diffYears = 0;
+      diffMonths = this.endDate.getMonth() - date.getMonth();
+    } else {
+      diffYears = this.endDate.getFullYear() - date.getFullYear();
+      diffMonths = (12 * (diffYears - 1)) + (this.endDate.getMonth()) + (11 - date.getMonth());
+    }
+    let year = date.getFullYear();
+    const tempChartData = [];
+    for (let m = 0; m < diffMonths; m++) {
+      const datapoint = [];
+      datapoint[0] = 0;
+      datapoint[1] = 0;
+      datapoint[2] = 0;
+      datapoint[3] = `${MONTH_NAMES[(date.getMonth() + m + 1) % 12].substr(0, 3)}-${year}`;
+      tempChartData.push(datapoint);
+
+      if ((date.getMonth() + m) % 12 === 11) {
+        year++;
+      }
+    }
+    return tempChartData;
+  }
+  /**
+  * Calculates the months before the first profit transaction, adds 0 values
+  * and the label, which allows the user to have data for the range they want
+  * even if there was no profit or loss during those months. Prettier charts.
+  * @return the compiled array of blank data and month-year label
+  */
+  calculateBeforeProfitMonths() {
+    let diffYears;
+    let diffMonths;
+    const firstResult = this.validProfitResults[this.validProfitResults.length - 1];
+    const date = new Date(firstResult['created_at']);
+    if (date.getFullYear() === this.startDate.getFullYear()) {
+      diffYears = 0;
+      diffMonths = date.getMonth() - this.startDate.getMonth() - 1;
+    } else {
+      diffYears = date.getFullYear() - this.startDate.getFullYear();
+      diffMonths = (12 * (diffYears - 1)) + (11 - this.startDate.getMonth()) + (date.getMonth());
+    }
+    let year = this.startDate.getFullYear();
+    const tempChartData = [];
+    for (let m = 0; m < diffMonths + 1; m++) {
+      const datapoint = [];
+      datapoint[0] = 0;
+      datapoint[1] = 0;
+      datapoint[2] = 0;
+      datapoint[3] = `${MONTH_NAMES[(this.startDate.getMonth() + m) % 12].substr(0, 3)}-${year}`;
+      tempChartData.push(datapoint);
+
+      if ((this.startDate.getMonth() + m) % 12 === 11) {
+        year++;
+      }
+    }
+    return tempChartData.reverse();
   }
   /**
   * Determines which data api to use based off of basePath, and calls it.

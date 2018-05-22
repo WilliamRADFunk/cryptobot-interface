@@ -222,6 +222,7 @@ describe('GdaxDataService', () => {
       service = serv;
       spyOn(service, 'getLatestGdaxData').and.returnValue(true);
       spyOn(service, 'getLatestGdaxHistoryData').and.returnValue(true);
+      spyOn(service, 'getLatestGdaxUSDData').and.returnValue(true);
       spyOn(service, 'getLatestGdaxProfitData').and.returnValue(true);
       spyOn(service, 'getLatestCryptoBotData').and.returnValue(true);
     }));
@@ -263,7 +264,7 @@ describe('GdaxDataService', () => {
       service.refreshData();
       expect(service.getLatestGdaxData).not.toHaveBeenCalled();
       expect(service.getLatestGdaxHistoryData).not.toHaveBeenCalled();
-      expect(service.getLatestGdaxProfitData).toHaveBeenCalled();
+      expect(service.getLatestGdaxUSDData).toHaveBeenCalled();
       expect(service.getLatestCryptoBotData).not.toHaveBeenCalled();
       expect(service.isRelevant.value).toBe(false);
     });
