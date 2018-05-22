@@ -104,6 +104,74 @@ export class GdaxDataService {
   */
   constructor(private http: HttpClient) { }
   /**
+  * Calculates the months after the last profit transaction, adds 0 values
+  * and the label, which allows the user to have data for the range they want
+  * even if there was no profit or loss during those months. Prettier charts.
+  * @return the compiled array of blank data and month-year label
+  */
+  calculateAfterProfitMonths() {
+    let diffYears;
+    let diffMonths;
+    const lastResult = this.validProfitResults[0];
+    const date = new Date(lastResult['created_at']);
+    if (date.getFullYear() === this.endDate.getFullYear()) {
+      diffYears = 0;
+      diffMonths = this.endDate.getMonth() - date.getMonth();
+    } else {
+      diffYears = this.endDate.getFullYear() - date.getFullYear();
+      diffMonths = (12 * (diffYears - 1)) + (this.endDate.getMonth()) + (11 - date.getMonth());
+    }
+    let year = date.getFullYear();
+    const tempChartData = [];
+    for (let m = 0; m < diffMonths; m++) {
+      const datapoint = [];
+      datapoint[0] = 0;
+      datapoint[1] = 0;
+      datapoint[2] = 0;
+      datapoint[3] = `${MONTH_NAMES[(date.getMonth() + m + 1) % 12].substr(0, 3)}-${year}`;
+      tempChartData.push(datapoint);
+
+      if ((date.getMonth() + m) % 12 === 11) {
+        year++;
+      }
+    }
+    return tempChartData;
+  }
+  /**
+  * Calculates the months before the first profit transaction, adds 0 values
+  * and the label, which allows the user to have data for the range they want
+  * even if there was no profit or loss during those months. Prettier charts.
+  * @return the compiled array of blank data and month-year label
+  */
+  calculateBeforeProfitMonths() {
+    let diffYears;
+    let diffMonths;
+    const firstResult = this.validProfitResults[this.validProfitResults.length - 1];
+    const date = new Date(firstResult['created_at']);
+    if (date.getFullYear() === this.startDate.getFullYear()) {
+      diffYears = 0;
+      diffMonths = date.getMonth() - this.startDate.getMonth() - 1;
+    } else {
+      diffYears = date.getFullYear() - this.startDate.getFullYear();
+      diffMonths = (12 * (diffYears - 1)) + (11 - this.startDate.getMonth()) + (date.getMonth());
+    }
+    let year = this.startDate.getFullYear();
+    const tempChartData = [];
+    for (let m = 0; m < diffMonths + 1; m++) {
+      const datapoint = [];
+      datapoint[0] = 0;
+      datapoint[1] = 0;
+      datapoint[2] = 0;
+      datapoint[3] = `${MONTH_NAMES[(this.startDate.getMonth() + m) % 12].substr(0, 3)}-${year}`;
+      tempChartData.push(datapoint);
+
+      if ((this.startDate.getMonth() + m) % 12 === 11) {
+        year++;
+      }
+    }
+    return tempChartData.reverse();
+  }
+  /**
   * Updates the currency type being viewed, and refreshes query results.
   * @param currency the currency string (ie. 'BTC-USD')
   * @param basePath keeps track of basepath to determine which options to turn on and off
@@ -736,74 +804,6 @@ export class GdaxDataService {
     // Better to be safe in case one of those things accidentally changes.
     this.validUSDResults = [];
     this.validProfitResults = [];
-  }
-  /**
-  * Calculates the months after the last profit transaction, adds 0 values
-  * and the label, which allows the user to have data for the range they want
-  * even if there was no profit or loss during those months. Prettier charts.
-  * @return the compiled array of blank data and month-year label
-  */
-  calculateAfterProfitMonths() {
-    let diffYears;
-    let diffMonths;
-    const lastResult = this.validProfitResults[0];
-    const date = new Date(lastResult['created_at']);
-    if (date.getFullYear() === this.endDate.getFullYear()) {
-      diffYears = 0;
-      diffMonths = this.endDate.getMonth() - date.getMonth();
-    } else {
-      diffYears = this.endDate.getFullYear() - date.getFullYear();
-      diffMonths = (12 * (diffYears - 1)) + (this.endDate.getMonth()) + (11 - date.getMonth());
-    }
-    let year = date.getFullYear();
-    const tempChartData = [];
-    for (let m = 0; m < diffMonths; m++) {
-      const datapoint = [];
-      datapoint[0] = 0;
-      datapoint[1] = 0;
-      datapoint[2] = 0;
-      datapoint[3] = `${MONTH_NAMES[(date.getMonth() + m + 1) % 12].substr(0, 3)}-${year}`;
-      tempChartData.push(datapoint);
-
-      if ((date.getMonth() + m) % 12 === 11) {
-        year++;
-      }
-    }
-    return tempChartData;
-  }
-  /**
-  * Calculates the months before the first profit transaction, adds 0 values
-  * and the label, which allows the user to have data for the range they want
-  * even if there was no profit or loss during those months. Prettier charts.
-  * @return the compiled array of blank data and month-year label
-  */
-  calculateBeforeProfitMonths() {
-    let diffYears;
-    let diffMonths;
-    const firstResult = this.validProfitResults[this.validProfitResults.length - 1];
-    const date = new Date(firstResult['created_at']);
-    if (date.getFullYear() === this.startDate.getFullYear()) {
-      diffYears = 0;
-      diffMonths = date.getMonth() - this.startDate.getMonth() - 1;
-    } else {
-      diffYears = date.getFullYear() - this.startDate.getFullYear();
-      diffMonths = (12 * (diffYears - 1)) + (11 - this.startDate.getMonth()) + (date.getMonth());
-    }
-    let year = this.startDate.getFullYear();
-    const tempChartData = [];
-    for (let m = 0; m < diffMonths + 1; m++) {
-      const datapoint = [];
-      datapoint[0] = 0;
-      datapoint[1] = 0;
-      datapoint[2] = 0;
-      datapoint[3] = `${MONTH_NAMES[(this.startDate.getMonth() + m) % 12].substr(0, 3)}-${year}`;
-      tempChartData.push(datapoint);
-
-      if ((this.startDate.getMonth() + m) % 12 === 11) {
-        year++;
-      }
-    }
-    return tempChartData.reverse();
   }
   /**
   * Determines which data api to use based off of basePath, and calls it.

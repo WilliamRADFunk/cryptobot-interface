@@ -41,7 +41,7 @@
 ### ⊕ **new LiveViewComponent**(activatedRouter: *`ActivatedRoute`*, router: *`Router`*, gdaxDataService: *[GdaxDataService](gdaxdataservice.md)*): [LiveViewComponent](liveviewcomponent.md)
 
 
-*Defined in [app/components/live-view/live-view.component.ts:34](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/live-view/live-view.component.ts#L34)*
+*Defined in [app/components/live-view/live-view.component.ts:34](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/live-view/live-view.component.ts#L34)*
 
 
 
@@ -72,7 +72,7 @@ Constructor for the class. Injects Angular's ActivatedRoute, Router, and GdaxDat
 
 **●  activatedRouter**:  *`ActivatedRoute`* 
 
-*Defined in [app/components/live-view/live-view.component.ts:43](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/live-view/live-view.component.ts#L43)*
+*Defined in [app/components/live-view/live-view.component.ts:43](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/live-view/live-view.component.ts#L43)*
 
 
 
@@ -89,7 +89,7 @@ ___
 
 **●  chart**:  *`Chart`* 
 
-*Defined in [app/components/live-view/live-view.component.ts:20](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/live-view/live-view.component.ts#L20)*
+*Defined in [app/components/live-view/live-view.component.ts:20](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/live-view/live-view.component.ts#L20)*
 
 
 
@@ -106,7 +106,7 @@ ___
 
 **●  chartReady**:  *`boolean`*  = false
 
-*Defined in [app/components/live-view/live-view.component.ts:24](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/live-view/live-view.component.ts#L24)*
+*Defined in [app/components/live-view/live-view.component.ts:24](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/live-view/live-view.component.ts#L24)*
 
 
 
@@ -123,7 +123,7 @@ ___
 
 **●  gdaxDataService**:  *[GdaxDataService](gdaxdataservice.md)* 
 
-*Defined in [app/components/live-view/live-view.component.ts:45](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/live-view/live-view.component.ts#L45)*
+*Defined in [app/components/live-view/live-view.component.ts:45](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/live-view/live-view.component.ts#L45)*
 
 
 
@@ -140,7 +140,7 @@ ___
 
 **●  isBusy**:  *`boolean`*  = true
 
-*Defined in [app/components/live-view/live-view.component.ts:29](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/live-view/live-view.component.ts#L29)*
+*Defined in [app/components/live-view/live-view.component.ts:29](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/live-view/live-view.component.ts#L29)*
 
 
 
@@ -157,7 +157,7 @@ ___
 
 **●  pathState**:  *`string`*  = "BTC-USD"
 
-*Defined in [app/components/live-view/live-view.component.ts:34](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/live-view/live-view.component.ts#L34)*
+*Defined in [app/components/live-view/live-view.component.ts:34](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/live-view/live-view.component.ts#L34)*
 
 
 
@@ -174,7 +174,7 @@ ___
 
 **●  router**:  *`Router`* 
 
-*Defined in [app/components/live-view/live-view.component.ts:44](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/live-view/live-view.component.ts#L44)*
+*Defined in [app/components/live-view/live-view.component.ts:44](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/live-view/live-view.component.ts#L44)*
 
 
 
@@ -195,7 +195,7 @@ ___
 
 
 
-*Defined in [app/components/live-view/live-view.component.ts:50](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/live-view/live-view.component.ts#L50)*
+*Defined in [app/components/live-view/live-view.component.ts:50](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/live-view/live-view.component.ts#L50)*
 
 
 
@@ -220,7 +220,7 @@ ___
 
 
 
-*Defined in [app/components/live-view/live-view.component.ts:68](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/live-view/live-view.component.ts#L68)*
+*Defined in [app/components/live-view/live-view.component.ts:68](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/live-view/live-view.component.ts#L68)*
 
 
 

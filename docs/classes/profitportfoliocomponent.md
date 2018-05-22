@@ -40,7 +40,7 @@
 ### ⊕ **new ProfitPortfolioComponent**(activatedRouter: *`ActivatedRoute`*, router: *`Router`*, gdaxDataService: *[GdaxDataService](gdaxdataservice.md)*): [ProfitPortfolioComponent](profitportfoliocomponent.md)
 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:28](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/profit-portfolio/profit-portfolio.component.ts#L28)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:28](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/profit-portfolio/profit-portfolio.component.ts#L28)*
 
 
 
@@ -71,7 +71,7 @@ Constructor for the class. Injects Angular's ActivatedRoute, and Router services
 
 **●  activatedRouter**:  *`ActivatedRoute`* 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:37](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/profit-portfolio/profit-portfolio.component.ts#L37)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:37](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/profit-portfolio/profit-portfolio.component.ts#L37)*
 
 
 
@@ -88,7 +88,7 @@ ___
 
 **●  chart**:  *`Chart`* 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:18](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/profit-portfolio/profit-portfolio.component.ts#L18)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:18](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/profit-portfolio/profit-portfolio.component.ts#L18)*
 
 
 
@@ -105,7 +105,7 @@ ___
 
 **●  gdaxDataService**:  *[GdaxDataService](gdaxdataservice.md)* 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:39](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/profit-portfolio/profit-portfolio.component.ts#L39)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:39](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/profit-portfolio/profit-portfolio.component.ts#L39)*
 
 
 
@@ -122,7 +122,7 @@ ___
 
 **●  isBusy**:  *`boolean`*  = true
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/profit-portfolio/profit-portfolio.component.ts#L23)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/profit-portfolio/profit-portfolio.component.ts#L23)*
 
 
 
@@ -139,7 +139,7 @@ ___
 
 **●  pathState**:  *`string`*  = "BTC-USD"
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:28](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/profit-portfolio/profit-portfolio.component.ts#L28)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:28](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/profit-portfolio/profit-portfolio.component.ts#L28)*
 
 
 
@@ -156,7 +156,7 @@ ___
 
 **●  router**:  *`Router`* 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:38](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/profit-portfolio/profit-portfolio.component.ts#L38)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:38](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/profit-portfolio/profit-portfolio.component.ts#L38)*
 
 
 
@@ -177,7 +177,7 @@ ___
 
 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:44](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/profit-portfolio/profit-portfolio.component.ts#L44)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:44](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/profit-portfolio/profit-portfolio.component.ts#L44)*
 
 
 
@@ -202,7 +202,7 @@ ___
 
 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:62](https://github.com/WilliamRADFunk/cryptobot-interface/blob/a748707/src/app/components/profit-portfolio/profit-portfolio.component.ts#L62)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:62](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/profit-portfolio/profit-portfolio.component.ts#L62)*
 
 
 
