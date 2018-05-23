@@ -16,7 +16,7 @@ export class FilterControlsComponent implements OnInit {
   /**
   * Maintains the end date in actual Javascript Date form
   */
-  endDate: Date = new Date();
+  endDate: Date = new Date((new Date()).getTime() - 360000);
   /**
   * Maintains the end date for 'End Date:' datepicker
   */
