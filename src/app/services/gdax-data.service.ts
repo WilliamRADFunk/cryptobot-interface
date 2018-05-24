@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscriber } from 'rxjs/Subscriber';
+import { Observer } from 'rxjs/Observer';
 
 const INTERFACE_URL = 'http://www.williamrobertfunk.com';
 const DATA_URL = 'http://167.99.149.6:3000/';
@@ -178,9 +180,6 @@ export class GdaxDataService {
   * @param refresh flag to refresh the query. Helps to wait until all url details are pulled
   */
   changeCurrencyType(currency: string, basePath: string, refresh?: boolean): void {
-    this.profitChartData = [];
-    this.validUSDResults = [];
-    this.validProfitResults = [];
     this.tableResults = [];
     this.page.next(1);
     this.basePath = basePath;
@@ -199,7 +198,6 @@ export class GdaxDataService {
   * @param initChange flag to signal it's an original change (prevents multiple query calls onInit)
   */
   changeEndDateTime(date: Date, initChange?: boolean): void {
-    this.profitChartData = [];
     this.tableResults = [];
     this.page.next(1);
     this.endDate = date;
@@ -217,7 +215,6 @@ export class GdaxDataService {
   * @param page the granularity to use
   */
   changePageNumber(page: number): void {
-    this.profitChartData = [];
     this.tableResults = [];
     if (page === 1) {
       this.bookmark = null;
@@ -239,7 +236,6 @@ export class GdaxDataService {
   * @param initChange flag to signal it's an original change (prevents multiple query calls onInit)
   */
   changeRowsPerPage(rowsPerPage: number, initChange?: boolean): void {
-    this.profitChartData = [];
     this.tableResults = [];
     this.rowsPerPage = rowsPerPage;
     this.page.next(1);
@@ -257,7 +253,6 @@ export class GdaxDataService {
   * @param initChange flag to signal it's an original change (prevents multiple query calls onInit)
   */
   changeStartDateTime(date: Date, initChange?: boolean): void {
-    this.profitChartData = [];
     this.tableResults = [];
     this.page.next(1);
     this.startDate = date;
@@ -436,7 +431,6 @@ export class GdaxDataService {
   */
   getLatestGdaxProfitData(): void {
     this.isBusy.next(true);
-    this.chartData.next([]);
     const headers = new HttpHeaders()
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
@@ -455,9 +449,9 @@ export class GdaxDataService {
 
     } else {
       const curr: string = this.currency.split('-')[0].toLowerCase();
-      this.http.get<any>(`${DATA_URL}history/${curr}`, {headers, params})
+      const subscription = this.http.get<any>(`${DATA_URL}history/${curr}`, {headers, params})
         .subscribe(originalData => {
-          this.handleProfitResults(originalData);
+          this.handleProfitResults(originalData, subscription);
         });
     }
   }
@@ -484,9 +478,9 @@ export class GdaxDataService {
     if (this.currency === 'ALL') {
 
     } else {
-      this.http.get<any>(`${DATA_URL}history/usd`, {headers, params})
+      const subscription = this.http.get<any>(`${DATA_URL}history/usd`, {headers, params})
         .subscribe(originalData => {
-          this.handleUSDResults(originalData);
+          this.handleUSDResults(originalData, subscription);
         });
     }
   }
@@ -632,12 +626,13 @@ export class GdaxDataService {
   * Recursive query maker until desired results are found
   * @param originalData data used to check against to see if current results are sufficient
   */
-  handleProfitResults(originalData: {}[]): void {
+  handleProfitResults(originalData: {}[], subscription): void {
+    subscription.unsubscribe();
     // Unexpectedly ran out of for-loop results.
     // Compute what's there and return.
     if (!originalData.length) {
       this.organizeProfitData();
-      this.chartData.next(this.profitChartData);
+      this.chartData.next(this.profitChartData.slice());
       this.bookmark = null;
       setTimeout(() => {
         this.isBusy.next(false);
@@ -657,7 +652,7 @@ export class GdaxDataService {
       // Stop looking. We've exceeded our search
       if (dateTime < this.startDate.getTime()) {
         this.organizeProfitData();
-        this.chartData.next(this.profitChartData);
+        this.chartData.next(this.profitChartData.slice());
         this.bookmark = null;
         setTimeout(() => {
           this.isBusy.next(false);
@@ -682,7 +677,8 @@ export class GdaxDataService {
   * Recursive query maker until desired results are found
   * @param originalData data used to check against to see if current results are sufficient
   */
-  handleUSDResults(originalData: {}[]): void {
+  handleUSDResults(originalData: {}[], subscription): void {
+    subscription.unsubscribe();
     // Unexpectedly ran out of for-loop results. Move on.
     if (!originalData.length) {
       this.bookmark = null;
@@ -724,7 +720,9 @@ export class GdaxDataService {
   * Assembles the data into a format suitable for the profit portfolio page.
   */
   organizeProfitData() {
-    if (!this.validProfitResults.length) {
+    this.profitChartData = [];
+    console.log('1', this.validUSDResults.length, this.validProfitResults.length, this.profitChartData.length);
+    if (!this.validProfitResults.length || !this.validUSDResults.length) {
       return;
     }
     let usdIndex = 0;
@@ -750,7 +748,7 @@ export class GdaxDataService {
       }
     }
     // Fill in blank months that come after last result.
-    this.profitChartData = this.profitChartData.concat(this.calculateAfterProfitMonths());
+    this.profitChartData = this.calculateAfterProfitMonths().slice();
     // Now that the profit/loss amount is tied into the transaction,
     // we can sort the data by time category (month).
     let currMonth = -1;
@@ -799,7 +797,8 @@ export class GdaxDataService {
       }
     }
     // Fill in blank months that come before first result.
-    this.profitChartData = this.profitChartData.concat(this.calculateBeforeProfitMonths());
+    this.profitChartData = this.profitChartData.concat(this.calculateBeforeProfitMonths().slice());
+    console.log('2', this.validUSDResults.length, this.validProfitResults.length, this.profitChartData.length);
     // Rest temp variables, though this is handled elsewhere in the code.
     // Better to be safe in case one of those things accidentally changes.
     this.validUSDResults = [];
@@ -820,6 +819,9 @@ export class GdaxDataService {
       this.isRelevant.next(false);
       this.getLatestGdaxHistoryData();
     } else if (this.basePath === 'profit-portfolio') {
+      this.chartData.next([]);
+      this.validUSDResults = [];
+      this.validProfitResults = [];
       this.isRelevant.next(false);
       this.getLatestGdaxUSDData();
     } else if (this.basePath === 'cryptobot-controls') {

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { Chart } from 'angular-highcharts';
 
 import { GdaxDataService } from '../../services/gdax-data.service';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-profit-portfolio',
@@ -60,7 +61,10 @@ export class ProfitPortfolioComponent implements OnInit {
   * @param data queried market data passed from the GdaxDataService.
   */
   updateChart(data: number[][]): void {
-    // console.log(data);
+    if (!data.length) {
+      return;
+    }
+    data = data.reverse();
     const options = {};
     options['chart'] = {
       type: 'column',
@@ -91,33 +95,63 @@ export class ProfitPortfolioComponent implements OnInit {
         }
       ];
     } else {
+      const spend = [];
+      const earn = [];
+      const profit = [];
+      for (let i = 0; i < data.length; i++) {
+        if (!data[i][3]) {
+          continue;
+        }
+        spend.push(data[i][0]);
+        earn.push(data[i][1]);
+        profit.push(data[i][2]);
+      }
       options['series'] = [
       {
-        name: '$ Spent',
-        data: [5, 3, 4, 7, 2, 5, 3, 4, 7, 2, 4, 2]
+        name: 'Spent',
+        data: spend
       }, {
-        name: '$ Earned',
-        data: [2, -2, -3, 2, 1, 2, -2, -3, 2, 1, 8, 1]
+        name: 'Earned',
+        data: earn
       }, {
-        name: '$ Profit',
-        data: [3, 4, 4, -2, 5, 3, 4, 4, -2, 5, 3, 6]
+        name: 'Profit',
+        data: profit
       }];
     }
     options['xAxis'] = {
-      categories: [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December'
-      ]
+      title: {
+        text: null
+      },
+      labels: {
+        formatter: function() {
+          return data[this.value][3];
+        },
+        shared: true
+      }
+    };
+    options['yAxis'] = {
+      title: {
+        text: null
+      }
+    };
+    options['tooltip'] = {
+      formatter: function() {
+        const moneyPipe = new CurrencyPipe('en-US');
+        const fun = val => {
+          return `
+            <table>
+              <tr>
+                <td>Date:</td><td>${data[val][3]}</td>
+              </tr>
+              <tr>
+                <td>${this.series.name}:</td><td>${moneyPipe.transform(this.y)}</td>
+              </tr>
+            </table>`;
+        };
+        const label = fun(this.x);
+        return label;
+      },
+      useHTML: true
     };
     this.chart = new Chart(options);
   }
