@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 
 import { NgbTimepickerConfig, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
 import { GdaxDataService } from '../../services/gdax-data.service';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-filter-controls',
@@ -11,8 +12,12 @@ import { ActivatedRoute, Router, ParamMap } from '@angular/router';
   styleUrls: ['./filter-controls.component.scss'],
   providers: [ NgbTimepickerConfig ]
 })
-export class FilterControlsComponent implements OnInit {
+export class FilterControlsComponent implements OnDestroy, OnInit {
   @ViewChild('t') public tooltip: NgbTooltip;
+  /**
+  * Makes unsubscribing from this variable possible in OnDestroy
+  */
+  busySubscription: Subscription;
   /**
   * Maintains the end date in actual Javascript Date form
   */
@@ -47,6 +52,10 @@ export class FilterControlsComponent implements OnInit {
   */
   isRelevant: boolean = true;
   /**
+  * Makes unsubscribing from this variable possible in OnDestroy
+  */
+  isRelevantSubscription: Subscription;
+  /**
   * Flag to determine whether or not to show invalid data colors
   * inside the datetime filters.
   */
@@ -79,6 +88,10 @@ export class FilterControlsComponent implements OnInit {
   * Holds query params to check against in other parts of component
   */
   params: ParamMap;
+  /**
+  * Makes unsubscribing from this variable possible in OnDestroy
+  */
+  queryParamSubscription: Subscription;
   /**
   * Maintains the start date in actual Javascript Date form
   */
@@ -165,19 +178,39 @@ export class FilterControlsComponent implements OnInit {
     }
   /**
   * @private
+  * Triggered when component is destroyed, but before it's officially dead
+  * this runs cleanup functionality to protect against misfired queries.
+  */
+  ngOnDestroy() {
+    if (this.busySubscription) {
+      this.busySubscription.unsubscribe();
+      this.busySubscription = null;
+    }
+    if (this.isRelevantSubscription) {
+      this.isRelevantSubscription.unsubscribe();
+      this.isRelevantSubscription = null;
+    }
+    if (this.queryParamSubscription) {
+      this.queryParamSubscription.unsubscribe();
+      this.queryParamSubscription = null;
+    }
+    this.gdaxDataService.kill();
+  }
+  /**
+  * @private
   * Triggered when component is loaded, but before it is viewed
   * Gets REST path info, and updates the profit chart
   */
   ngOnInit(): void {
-    this.gdaxDataService.isBusy
+    this.busySubscription = this.gdaxDataService.isBusy
       .subscribe(data => {
         this.isBusy = data;
       });
-    this.gdaxDataService.isRelevant
+    this.isRelevantSubscription = this.gdaxDataService.isRelevant
       .subscribe(data => {
         this.isRelevant = data;
       });
-    this.activatedRouter.queryParamMap
+    this.queryParamSubscription = this.activatedRouter.queryParamMap
       .subscribe((params: ParamMap) => {
         this.params = params;
         if (!this.isInitialized) {

@@ -8,7 +8,9 @@
       .col-12.col-sm-12.col-md-12.col-lg-12
         div(
           [chart]="chart",
-          *ngIf="!isBusy")
+          *ngIf="!isBusy && !isEmpty")
+        div.text-center(*ngIf="!isBusy && isEmpty")
+          h3 There is no data within your criteria
         div.text-center(*ngIf="isBusy")
           img(
             height=200,

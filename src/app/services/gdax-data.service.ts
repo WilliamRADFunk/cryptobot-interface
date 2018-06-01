@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscriber } from 'rxjs/Subscriber';
 import { Observer } from 'rxjs/Observer';
+import { Subscription } from 'rxjs/Subscription';
 
 const INTERFACE_URL = 'http://www.williamrobertfunk.com';
 const DATA_URL = 'http://167.99.149.6:3000/';
@@ -52,6 +53,7 @@ export class GdaxDataService {
   * Second is granularity, Third is startDateTime. Fourth is endDateTime.
   */
   firstTime: boolean[] = [true, true, true, true];
+  historySubscription: Subscription;
   /**
   * The granularity between data points. Used as a parameter in query URL
   */
@@ -60,6 +62,10 @@ export class GdaxDataService {
   * The flag to designate if query is busy
   */
   isBusy: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  /**
+  * The flag to designate component destruction for preventing accidental query calls.
+  */
+  isKilled: boolean = false;
   /**
   * The flag to designate if granularity is relevant for basePath api
   */
@@ -72,6 +78,10 @@ export class GdaxDataService {
   * Temporary holder for profit portfolio data until recursive search is completed.
   */
   profitChartData: number[][] = [];
+  /**
+  * Makes unsubscribing from this variable possible in OnDestroy
+  */
+  profitSubscription: Subscription;
   /**
   * The current number for rows per page
   */
@@ -89,6 +99,10 @@ export class GdaxDataService {
   * Temporary holder for trading history table data until recursive search is completed.
   */
   tableResults: {}[] = [];
+  /**
+  * Makes unsubscribing from this variable possible in OnDestroy
+  */
+  usdSubscription: Subscription;
   /**
   * Contains list of profit results that reside inside filter zone.
   * Used later in organizeProfitData function.
@@ -188,7 +202,7 @@ export class GdaxDataService {
     if (refresh) {
       this.firstTime[0] = false;
     }
-    if (refresh && this.firstTime.indexOf(true) < 0) {
+    if (refresh && !this.firstTime.some(el => el)) {
       this.refreshData();
     }
   }
@@ -205,7 +219,7 @@ export class GdaxDataService {
     if (initChange) {
       this.firstTime[3] = false;
     }
-    if (this.firstTime.indexOf(true) < 0) {
+    if (!this.firstTime.some(el => el)) {
       this.refreshData();
     }
   }
@@ -243,7 +257,7 @@ export class GdaxDataService {
     if (initChange) {
       this.firstTime[0] = false;
     }
-    if (this.firstTime.indexOf(true) < 0) {
+    if (!this.firstTime.some(el => el)) {
       this.refreshData();
     }
   }
@@ -260,7 +274,7 @@ export class GdaxDataService {
     if (initChange) {
       this.firstTime[2] = false;
     }
-    if (this.firstTime.indexOf(true) < 0) {
+    if (!this.firstTime.some(el => el)) {
       this.refreshData();
     }
   }
@@ -275,7 +289,7 @@ export class GdaxDataService {
     if (initChange) {
       this.firstTime[1] = false;
     }
-    if (this.firstTime.indexOf(true) < 0) {
+    if (!this.firstTime.some(el => el)) {
       this.refreshData();
     }
   }
@@ -350,41 +364,51 @@ export class GdaxDataService {
       .set('start', this.startDate.toISOString())
       .set('end', this.endDate.toISOString());
     if (this.currency === 'ALL') {
-      this.http.get<any>(`https://api.gdax.com/products/BTC-USD/candles`, {headers, params})
+      let subscription = this.http.get<any>(`https://api.gdax.com/products/BTC-USD/candles`, {headers, params})
         .subscribe(data1 => {
-          this.http.get<any>(`https://api.gdax.com/products/LTC-USD/candles`, {headers, params})
+          subscription.unsubscribe();
+          subscription = this.http.get<any>(`https://api.gdax.com/products/LTC-USD/candles`, {headers, params})
             .subscribe(data2 => {
-              this.http.get<any>(`https://api.gdax.com/products/ETH-USD/candles`, {headers, params})
+              subscription.unsubscribe();
+              subscription = this.http.get<any>(`https://api.gdax.com/products/ETH-USD/candles`, {headers, params})
                 .subscribe(data3 => {
-                  for (let i = 0 ; i < data1.length; i++) {
-                    data1[i].push(0);
+                  subscription.unsubscribe();
+                  // Added protection from recursive or lingering query calls.
+                  if (!this.isKilled) {
+                    for (let i = 0 ; i < data1.length; i++) {
+                      data1[i].push(0);
+                    }
+                    for (let j = 0 ; j < data2.length; j++) {
+                      data2[j].push(1);
+                    }
+                    for (let a = 0 ; a < data2.length; a++) {
+                      data1.push(data2[a]);
+                    }
+                    for (let k = 0 ; k < data3.length; k++) {
+                      data3[k].push(2);
+                    }
+                    for (let b = 0 ; b < data3.length; b++) {
+                      data1.push(data3[b]);
+                    }
+                    this.chartData.next(data1);
+                    setTimeout(() => {
+                      this.isBusy.next(false);
+                    }, 300);
                   }
-                  for (let j = 0 ; j < data2.length; j++) {
-                    data2[j].push(1);
-                  }
-                  for (let a = 0 ; a < data2.length; a++) {
-                    data1.push(data2[a]);
-                  }
-                  for (let k = 0 ; k < data3.length; k++) {
-                    data3[k].push(2);
-                  }
-                  for (let b = 0 ; b < data3.length; b++) {
-                    data1.push(data3[b]);
-                  }
-                  this.chartData.next(data1);
-                  setTimeout(() => {
-                    this.isBusy.next(false);
-                  }, 300);
                 });
             });
         });
     } else {
-      this.http.get<any>(`https://api.gdax.com/products/${this.currency}/candles`, {headers, params})
+      const subscription = this.http.get<any>(`https://api.gdax.com/products/${this.currency}/candles`, {headers, params})
         .subscribe(data => {
-          this.chartData.next(data);
-          setTimeout(() => {
-            this.isBusy.next(false);
-          }, 1000);
+          subscription.unsubscribe();
+          // Added protection from recursive or lingering query calls.
+          if (!this.isKilled) {
+            this.chartData.next(data);
+            setTimeout(() => {
+              this.isBusy.next(false);
+            }, 1000);
+          }
         });
     }
   }
@@ -414,15 +438,21 @@ export class GdaxDataService {
         .set(`limit`, `${this.rowsPerPage + 1}`);
     }
     if (this.currency === 'ALL') {
-      this.http.get<any>(`${DATA_URL}history/${this.currTypes[this.currIndex]}`, {headers, params})
+      this.historySubscription = this.http.get<any>(`${DATA_URL}history/${this.currTypes[this.currIndex]}`, {headers, params})
         .subscribe(originalData => {
-          this.handleHistoryResults(originalData);
+          // Added protection from recursive or lingering query calls.
+          if (!this.isKilled) {
+            this.handleHistoryResults(originalData);
+          }
         });
     } else {
       const curr: string = this.currency.split('-')[0].toLowerCase();
-      this.http.get<any>(`${DATA_URL}history/${curr}`, {headers, params})
+      this.historySubscription = this.http.get<any>(`${DATA_URL}history/${curr}`, {headers, params})
         .subscribe(originalData => {
-          this.handleHistoryResults(originalData);
+          // Added protection from recursive or lingering query calls.
+          if (!this.isKilled) {
+            this.handleHistoryResults(originalData);
+          }
         });
     }
   }
@@ -449,9 +479,12 @@ export class GdaxDataService {
 
     } else {
       const curr: string = this.currency.split('-')[0].toLowerCase();
-      const subscription = this.http.get<any>(`${DATA_URL}history/${curr}`, {headers, params})
+      this.profitSubscription = this.http.get<any>(`${DATA_URL}history/${curr}`, {headers, params})
         .subscribe(originalData => {
-          this.handleProfitResults(originalData, subscription);
+          // Added protection from recursive or lingering query calls.
+          if (!this.isKilled) {
+            this.handleProfitResults(originalData, this.profitSubscription);
+          }
         });
     }
   }
@@ -478,9 +511,12 @@ export class GdaxDataService {
     if (this.currency === 'ALL') {
 
     } else {
-      const subscription = this.http.get<any>(`${DATA_URL}history/usd`, {headers, params})
+      this.usdSubscription = this.http.get<any>(`${DATA_URL}history/usd`, {headers, params})
         .subscribe(originalData => {
-          this.handleUSDResults(originalData, subscription);
+          // Added protection from recursive or lingering query calls.
+          if (!this.isKilled) {
+            this.handleUSDResults(originalData, this.usdSubscription);
+          }
         });
     }
   }
@@ -496,6 +532,10 @@ export class GdaxDataService {
   * @param originalData data used to check against to see if current results are sufficient
   */
   handleHistoryResults(originalData: {}[]): void {
+    // Added protection from recursive or lingering query calls.
+    if (this.isKilled) {
+      return;
+    }
     // No data returned. No more data.
     // If 'ALL' and other currencies left, try those.
     if (!originalData.length
@@ -628,6 +668,10 @@ export class GdaxDataService {
   */
   handleProfitResults(originalData: {}[], subscription): void {
     subscription.unsubscribe();
+    // Added protection from recursive or lingering query calls.
+    if (this.isKilled) {
+      return;
+    }
     // Unexpectedly ran out of for-loop results.
     // Compute what's there and return.
     if (!originalData.length) {
@@ -679,6 +723,10 @@ export class GdaxDataService {
   */
   handleUSDResults(originalData: {}[], subscription): void {
     subscription.unsubscribe();
+    // Added protection from recursive or lingering query calls.
+    if (this.isKilled) {
+      return;
+    }
     // Unexpectedly ran out of for-loop results. Move on.
     if (!originalData.length) {
       this.bookmark = null;
@@ -717,11 +765,39 @@ export class GdaxDataService {
     }, 400);
   }
   /**
+  * Resets initialization flags, unsubscribes from all subscriptions,
+  * and halts any current queries.
+  */
+  kill() {
+    console.log('keel dem!');
+    this.isKilled = true;
+    this.firstTime = [true, true, true, true];
+    this.page.next(1);
+    if (this.profitSubscription) {
+      this.profitSubscription.unsubscribe();
+      this.profitSubscription = null;
+    }
+    if (this.usdSubscription) {
+      this.usdSubscription.unsubscribe();
+      this.usdSubscription = null;
+    }
+    if (this.historySubscription) {
+      this.historySubscription.unsubscribe();
+      this.historySubscription = null;
+    }
+    if (this.usdSubscription) {
+      this.usdSubscription.unsubscribe();
+      this.usdSubscription = null;
+    }
+  }
+  /**
   * Assembles the data into a format suitable for the profit portfolio page.
   */
   organizeProfitData() {
+    if (this.isKilled) {
+      return;
+    }
     this.profitChartData = [];
-    console.log('1', this.validUSDResults.length, this.validProfitResults.length, this.profitChartData.length);
     if (!this.validProfitResults.length || !this.validUSDResults.length) {
       return;
     }
@@ -798,7 +874,6 @@ export class GdaxDataService {
     }
     // Fill in blank months that come before first result.
     this.profitChartData = this.profitChartData.concat(this.calculateBeforeProfitMonths().slice());
-    console.log('2', this.validUSDResults.length, this.validProfitResults.length, this.profitChartData.length);
     // Rest temp variables, though this is handled elsewhere in the code.
     // Better to be safe in case one of those things accidentally changes.
     this.validUSDResults = [];
@@ -809,6 +884,7 @@ export class GdaxDataService {
   * @param isPageChange flag to make sure currIndex isn't reset on page change.
   */
   refreshData(isPageChange?: boolean): void {
+    this.isKilled = false;
     if (this.basePath === 'live-view') {
       this.isRelevant.next(true);
       this.getLatestGdaxData();

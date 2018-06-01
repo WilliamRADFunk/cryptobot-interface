@@ -1,14 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, UrlSegment, ParamMap } from '@angular/router';
 
 import { GdaxDataService } from '../../services/gdax-data.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-trading-history',
   templateUrl: './trading-history.component.html',
   styleUrls: ['./trading-history.component.scss']
 })
-export class TradingHistoryComponent implements OnInit {
+export class TradingHistoryComponent implements OnDestroy, OnInit {
+  /**
+  * Makes unsubscribing from this variable possible in OnDestroy
+  */
+  busySubscription: Subscription;
   /**
   * Array of flags to determine if initial param and url pull is done before triggering
   * the service to query for data. First is currencyType. Second is rowsPerPage.
@@ -32,6 +37,10 @@ export class TradingHistoryComponent implements OnInit {
   */
   page: number = 1;
   /**
+  * Makes unsubscribing from this variable possible in OnDestroy
+  */
+  pageSubscription: Subscription;
+  /**
   * Holds query params to check against in other parts of component
   */
   params: ParamMap;
@@ -49,10 +58,18 @@ export class TradingHistoryComponent implements OnInit {
   */
   rowAmounts: number[] = [10, 25, 50, 75];
   /**
+  * Makes unsubscribing from this variable possible in OnDestroy
+  */
+  queryParamSubscription: Subscription;
+  /**
   * The main table object to be constructed whenever new
   * data is returned from the service.
   */
   table: {}[] = [];
+  /**
+  * Makes unsubscribing from this variable possible in OnDestroy
+  */
+  tableDataSubscription: Subscription;
   /**
   * The initial path state passed in by the activatedRouter.
   * Keeps track of what currency the chart should be viewing.
@@ -64,6 +81,10 @@ export class TradingHistoryComponent implements OnInit {
   */
   timeoutId: any = null;
   /**
+  * Makes unsubscribing from this variable possible in OnDestroy
+  */
+  urlSubscription: Subscription;
+  /**
   * Constructor for the class. Injects Angular's ActivatedRoute, and Router services
   * @param activatedRouter Angular's ActivatedRoute service for knowing current route
   * @param router Angular's Router service for changing route
@@ -74,15 +95,44 @@ export class TradingHistoryComponent implements OnInit {
     private router: Router,
     private gdaxDataService: GdaxDataService) { }
   /**
+  * @private
+  * Triggered when component is destroyed, but before it's officially dead
+  * this runs cleanup functionality to protect against misfired queries.
+  */
+  ngOnDestroy() {
+    console.log('diieeeeee!!!', 'table-history');
+    if (this.busySubscription) {
+      this.busySubscription.unsubscribe();
+      this.busySubscription = null;
+    }
+    if (this.queryParamSubscription) {
+      this.queryParamSubscription.unsubscribe();
+      this.queryParamSubscription = null;
+    }
+    if (this.urlSubscription) {
+      this.urlSubscription.unsubscribe();
+      this.urlSubscription = null;
+    }
+    if (this.pageSubscription) {
+      this.pageSubscription.unsubscribe();
+      this.pageSubscription = null;
+    }
+    if (this.tableDataSubscription) {
+      this.tableDataSubscription.unsubscribe();
+      this.tableDataSubscription = null;
+    }
+    this.gdaxDataService.kill();
+  }
+  /**
   * Triggered when component is loaded, but before it is viewed.
   * Gets REST path info, and updates the history table.
   */
   ngOnInit(): void {
-    this.gdaxDataService.isBusy
+    this.busySubscription = this.gdaxDataService.isBusy
       .subscribe(data => {
         this.isBusy = data;
       });
-    this.activatedRouter.url
+    this.urlSubscription = this.activatedRouter.url
       .subscribe((segments: UrlSegment[]) => {
         this.pathState = segments[0]['path'];
         if (this.firstTime[1]) {
@@ -93,7 +143,7 @@ export class TradingHistoryComponent implements OnInit {
         // Mark the first time as false to signal rows section query can be made.
         this.firstTime[0] = false;
       });
-    this.activatedRouter.queryParamMap
+    this.queryParamSubscription = this.activatedRouter.queryParamMap
       .subscribe((params: ParamMap) => {
         this.params = params;
         this.handleRowsPerPageParam();
@@ -101,7 +151,7 @@ export class TradingHistoryComponent implements OnInit {
         // currencyType know it's ready for query.
         this.firstTime[1] = false;
       });
-    this.gdaxDataService.page
+    this.pageSubscription = this.gdaxDataService.page
       .subscribe(data => {
         this.page = data;
         if (this.page === 1) {
@@ -110,7 +160,7 @@ export class TradingHistoryComponent implements OnInit {
           this.isNoPrevPage = false;
         }
       });
-    this.gdaxDataService.tableData
+    this.tableDataSubscription = this.gdaxDataService.tableData
       .subscribe(this.updateTable.bind(this));
   }
   /**

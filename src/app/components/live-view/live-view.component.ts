@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
@@ -6,18 +6,27 @@ import { Chart, Highcharts } from 'angular-highcharts';
 
 import { GdaxDataService } from '../../services/gdax-data.service';
 import { CurrencyPipe } from '@angular/common';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-live-view',
   templateUrl: './live-view.component.html',
   styleUrls: ['./live-view.component.scss']
 })
-export class LiveViewComponent implements OnInit {
+export class LiveViewComponent implements OnDestroy, OnInit {
+  /**
+  * Makes unsubscribing from this variable possible in OnDestroy
+  */
+  busySubscription: Subscription;
   /**
   * The main chart object to be constructed whenever new
   * data is returned from the service.
   */
   chart: Chart;
+  /**
+  * Makes unsubscribing from this variable possible in OnDestroy
+  */
+  chartDataSubscription: Subscription;
   /**
   * Flag to prevent chart compilation until after chart is created.
   */
@@ -32,6 +41,10 @@ export class LiveViewComponent implements OnInit {
   * Keeps track of what currency the chart should be viewing.
   */
   pathState: string = 'BTC-USD';
+  /**
+  * Makes unsubscribing from this variable possible in OnDestroy
+  */
+  urlSubscription: Subscription;
 
   /**
   * Constructor for the class. Injects Angular's ActivatedRoute, Router, and GdaxDataService services
@@ -44,20 +57,41 @@ export class LiveViewComponent implements OnInit {
     private router: Router,
     private gdaxDataService: GdaxDataService) { }
   /**
+  * @private
+  * Triggered when component is destroyed, but before it's officially dead
+  * this runs cleanup functionality to protect against misfired queries.
+  */
+  ngOnDestroy() {
+    console.log('diieeeeee!!!', 'live-view');
+    if (this.busySubscription) {
+      this.busySubscription.unsubscribe();
+      this.busySubscription = null;
+    }
+    if (this.chartDataSubscription) {
+      this.chartDataSubscription.unsubscribe();
+      this.chartDataSubscription = null;
+    }
+    if (this.urlSubscription) {
+      this.urlSubscription.unsubscribe();
+      this.urlSubscription = null;
+    }
+    this.gdaxDataService.kill();
+  }
+  /**
   * Triggered when component is loaded, but before it is viewed.
   * Gets REST path info, and updates the profit chart.
   */
   ngOnInit(): void {
-    this.gdaxDataService.isBusy
+    this.busySubscription = this.gdaxDataService.isBusy
       .subscribe(data => {
         this.isBusy = data;
       });
-    this.activatedRouter.url
+    this.urlSubscription = this.activatedRouter.url
       .subscribe((segments: UrlSegment[]) => {
         this.pathState = segments[0]['path'];
         this.gdaxDataService.changeCurrencyType(this.pathState, 'live-view', true);
       });
-    this.gdaxDataService.chartData
+    this.chartDataSubscription = this.gdaxDataService.chartData
       .subscribe(this.updateChart.bind(this));
   }
   /**

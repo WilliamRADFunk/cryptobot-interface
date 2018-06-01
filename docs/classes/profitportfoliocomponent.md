@@ -6,6 +6,7 @@
 
 ## Implements
 
+* `OnDestroy`
 * `OnInit`
 
 ## Index
@@ -18,15 +19,20 @@
 ### Properties
 
 * [activatedRouter](profitportfoliocomponent.md#markdown-header-private-activatedrouter)
+* [busySubscription](profitportfoliocomponent.md#markdown-header-busysubscription)
 * [chart](profitportfoliocomponent.md#markdown-header-chart)
+* [chartDataSubscription](profitportfoliocomponent.md#markdown-header-chartdatasubscription)
 * [gdaxDataService](profitportfoliocomponent.md#markdown-header-private-gdaxdataservice)
 * [isBusy](profitportfoliocomponent.md#markdown-header-isbusy)
+* [isEmpty](profitportfoliocomponent.md#markdown-header-isempty)
 * [pathState](profitportfoliocomponent.md#markdown-header-pathstate)
 * [router](profitportfoliocomponent.md#markdown-header-private-router)
+* [urlSubscription](profitportfoliocomponent.md#markdown-header-urlsubscription)
 
 
 ### Methods
 
+* [ngOnDestroy](profitportfoliocomponent.md#markdown-header-private-ngondestroy)
 * [ngOnInit](profitportfoliocomponent.md#markdown-header-ngoninit)
 * [updateChart](profitportfoliocomponent.md#markdown-header-updatechart)
 
@@ -40,7 +46,7 @@
 ### ⊕ **new ProfitPortfolioComponent**(activatedRouter: *`ActivatedRoute`*, router: *`Router`*, gdaxDataService: *[GdaxDataService](gdaxdataservice.md)*): [ProfitPortfolioComponent](profitportfoliocomponent.md)
 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:28](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/profit-portfolio/profit-portfolio.component.ts#L28)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:46](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/profit-portfolio/profit-portfolio.component.ts#L46)*
 
 
 
@@ -71,7 +77,7 @@ Constructor for the class. Injects Angular's ActivatedRoute, and Router services
 
 **●  activatedRouter**:  *`ActivatedRoute`* 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:37](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/profit-portfolio/profit-portfolio.component.ts#L37)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:55](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/profit-portfolio/profit-portfolio.component.ts#L55)*
 
 
 
@@ -84,11 +90,28 @@ ___
 
 
 
+###  busySubscription
+
+**●  busySubscription**:  *`Subscription`* 
+
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:19](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/profit-portfolio/profit-portfolio.component.ts#L19)*
+
+
+
+Makes unsubscribing from this variable possible in OnDestroy
+
+
+
+
+___
+
+
+
 ###  chart
 
 **●  chart**:  *`Chart`* 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:18](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/profit-portfolio/profit-portfolio.component.ts#L18)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:24](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/profit-portfolio/profit-portfolio.component.ts#L24)*
 
 
 
@@ -101,11 +124,28 @@ ___
 
 
 
+###  chartDataSubscription
+
+**●  chartDataSubscription**:  *`Subscription`* 
+
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:28](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/profit-portfolio/profit-portfolio.component.ts#L28)*
+
+
+
+Makes unsubscribing from this variable possible in OnDestroy
+
+
+
+
+___
+
+
+
 ### «Private» gdaxDataService
 
 **●  gdaxDataService**:  *[GdaxDataService](gdaxdataservice.md)* 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:39](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/profit-portfolio/profit-portfolio.component.ts#L39)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:57](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/profit-portfolio/profit-portfolio.component.ts#L57)*
 
 
 
@@ -122,7 +162,7 @@ ___
 
 **●  isBusy**:  *`boolean`*  = true
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:23](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/profit-portfolio/profit-portfolio.component.ts#L23)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:33](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/profit-portfolio/profit-portfolio.component.ts#L33)*
 
 
 
@@ -135,11 +175,28 @@ ___
 
 
 
+###  isEmpty
+
+**●  isEmpty**:  *`boolean`* 
+
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:37](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/profit-portfolio/profit-portfolio.component.ts#L37)*
+
+
+
+Flag to let ui show no data returned message
+
+
+
+
+___
+
+
+
 ###  pathState
 
 **●  pathState**:  *`string`*  = "BTC-USD"
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:28](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/profit-portfolio/profit-portfolio.component.ts#L28)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:42](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/profit-portfolio/profit-portfolio.component.ts#L42)*
 
 
 
@@ -156,7 +213,7 @@ ___
 
 **●  router**:  *`Router`* 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:38](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/profit-portfolio/profit-portfolio.component.ts#L38)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:56](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/profit-portfolio/profit-portfolio.component.ts#L56)*
 
 
 
@@ -168,7 +225,47 @@ Angular's Router service for changing route
 ___
 
 
+
+###  urlSubscription
+
+**●  urlSubscription**:  *`Subscription`* 
+
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:46](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/profit-portfolio/profit-portfolio.component.ts#L46)*
+
+
+
+Makes unsubscribing from this variable possible in OnDestroy
+
+
+
+
+___
+
+
 ## Methods
+
+
+### «Private» ngOnDestroy
+
+► **ngOnDestroy**(): `void`
+
+
+
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:63](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/profit-portfolio/profit-portfolio.component.ts#L63)*
+
+
+
+
+
+
+**Returns:** `void`
+
+
+
+
+
+___
+
 
 
 ###  ngOnInit
@@ -177,7 +274,7 @@ ___
 
 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:44](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/profit-portfolio/profit-portfolio.component.ts#L44)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:83](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/profit-portfolio/profit-portfolio.component.ts#L83)*
 
 
 
@@ -202,7 +299,7 @@ ___
 
 
 
-*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:62](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/profit-portfolio/profit-portfolio.component.ts#L62)*
+*Defined in [app/components/profit-portfolio/profit-portfolio.component.ts:101](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/profit-portfolio/profit-portfolio.component.ts#L101)*
 
 
 
