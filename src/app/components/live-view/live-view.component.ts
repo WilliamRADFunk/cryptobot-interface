@@ -62,7 +62,6 @@ export class LiveViewComponent implements OnDestroy, OnInit {
   * this runs cleanup functionality to protect against misfired queries.
   */
   ngOnDestroy() {
-    console.log('diieeeeee!!!', 'live-view');
     if (this.busySubscription) {
       this.busySubscription.unsubscribe();
       this.busySubscription = null;
@@ -89,6 +88,7 @@ export class LiveViewComponent implements OnDestroy, OnInit {
     this.urlSubscription = this.activatedRouter.url
       .subscribe((segments: UrlSegment[]) => {
         this.pathState = segments[0]['path'];
+        console.log('I\'m alive!!!');
         this.gdaxDataService.changeCurrencyType(this.pathState, 'live-view', true);
       });
     this.chartDataSubscription = this.gdaxDataService.chartData

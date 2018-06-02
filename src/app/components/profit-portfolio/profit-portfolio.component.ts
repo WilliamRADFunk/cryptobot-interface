@@ -61,7 +61,6 @@ export class ProfitPortfolioComponent implements OnDestroy, OnInit {
   * this runs cleanup functionality to protect against misfired queries.
   */
   ngOnDestroy() {
-    console.log('diieeeeee!!!', 'profit-portfolio');
     if (this.busySubscription) {
       this.busySubscription.unsubscribe();
       this.busySubscription = null;
@@ -87,6 +86,7 @@ export class ProfitPortfolioComponent implements OnDestroy, OnInit {
       });
     this.urlSubscription = this.activatedRouter.url
       .subscribe((segments: UrlSegment[]) => {
+        console.log('I\'m alive!!!');
         this.pathState = segments[0]['path'];
         this.gdaxDataService.changeCurrencyType(this.pathState, 'profit-portfolio', true);
       });
@@ -164,7 +164,7 @@ export class ProfitPortfolioComponent implements OnDestroy, OnInit {
       },
       labels: {
         formatter: function() {
-          return data[this.value][3];
+          return data && data[this.value] && data[this.value][3];
         },
         shared: true
       }

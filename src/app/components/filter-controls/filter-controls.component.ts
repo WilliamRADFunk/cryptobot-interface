@@ -194,7 +194,8 @@ export class FilterControlsComponent implements OnDestroy, OnInit {
       this.queryParamSubscription.unsubscribe();
       this.queryParamSubscription = null;
     }
-    this.gdaxDataService.kill();
+    this.isInitialized = false;
+    this.gdaxDataService.kill(true);
   }
   /**
   * @private
@@ -214,6 +215,7 @@ export class FilterControlsComponent implements OnDestroy, OnInit {
       .subscribe((params: ParamMap) => {
         this.params = params;
         if (!this.isInitialized) {
+          console.log('stuff is happening...');
           this.handleStartDateTimeParam();
           this.handleEndDateTimeParam();
           this.handleIncorrectDateTimeParams();

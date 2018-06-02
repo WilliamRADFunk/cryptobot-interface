@@ -194,15 +194,18 @@ export class GdaxDataService {
   * @param refresh flag to refresh the query. Helps to wait until all url details are pulled
   */
   changeCurrencyType(currency: string, basePath: string, refresh?: boolean): void {
+    console.log('ANYTHING!', refresh, this.firstTime);
     this.tableResults = [];
     this.page.next(1);
     this.basePath = basePath;
     this.currency = currency;
     this.bookmark = null;
     if (refresh) {
+      console.log('$$$ Mo money please!', currency, basePath, refresh);
       this.firstTime[0] = false;
     }
     if (refresh && !this.firstTime.some(el => el)) {
+      console.log('!!!!!!!!!!!Mo money please!', currency, basePath, refresh);
       this.refreshData();
     }
   }
@@ -217,9 +220,11 @@ export class GdaxDataService {
     this.endDate = date;
     this.bookmark = null;
     if (initChange) {
+      console.log('*** End o\' days!', date, initChange);
       this.firstTime[3] = false;
     }
     if (!this.firstTime.some(el => el)) {
+      console.log('End o\' days!', date, initChange);
       this.refreshData();
     }
   }
@@ -255,9 +260,11 @@ export class GdaxDataService {
     this.page.next(1);
     this.bookmark = null;
     if (initChange) {
+      console.log('/// Row row row your boat!', rowsPerPage, initChange);
       this.firstTime[0] = false;
     }
     if (!this.firstTime.some(el => el)) {
+      console.log('Row row row your boat!', rowsPerPage, initChange);
       this.refreshData();
     }
   }
@@ -272,9 +279,11 @@ export class GdaxDataService {
     this.startDate = date;
     this.bookmark = null;
     if (initChange) {
+      console.log('--- It\'s a new day!', date, initChange);
       this.firstTime[2] = false;
     }
     if (!this.firstTime.some(el => el)) {
+      console.log('It\'s a new day!', date, initChange);
       this.refreshData();
     }
   }
@@ -287,9 +296,11 @@ export class GdaxDataService {
   changeTimeInterval(interval: number, initChange?: boolean): void {
     this.interval = interval;
     if (initChange) {
+      console.log('+++ Intervalicious!', interval, initChange);
       this.firstTime[1] = false;
     }
     if (!this.firstTime.some(el => el)) {
+      console.log('Intervalicious!', interval, initChange);
       this.refreshData();
     }
   }
@@ -768,10 +779,14 @@ export class GdaxDataService {
   * Resets initialization flags, unsubscribes from all subscriptions,
   * and halts any current queries.
   */
-  kill() {
-    console.log('keel dem!');
+  kill(isFilter?: boolean) {
     this.isKilled = true;
-    this.firstTime = [true, true, true, true];
+    if (isFilter) {
+      this.firstTime = [this.firstTime[0], true, true, true];
+    } else {
+      this.firstTime[0] = true;
+    }
+    console.log('keel dem!', this.firstTime);
     this.page.next(1);
     if (this.profitSubscription) {
       this.profitSubscription.unsubscribe();
@@ -789,6 +804,9 @@ export class GdaxDataService {
       this.usdSubscription.unsubscribe();
       this.usdSubscription = null;
     }
+    this.chartData.next([]);
+    this.tableData.next([]);
+    console.log('killed dem!');
   }
   /**
   * Assembles the data into a format suitable for the profit portfolio page.
@@ -884,6 +902,7 @@ export class GdaxDataService {
   * @param isPageChange flag to make sure currIndex isn't reset on page change.
   */
   refreshData(isPageChange?: boolean): void {
+    console.log('How Refreshing...');
     this.isKilled = false;
     if (this.basePath === 'live-view') {
       this.isRelevant.next(true);

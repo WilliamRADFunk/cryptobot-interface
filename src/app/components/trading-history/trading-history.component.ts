@@ -100,7 +100,6 @@ export class TradingHistoryComponent implements OnDestroy, OnInit {
   * this runs cleanup functionality to protect against misfired queries.
   */
   ngOnDestroy() {
-    console.log('diieeeeee!!!', 'table-history');
     if (this.busySubscription) {
       this.busySubscription.unsubscribe();
       this.busySubscription = null;
@@ -135,6 +134,7 @@ export class TradingHistoryComponent implements OnDestroy, OnInit {
     this.urlSubscription = this.activatedRouter.url
       .subscribe((segments: UrlSegment[]) => {
         this.pathState = segments[0]['path'];
+        console.log('I\'m alive!!!', 'trade-history');
         if (this.firstTime[1]) {
           this.gdaxDataService.changeCurrencyType(this.pathState, 'trading-history', false);
         } else {
@@ -145,6 +145,7 @@ export class TradingHistoryComponent implements OnDestroy, OnInit {
       });
     this.queryParamSubscription = this.activatedRouter.queryParamMap
       .subscribe((params: ParamMap) => {
+        console.log('I\'m sort of alive!!!');
         this.params = params;
         this.handleRowsPerPageParam();
         // Whether rows is a parameter or not, mark the firsttime as false to let
