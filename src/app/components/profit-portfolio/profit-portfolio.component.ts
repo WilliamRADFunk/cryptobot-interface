@@ -86,7 +86,6 @@ export class ProfitPortfolioComponent implements OnDestroy, OnInit {
       });
     this.urlSubscription = this.activatedRouter.url
       .subscribe((segments: UrlSegment[]) => {
-        console.log('I\'m alive!!!');
         this.pathState = segments[0]['path'];
         this.gdaxDataService.changeCurrencyType(this.pathState, 'profit-portfolio', true);
       });

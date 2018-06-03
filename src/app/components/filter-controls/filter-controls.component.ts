@@ -215,7 +215,6 @@ export class FilterControlsComponent implements OnDestroy, OnInit {
       .subscribe((params: ParamMap) => {
         this.params = params;
         if (!this.isInitialized) {
-          console.log('stuff is happening...');
           this.handleStartDateTimeParam();
           this.handleEndDateTimeParam();
           this.handleIncorrectDateTimeParams();
@@ -431,17 +430,23 @@ export class FilterControlsComponent implements OnDestroy, OnInit {
       } else if (prevDateTime) {
         this.setADateTime(prevDateTime, this.eDate, this.eTime);
         this.endDate = prevDateTime;
+        if (!this.isInitialized) {
+          this.gdaxDataService.changeEndDateTime(this.endDate, true);
+        }
       // If no url param option for endDateTime, and service
       // has no previous endDateTime, use fallback,
       // adjust params, and signal the service
       } else {
-        this.gdaxDataService.changeStartDateTime(this.endDate, true);
+        this.gdaxDataService.changeEndDateTime(this.endDate, true);
       }
     // If no url param option for endDateTime,
     // but the service does. Use it.
     } else if (prevDateTime) {
       this.setADateTime(prevDateTime, this.eDate, this.eTime);
       this.endDate = prevDateTime;
+      if (!this.isInitialized) {
+        this.gdaxDataService.changeEndDateTime(this.endDate, true);
+      }
     // If no url param option for endDateTime, and service
     // has no previous endDateTime, use fallback,
     // adjust params, and signal the service
@@ -528,6 +533,9 @@ export class FilterControlsComponent implements OnDestroy, OnInit {
       } else if (prevDateTime) {
         this.setADateTime(prevDateTime, this.sDate, this.sTime);
         this.startDate = prevDateTime;
+        if (!this.isInitialized) {
+          this.gdaxDataService.changeStartDateTime(this.startDate, true);
+        }
       // If no url param option for startDateTime, and service
       // has no previous startDateTime, use fallback,
       // adjust params, and signal the service
@@ -539,6 +547,9 @@ export class FilterControlsComponent implements OnDestroy, OnInit {
     } else if (prevDateTime) {
       this.setADateTime(prevDateTime, this.sDate, this.sTime);
       this.startDate = prevDateTime;
+      if (!this.isInitialized) {
+        this.gdaxDataService.changeStartDateTime(this.startDate, true);
+      }
     // If no url param option for startDateTime, and service
     // has no previous startDateTime, use fallback,
     // adjust params, and signal the service
