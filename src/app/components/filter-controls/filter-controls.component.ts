@@ -430,6 +430,8 @@ export class FilterControlsComponent implements OnDestroy, OnInit {
       } else if (prevDateTime) {
         this.setADateTime(prevDateTime, this.eDate, this.eTime);
         this.endDate = prevDateTime;
+        // Change from one main nav choice to next.
+        // This ensures the all is loaded signals are fired correctly.
         if (!this.isInitialized) {
           this.gdaxDataService.changeEndDateTime(this.endDate, true);
         }
@@ -444,6 +446,8 @@ export class FilterControlsComponent implements OnDestroy, OnInit {
     } else if (prevDateTime) {
       this.setADateTime(prevDateTime, this.eDate, this.eTime);
       this.endDate = prevDateTime;
+      // Change from one main nav choice to next.
+      // This ensures the all is loaded signals are fired correctly.
       if (!this.isInitialized) {
         this.gdaxDataService.changeEndDateTime(this.endDate, true);
       }
@@ -533,6 +537,8 @@ export class FilterControlsComponent implements OnDestroy, OnInit {
       } else if (prevDateTime) {
         this.setADateTime(prevDateTime, this.sDate, this.sTime);
         this.startDate = prevDateTime;
+        // Change from one main nav choice to next.
+        // This ensures the all is loaded signals are fired correctly.
         if (!this.isInitialized) {
           this.gdaxDataService.changeStartDateTime(this.startDate, true);
         }
@@ -547,6 +553,8 @@ export class FilterControlsComponent implements OnDestroy, OnInit {
     } else if (prevDateTime) {
       this.setADateTime(prevDateTime, this.sDate, this.sTime);
       this.startDate = prevDateTime;
+      // Change from one main nav choice to next.
+      // This ensures the all is loaded signals are fired correctly.
       if (!this.isInitialized) {
         this.gdaxDataService.changeStartDateTime(this.startDate, true);
       }
