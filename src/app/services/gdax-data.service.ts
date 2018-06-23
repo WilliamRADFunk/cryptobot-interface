@@ -836,6 +836,8 @@ export class GdaxDataService {
     let currYear = -1;
     let monthlySpendTally = 0;
     let monthlyEarnTally = 0;
+    let prevMonth = null;
+    let prevYear = null;
     for (let k = 0; k < this.validProfitResults.length; k++) {
       const date = new Date(this.validProfitResults[k]['created_at']);
       // First iteration. Set current month and year for the first time.
@@ -843,6 +845,44 @@ export class GdaxDataService {
         currMonth = date.getMonth();
         currYear = date.getFullYear();
       }
+      // prevMonth = currMonth;
+      // prevYear = currYear;
+      // // In the event there are months in between valid data points,
+      // // this handles the populating of those "empty months" in the dataset.
+      // if (prevYear === currYear && (currMonth) > prevMonth) {
+      //   console.log('here 1');
+      //   for (let w = 1; w < currMonth; w++) {
+      //     const datapoint = [];
+      //     datapoint[0] = 0;
+      //     datapoint[1] = 0;
+      //     datapoint[2] = 0;
+      //     datapoint[3] = `${MONTH_NAMES[prevMonth + w].substr(0, 3)}-${currYear}`;
+      //     this.profitChartData.push(datapoint);
+      //   }
+      // } else if ((prevYear - currYear) === 1 && prevMonth !== 11 && currMonth !== 0) {
+      //   console.log('here 2');
+      //   for (let q = prevMonth; q < 12; q++) {
+      //     const datapoint = [];
+      //     datapoint[0] = 0;
+      //     datapoint[1] = 0;
+      //     datapoint[2] = 0;
+      //     datapoint[3] = `${MONTH_NAMES[prevMonth + q].substr(0, 3)}-${prevYear}`;
+      //     this.profitChartData.push(datapoint);
+      //   }
+      //   for (let p = 0; p < currMonth; p++) {
+      //     const datapoint = [];
+      //     datapoint[0] = 0;
+      //     datapoint[1] = 0;
+      //     datapoint[2] = 0;
+      //     datapoint[3] = `${MONTH_NAMES[prevMonth + p].substr(0, 3)}-${currYear}`;
+      //     this.profitChartData.push(datapoint);
+      //   }
+      // } else if ((prevYear - currYear) > 1) {
+      //   console.log('here 3');
+      //   // Count through same as before and then through multiple years.
+      // } else {
+      //   console.log('here 4', currMonth, currYear);
+      // }
       // It's a new month. Tally up the month and send it in before resetting
       // everything and establishing the new current month and year.
       if (currMonth !== date.getMonth() || currYear !== date.getFullYear()) {
