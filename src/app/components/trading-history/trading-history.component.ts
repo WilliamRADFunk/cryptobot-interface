@@ -81,9 +81,9 @@ export class TradingHistoryComponent implements OnDestroy, OnInit {
   */
   timeoutId: any = null;
   /**
-  * Makes unsubscribing from this variable possible in OnDestroy
-  */
-  urlSubscription: Subscription;
+   * Subscriptions to unsubscribe from onDestroy
+   */
+  private subs: Subscription[] = [];
   /**
   * Constructor for the class. Injects Angular's ActivatedRoute, and Router services
   * @param activatedRouter Angular's ActivatedRoute service for knowing current route
@@ -100,26 +100,7 @@ export class TradingHistoryComponent implements OnDestroy, OnInit {
   * this runs cleanup functionality to protect against misfired queries.
   */
   ngOnDestroy() {
-    if (this.busySubscription) {
-      this.busySubscription.unsubscribe();
-      this.busySubscription = null;
-    }
-    if (this.queryParamSubscription) {
-      this.queryParamSubscription.unsubscribe();
-      this.queryParamSubscription = null;
-    }
-    if (this.urlSubscription) {
-      this.urlSubscription.unsubscribe();
-      this.urlSubscription = null;
-    }
-    if (this.pageSubscription) {
-      this.pageSubscription.unsubscribe();
-      this.pageSubscription = null;
-    }
-    if (this.tableDataSubscription) {
-      this.tableDataSubscription.unsubscribe();
-      this.tableDataSubscription = null;
-    }
+    this.subs.forEach(s => s && s.unsubscribe());
     this.gdaxDataService.kill();
   }
   /**
@@ -127,40 +108,42 @@ export class TradingHistoryComponent implements OnDestroy, OnInit {
   * Gets REST path info, and updates the history table.
   */
   ngOnInit(): void {
-    this.busySubscription = this.gdaxDataService.isBusy
-      .subscribe(data => {
-        this.isBusy = data;
-      });
-    this.urlSubscription = this.activatedRouter.url
-      .subscribe((segments: UrlSegment[]) => {
-        this.pathState = segments[0]['path'];
-        if (this.firstTime[1]) {
-          this.gdaxDataService.changeCurrencyType(this.pathState, 'trading-history', false);
-        } else {
-          this.gdaxDataService.changeCurrencyType(this.pathState, 'trading-history', true);
-        }
-        // Mark the first time as false to signal rows section query can be made.
-        this.firstTime[0] = false;
-      });
-    this.queryParamSubscription = this.activatedRouter.queryParamMap
-      .subscribe((params: ParamMap) => {
-        this.params = params;
-        this.handleRowsPerPageParam();
-        // Whether rows is a parameter or not, mark the firsttime as false to let
-        // currencyType know it's ready for query.
-        this.firstTime[1] = false;
-      });
-    this.pageSubscription = this.gdaxDataService.page
-      .subscribe(data => {
-        this.page = data;
-        if (this.page === 1) {
-          this.isNoPrevPage = true;
-        } else {
-          this.isNoPrevPage = false;
-        }
-      });
-    this.tableDataSubscription = this.gdaxDataService.tableData
-      .subscribe(this.updateTable.bind(this));
+    this.subs.push(
+      this.busySubscription = this.gdaxDataService.isBusy
+        .subscribe(data => {
+          this.isBusy = data;
+        }),
+      this.activatedRouter.url
+        .subscribe((segments: UrlSegment[]) => {
+          this.pathState = segments[0]['path'];
+          if (this.firstTime[1]) {
+            this.gdaxDataService.changeCurrencyType(this.pathState, 'trading-history', false);
+          } else {
+            this.gdaxDataService.changeCurrencyType(this.pathState, 'trading-history', true);
+          }
+          // Mark the first time as false to signal rows section query can be made.
+          this.firstTime[0] = false;
+        }),
+      this.activatedRouter.queryParamMap
+        .subscribe((params: ParamMap) => {
+          this.params = params;
+          this.handleRowsPerPageParam();
+          // Whether rows is a parameter or not, mark the firsttime as false to let
+          // currencyType know it's ready for query.
+          this.firstTime[1] = false;
+        }),
+      this.gdaxDataService.page
+        .subscribe(data => {
+          this.page = data;
+          if (this.page === 1) {
+            this.isNoPrevPage = true;
+          } else {
+            this.isNoPrevPage = false;
+          }
+        }),
+      this.gdaxDataService.tableData
+        .subscribe(this.updateTable.bind(this))
+    );
   }
   /**
   * Called when user clicked next or previous page button
@@ -207,8 +190,8 @@ export class TradingHistoryComponent implements OnDestroy, OnInit {
   handleRowsPerPageParam() {
     // If valid option for rowsPerPage, use it, and signal the service
     if (this.params.has('rows')
-    && Number(this.params.get('rows'))
-    && this.rowAmounts.indexOf(Number(this.params.get('rows'))) > -1) {
+      && Number(this.params.get('rows'))
+      && this.rowAmounts.indexOf(Number(this.params.get('rows'))) > -1) {
     this.rowsPerPage = Number(this.params.get('rows'));
     // If invalid option for rowsPerPage, or not present in params,
     // fall back to first option, and signal the service

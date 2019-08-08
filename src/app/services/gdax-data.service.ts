@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subscriber } from 'rxjs/Subscriber';
-import { Observer } from 'rxjs/Observer';
 import { Subscription } from 'rxjs/Subscription';
+import { take } from 'rxjs/operators';
 
 const INTERFACE_URL = 'http://www.williamrobertfunk.com';
 const DATA_URL = 'http://167.99.149.6:3000/';
@@ -364,15 +363,15 @@ export class GdaxDataService {
       .set('start', this.startDate.toISOString())
       .set('end', this.endDate.toISOString());
     if (this.currency === 'ALL') {
-      let subscription = this.http.get<any>(`https://api.gdax.com/products/BTC-USD/candles`, {headers, params})
+      this.http.get<any>(`https://api.gdax.com/products/BTC-USD/candles`, {headers, params})
+        .pipe(take(1))
         .subscribe(data1 => {
-          subscription.unsubscribe();
-          subscription = this.http.get<any>(`https://api.gdax.com/products/LTC-USD/candles`, {headers, params})
+          this.http.get<any>(`https://api.gdax.com/products/LTC-USD/candles`, {headers, params})
+            .pipe(take(1))
             .subscribe(data2 => {
-              subscription.unsubscribe();
-              subscription = this.http.get<any>(`https://api.gdax.com/products/ETH-USD/candles`, {headers, params})
+              this.http.get<any>(`https://api.gdax.com/products/ETH-USD/candles`, {headers, params})
+                .pipe(take(1))
                 .subscribe(data3 => {
-                  subscription.unsubscribe();
                   // Added protection from recursive or lingering query calls.
                   if (!this.isKilled) {
                     for (let i = 0 ; i < data1.length; i++) {
@@ -399,9 +398,9 @@ export class GdaxDataService {
             });
         });
     } else {
-      const subscription = this.http.get<any>(`https://api.gdax.com/products/${this.currency}/candles`, {headers, params})
+      this.http.get<any>(`https://api.gdax.com/products/${this.currency}/candles`, {headers, params})
+        .pipe(take(1))
         .subscribe(data => {
-          subscription.unsubscribe();
           // Added protection from recursive or lingering query calls.
           if (!this.isKilled) {
             this.chartData.next(data);
@@ -439,6 +438,7 @@ export class GdaxDataService {
     }
     if (this.currency === 'ALL') {
       this.historySubscription = this.http.get<any>(`${DATA_URL}history/${this.currTypes[this.currIndex]}`, {headers, params})
+        .pipe(take(1))
         .subscribe(originalData => {
           // Added protection from recursive or lingering query calls.
           if (!this.isKilled) {
@@ -448,6 +448,7 @@ export class GdaxDataService {
     } else {
       const curr: string = this.currency.split('-')[0].toLowerCase();
       this.historySubscription = this.http.get<any>(`${DATA_URL}history/${curr}`, {headers, params})
+        .pipe(take(1))
         .subscribe(originalData => {
           // Added protection from recursive or lingering query calls.
           if (!this.isKilled) {
@@ -480,6 +481,7 @@ export class GdaxDataService {
     } else {
       const curr: string = this.currency.split('-')[0].toLowerCase();
       this.profitSubscription = this.http.get<any>(`${DATA_URL}history/${curr}`, {headers, params})
+        .pipe(take(1))
         .subscribe(originalData => {
           // Added protection from recursive or lingering query calls.
           if (!this.isKilled) {
@@ -512,6 +514,7 @@ export class GdaxDataService {
 
     } else {
       this.usdSubscription = this.http.get<any>(`${DATA_URL}history/usd`, {headers, params})
+        .pipe(take(1))
         .subscribe(originalData => {
           // Added protection from recursive or lingering query calls.
           if (!this.isKilled) {
@@ -845,8 +848,8 @@ export class GdaxDataService {
         currMonth = date.getMonth();
         currYear = date.getFullYear();
       }
-      // prevMonth = currMonth;
-      // prevYear = currYear;
+      prevMonth = currMonth;
+      prevYear = currYear;
       // // In the event there are months in between valid data points,
       // // this handles the populating of those "empty months" in the dataset.
       // if (prevYear === currYear && (currMonth) > prevMonth) {
