@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
+import { ActivatedRoute, UrlSegment } from '@angular/router';
 
 import { Chart } from 'angular-highcharts';
 
@@ -14,65 +14,44 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class ProfitPortfolioComponent implements OnDestroy, OnInit {
   /**
-  * Makes unsubscribing from this variable possible in OnDestroy
-  */
-  busySubscription: Subscription;
+   * Subscriptions to unsubscribe from on destroy.
+   */
+  private readonly _subs: Subscription[] = [];
   /**
   * The main chart object to be constructed whenever new
   * data is returned from the service.
   */
-  chart: Chart;
-  /**
-  * Makes unsubscribing from this variable possible in OnDestroy
-  */
-  chartDataSubscription: Subscription;
+  public chart: Chart;
   /**
   * Checks with service to see if it's busy in a query,
   * and puts table in standby mode until it's ready.
   */
-  isBusy: boolean = true;
+  public isBusy: boolean = true;
   /**
   * Flag to let ui show no data returned message
   */
-  isEmpty: boolean;
+  public isEmpty: boolean;
   /**
   * The initial path state passed in by the activatedRouter.
   * Keeps track of what currency the chart should be viewing.
   */
-  pathState: string = 'BTC-USD';
-  /**
-  * Makes unsubscribing from this variable possible in OnDestroy
-  */
-  urlSubscription: Subscription;
+  public pathState: string = 'BTC-USD';
 
   /**
   * Constructor for the class. Injects Angular's ActivatedRoute, and Router services
   * @param activatedRouter Angular's ActivatedRoute service for knowing current route
-  * @param router Angular's Router service for changing route
   * @param gdaxDataService Internal service to get queried market data.
   */
   constructor(
-    private activatedRouter: ActivatedRoute,
-    private router: Router,
-    private gdaxDataService: GdaxDataService) { }
+    private readonly activatedRouter: ActivatedRoute,
+    private readonly gdaxDataService: GdaxDataService) { }
   /**
-  * @private
   * Triggered when component is destroyed, but before it's officially dead
   * this runs cleanup functionality to protect against misfired queries.
   */
-  ngOnDestroy() {
-    if (this.busySubscription) {
-      this.busySubscription.unsubscribe();
-      this.busySubscription = null;
-    }
-    if (this.chartDataSubscription) {
-      this.chartDataSubscription.unsubscribe();
-      this.chartDataSubscription = null;
-    }
-    if (this.urlSubscription) {
-      this.urlSubscription.unsubscribe();
-      this.urlSubscription = null;
-    }
+  ngOnDestroy(): void {
+    this._subs.forEach(s => s && s.unsubscribe());
+    this._subs.length = 0;
     this.gdaxDataService.kill();
   }
   /**
@@ -80,24 +59,25 @@ export class ProfitPortfolioComponent implements OnDestroy, OnInit {
   * Gets REST path info, and updates the profit chart.
   */
   ngOnInit(): void {
-    this.busySubscription = this.gdaxDataService.isBusy
-      .subscribe(data => {
-        this.isBusy = data;
-      });
-    this.urlSubscription = this.activatedRouter.url
-      .subscribe((segments: UrlSegment[]) => {
-        this.pathState = segments[0]['path'];
-        this.gdaxDataService.changeCurrencyType(this.pathState, 'profit-portfolio', true);
-      });
-    this.chartDataSubscription = this.gdaxDataService.chartData
-      .subscribe(this.updateChart.bind(this));
+    this._subs.push(
+      this.gdaxDataService.isBusy
+        .subscribe(data => {
+          this.isBusy = data;
+        }),
+      this.activatedRouter.url
+        .subscribe((segments: UrlSegment[]) => {
+          this.pathState = segments[0]['path'];
+          this.gdaxDataService.changeCurrencyType(this.pathState, 'profit-portfolio', true);
+        }),
+      this.gdaxDataService.chartData
+        .subscribe(this._updateChart.bind(this)));
   }
   /**
   * When new data is received, it's passed to this function.
   * Here the chart details assembled, and the chartReady flag is released.
   * @param data queried market data passed from the GdaxDataService.
   */
-  updateChart(data: number[][]): void {
+  private _updateChart(data: number[][]): void {
     this.isEmpty = false;
     if (!data.length) {
       this.isEmpty = true;
