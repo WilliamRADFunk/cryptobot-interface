@@ -49,7 +49,7 @@ export class TradingHistoryComponent implements OnDestroy, OnInit {
   /**
   * Number of rows to show per page
   */
-  public rowsPerPage: number = 10;
+  public rowsPerPage: number = 0;
   /**
   * Options for number of rows to show per page
   */
@@ -136,7 +136,12 @@ export class TradingHistoryComponent implements OnDestroy, OnInit {
   if (this._params.has('rows')
     && Number(this._params.get('rows'))
     && this.rowAmounts.indexOf(Number(this._params.get('rows'))) > -1) {
-  this.rowsPerPage = Number(this._params.get('rows'));
+    // If current rowsPerPage is the same as params version,
+    // assume it was component that triggered the change.
+    if (this.rowsPerPage === Number(this._params.get('rows'))) {
+      return;
+    }
+    this.rowsPerPage = Number(this._params.get('rows'));
   // If invalid option for rowsPerPage, or not present in params,
   // fall back to first option, and signal the service
   } else {
@@ -144,7 +149,6 @@ export class TradingHistoryComponent implements OnDestroy, OnInit {
   }
 
   this._updateParams({
-    ...this.activatedRouter.snapshot.queryParams,
     rows: this.rowsPerPage.toString()
   });
 
@@ -160,8 +164,7 @@ export class TradingHistoryComponent implements OnDestroy, OnInit {
 */
 private _updateParams(params: {}) {
   this.router.navigate([], {
-    queryParams: params,
-    queryParamsHandling: 'merge'
+    queryParams: params
   });
 }
 /**
@@ -249,7 +252,6 @@ private _updateTable(data: {}[]): void {
       this.page = 1;
       this.isBusy = true;
       this._updateParams({
-        ...this.activatedRouter.snapshot.queryParams,
         rows: this.rowsPerPage.toString()
       });
       this.gdaxDataService.changeRowsPerPage(this.rowsPerPage);

@@ -33,17 +33,6 @@ export class GdaxDataService {
   */
   private _currency: string = 'BTC-USD';
   /**
-  * Keeps track of the index for current currency within currTypes for
-  * trading history 'ALL' fetches.
-  */
-  private _currIndex: number = 0;
-  /**
-  * Contains the types of currency, which allows trading history fetch to iterate
-  * through all currencies in the 'ALL' currency type. Dynamically switches API
-  * params when one currency type runs out but more results are needed.
-  */
-  private readonly _currTypes: string[] = ['btc', 'ltc', 'eth'];
-  /**
   * The end datetime used as a parameter in the query URL
   */
   private _endDate: Date = null;
@@ -66,10 +55,6 @@ export class GdaxDataService {
   */
   private _isKilled: boolean = false;
   /**
-  * The flag to designate if granularity is relevant for basePath api
-  */
-  private readonly _isRelevantBSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  /**
   * The current number for page in results.
   */
   private readonly _pageBSubject: BehaviorSubject<number> = new BehaviorSubject<number>(1);
@@ -85,6 +70,10 @@ export class GdaxDataService {
   * The start datetime used as a parameter in the query URL
   */
   private _startDate: Date = null;
+  /**
+   * Subscriptions to unsubscribe from onDestroy
+   */
+  private readonly _subs: Subscription[] = [];
   /**
   * The updated query results for historical trade market data in a format
   * that all of the live views will understand and be able to use.
@@ -108,105 +97,24 @@ export class GdaxDataService {
    * Public observable version of _chartDataBSubject
    */
   public readonly chartData: Observable<number[][]> = this._chartDataBSubject.asObservable();
-  historySubscription: Subscription;
   /**
    * Public observable version of _isBusyBSubject
    */
   public readonly isBusy: Observable<boolean> = this._isBusyBSubject.asObservable();
   /**
-   * Public observable version of _isRelevantBSubject
-   */
-  public readonly isRelevant: Observable<boolean> = this._isRelevantBSubject.asObservable();
-  /**
    * Public observable version of _pageBSubject
    */
   public readonly page: Observable<number> = this._pageBSubject.asObservable();
   /**
-  * Makes unsubscribing from this variable possible in OnDestroy
-  */
-  profitSubscription: Subscription;
-  /**
    * Public observable version of _tableDataBSubject
    */
   public readonly tableData: Observable<{}[]> = this._tableDataBSubject.asObservable();
-  /**
-  * Makes unsubscribing from this variable possible in OnDestroy
-  */
-  usdSubscription: Subscription;
 
   /**
   * Constructor for the class. Injects Angular's HttpClient service
   * @param http Angular's HttpClient service for making http calls
   */
   constructor(private readonly http: HttpClient) { }
-  /**
-  * Calculates the months after the last profit transaction, adds 0 values
-  * and the label, which allows the user to have data for the range they want
-  * even if there was no profit or loss during those months. Prettier charts.
-  * @return the compiled array of blank data and month-year label
-  */
-  private _calculateAfterProfitMonths(): number[][] {
-    let diffYears;
-    let diffMonths;
-    const lastResult = this._validProfitResults[0];
-    const date = new Date(lastResult['created_at']);
-    if (date.getFullYear() === this._endDate.getFullYear()) {
-      diffYears = 0;
-      diffMonths = this._endDate.getMonth() - date.getMonth();
-    } else {
-      diffYears = this._endDate.getFullYear() - date.getFullYear();
-      diffMonths = (12 * (diffYears - 1)) + (this._endDate.getMonth()) + (11 - date.getMonth());
-    }
-    let year = date.getFullYear();
-    const tempChartData = [];
-    for (let m = 0; m < diffMonths; m++) {
-      const datapoint = [];
-      datapoint[0] = 0;
-      datapoint[1] = 0;
-      datapoint[2] = 0;
-      datapoint[3] = `${MONTH_NAMES[(date.getMonth() + m + 1) % 12].substr(0, 3)}-${year}`;
-      tempChartData.push(datapoint);
-
-      if ((date.getMonth() + m) % 12 === 11) {
-        year++;
-      }
-    }
-    return tempChartData;
-  }
-  /**
-  * Calculates the months before the first profit transaction, adds 0 values
-  * and the label, which allows the user to have data for the range they want
-  * even if there was no profit or loss during those months. Prettier charts.
-  * @return the compiled array of blank data and month-year label
-  */
-  private _calculateBeforeProfitMonths(): number[][] {
-    let diffYears;
-    let diffMonths;
-    const firstResult = this._validProfitResults[this._validProfitResults.length - 1];
-    const date = new Date(firstResult['created_at']);
-    if (date.getFullYear() === this._startDate.getFullYear()) {
-      diffYears = 0;
-      diffMonths = date.getMonth() - this._startDate.getMonth() - 1;
-    } else {
-      diffYears = date.getFullYear() - this._startDate.getFullYear();
-      diffMonths = (12 * (diffYears - 1)) + (11 - this._startDate.getMonth()) + (date.getMonth());
-    }
-    let year = this._startDate.getFullYear();
-    const tempChartData = [];
-    for (let m = 0; m < diffMonths + 1; m++) {
-      const datapoint = [];
-      datapoint[0] = 0;
-      datapoint[1] = 0;
-      datapoint[2] = 0;
-      datapoint[3] = `${MONTH_NAMES[(this._startDate.getMonth() + m) % 12].substr(0, 3)}-${year}`;
-      tempChartData.push(datapoint);
-
-      if ((this._startDate.getMonth() + m) % 12 === 11) {
-        year++;
-      }
-    }
-    return tempChartData.reverse();
-  }
   /**
   * Only returns elements of data array that fit within user specified time range.
   * @param data array of data objects to be formatted
@@ -275,7 +183,7 @@ export class GdaxDataService {
                 .pipe(take(1))
                 .subscribe(data3 => {
                   // Added protection from recursive or lingering query calls.
-                  if (!this._isKilled) {
+                  if (this._basePath === 'live-view') {
                     for (let i = 0 ; i < data1.length; i++) {
                       data1[i].push(0);
                     }
@@ -304,7 +212,7 @@ export class GdaxDataService {
         .pipe(take(1))
         .subscribe(data => {
           // Added protection from recursive or lingering query calls.
-          if (!this._isKilled) {
+          if (this._basePath === 'live-view') {
             this._chartDataBSubject.next(data);
             setTimeout(() => {
               this._isBusyBSubject.next(false);
@@ -338,26 +246,15 @@ export class GdaxDataService {
         .set(`after`, `${this._bookmark}`)
         .set(`limit`, `${this._rowsPerPage + 1}`);
     }
-    if (this._currency === 'ALL') {
-      this.historySubscription = this.http.get<any>(`${DATA_URL}history/${this._currTypes[this._currIndex]}`, {headers, params})
-        .pipe(take(1))
-        .subscribe(originalData => {
-          // Added protection from recursive or lingering query calls.
-          if (!this._isKilled) {
-            this._handleHistoryResults(originalData);
-          }
-        });
-    } else {
-      const curr: string = this._currency.split('-')[0].toLowerCase();
-      this.historySubscription = this.http.get<any>(`${DATA_URL}history/${curr}`, {headers, params})
-        .pipe(take(1))
-        .subscribe(originalData => {
-          // Added protection from recursive or lingering query calls.
-          if (!this._isKilled) {
-            this._handleHistoryResults(originalData);
-          }
-        });
-    }
+    const curr: string = this._currency.split('-')[0].toLowerCase();
+    this._subs.push(this.http.get<any>(`${DATA_URL}history/${curr}`, {headers, params})
+      .pipe(take(1))
+      .subscribe(originalData => {
+        // Added protection from recursive or lingering query calls.
+        if (this._basePath === 'trading-history') {
+          this._handleHistoryResults(originalData);
+        }
+      }));
   }
   /**
   * Call to GDAX for profit data
@@ -376,21 +273,18 @@ export class GdaxDataService {
       params = new HttpParams();
     } else {
       params = new HttpParams()
-        .set(`after`, `${this._bookmark}`);
+        .set('after', `${this._bookmark}`)
+        .set('limit', '100');
     }
-    if (this._currency === 'ALL') {
-
-    } else {
-      const curr: string = this._currency.split('-')[0].toLowerCase();
-      this.profitSubscription = this.http.get<any>(`${DATA_URL}history/${curr}`, {headers, params})
-        .pipe(take(1))
-        .subscribe(originalData => {
-          // Added protection from recursive or lingering query calls.
-          if (!this._isKilled) {
-            this._handleProfitResults(originalData, this.profitSubscription);
-          }
-        });
-    }
+    const curr: string = this._currency.split('-')[0].toLowerCase();
+    this._subs.push(this.http.get<any>(`${DATA_URL}history/${curr}`, {headers, params})
+      .pipe(take(1))
+      .subscribe(originalData => {
+        // Added protection from recursive or lingering query calls.
+        if (this._basePath === 'profit-portfolio') {
+          this._handleProfitResults(originalData);
+        }
+      }));
   }
   /**
   * Call to GDAX for USD results to later
@@ -410,20 +304,17 @@ export class GdaxDataService {
       params = new HttpParams();
     } else {
       params = new HttpParams()
-        .set(`after`, `${this._bookmark}`);
+        .set('after', `${this._bookmark}`)
+        .set('limit', '100');
     }
-    if (this._currency === 'ALL') {
-
-    } else {
-      this.usdSubscription = this.http.get<any>(`${DATA_URL}history/usd`, {headers, params})
-        .pipe(take(1))
-        .subscribe(originalData => {
-          // Added protection from recursive or lingering query calls.
-          if (!this._isKilled) {
-            this._handleUSDResults(originalData, this.usdSubscription);
-          }
-        });
-    }
+    this._subs.push(this.http.get<any>(`${DATA_URL}history/usd`, {headers, params})
+      .pipe(take(1))
+      .subscribe(originalData => {
+        // Added protection from recursive or lingering query calls.
+        if (this._basePath === 'profit-portfolio') {
+          this._handleUSDResults(originalData);
+        }
+      }));
   }
   /**
   * Recursive query maker until desired results are found
@@ -431,143 +322,49 @@ export class GdaxDataService {
   */
   private _handleHistoryResults(originalData: {}[]): void {
     // Added protection from recursive or lingering query calls.
-    if (this._isKilled) {
+    if (this._basePath !== 'trading-history') {
       return;
     }
     // No data returned. No more data.
-    // If 'ALL' and other currencies left, try those.
-    if (!originalData.length
-      && this._currency === 'ALL'
-      && this._currIndex < this._currTypes.length - 1) {
-      this._currIndex++;
-      this._bookmark = null;
-      setTimeout(() => {
-        this._getLatestGdaxHistoryData();
-      }, 500);
-      return;
-    // No data returned. No more data.
     // Return what has been collected.
-    } else if (!originalData.length) {
+    if (!originalData.length) {
       this._tableDataBSubject.next(this._tableResults);
       setTimeout(() => {
         this._isBusyBSubject.next(false);
       }, 300);
       return;
-    // Looking at data older than the earliest desired
-    // date (passed filter range)
-    // Return what has been collected.
-    } else if (
-      originalData[0]
-      && originalData[0]['created_at']
-      && new Date(originalData[0]['created_at']).getTime() < this._startDate.getTime()) {
-      if (this._currency === 'ALL' && this._currIndex < this._currTypes.length - 1) {
-        this._currIndex++;
-        this._bookmark = null;
-        setTimeout(() => {
-          this._getLatestGdaxHistoryData();
-        }, 500);
-        return;
-      } else {
-        this._bookmark = null;
-        this._tableDataBSubject.next(this._tableResults);
-        setTimeout(() => {
-          this._isBusyBSubject.next(false);
-        }, 300);
-        return;
-      }
     }
-    // See how much of the data is usedful.
-    const data = this._filterByDate(originalData);
-    // None of the data fits, book mark last and keep moving.
-    if (!data.length) {
-      this._bookmark = originalData[originalData.length - 1]['id'];
-      setTimeout(() => {
-        this._getLatestGdaxHistoryData();
-      }, 500);
-      return;
     // All returned results were good.
     // Take what is needed to fill the page.
-    } else if (originalData.length === data.length) {
-      const formatedData = this._formatProduct(data);
-      // No previously stored results. Results less than needed.
-      // Currency type 'ALL' and still have currencies left.
-      if (!this._tableResults.length
-        && data.length < (this._rowsPerPage + 1)
-        && this._currency === 'ALL'
-        && this._currIndex < this._currTypes.length - 1) {
-        this._currIndex++;
-        this._tableResults = this._tableResults.concat(formatedData);
-        this._bookmark = null;
-        setTimeout(() => {
-          this._getLatestGdaxHistoryData();
-        }, 500);
-        return;
-      // No previously stored results. Send everything from query.
-      } else if (!this._tableResults.length) {
-        this._bookmark = formatedData[formatedData.length - 2]['id'];
-        this._tableResults = this._tableResults.concat(formatedData);
-        this._tableDataBSubject.next(this._tableResults);
-        setTimeout(() => {
-          this._isBusyBSubject.next(false);
-        }, 300);
-        return;
-      // Has previously stored results. Results less than needed.
-      // Currency type 'ALL' and still have currencies left.
-      } else if (
-        this._tableResults.length
-        && data.length < (this._rowsPerPage + 1)
-        && this._currency === 'ALL'
-        && this._currIndex < this._currTypes.length - 1) {
-        this._currIndex++;
-        this._tableResults = this._tableResults.concat(formatedData);
-        this._bookmark = null;
-        setTimeout(() => {
-          this._getLatestGdaxHistoryData();
-        }, 500);
-        return;
-      // Some results previously stored. Take only what's needed.
-      } else {
-        const deficit = (this._rowsPerPage + 1) - this._tableResults.length;
-        this._tableResults = this._tableResults.concat(formatedData.slice(0, deficit));
-        this._bookmark = this._tableResults[this._tableResults.length - 2]['id'];
-        this._tableDataBSubject.next(this._tableResults);
-        setTimeout(() => {
-          this._isBusyBSubject.next(false);
-        }, 300);
-        return;
-      }
+    const formatedData = this._formatProduct(originalData);
+    // No previously stored results. Send everything from query.
+    if (!this._tableResults.length) {
+      this._bookmark = formatedData[formatedData.length - 2]['id'];
+      this._tableResults = this._tableResults.concat(formatedData);
+      this._tableDataBSubject.next(this._tableResults);
+      setTimeout(() => {
+        this._isBusyBSubject.next(false);
+      }, 300);
+      return;
+    // Some results previously stored. Take only what's needed.
     } else {
       const deficit = (this._rowsPerPage + 1) - this._tableResults.length;
-      const formatedData = this._formatProduct(data);
-      // No/some previously stored results, but not enough to fulfil page.
-      // Add everything to results and run query again for more.
-      if (!this._tableResults.length && deficit > formatedData.length) {
-        this._tableResults = this._tableResults.concat(formatedData);
-        this._bookmark = formatedData[formatedData.length - 1]['id'];
-        setTimeout(() => {
-          this._getLatestGdaxHistoryData();
-        }, 500);
-        return;
-      // Some results previously stored. Take only what's needed.
-      } else if (deficit > formatedData.length) {
-        this._tableResults = this._tableResults.concat(formatedData.slice(0, deficit));
-        this._bookmark = this._tableResults[this._tableResults.length - 2]['id'];
-        this._tableDataBSubject.next(this._tableResults);
-        setTimeout(() => {
-          this._isBusyBSubject.next(false);
-        }, 300);
-        return;
-      }
+      this._tableResults = this._tableResults.concat(formatedData.slice(0, deficit));
+      this._bookmark = this._tableResults[this._tableResults.length - 2]['id'];
+      this._tableDataBSubject.next(this._tableResults);
+      setTimeout(() => {
+        this._isBusyBSubject.next(false);
+      }, 300);
+      return;
     }
   }
   /**
   * Recursive query maker until desired results are found
   * @param originalData data used to check against to see if current results are sufficient
   */
-  private _handleProfitResults(originalData: {}[], subscription): void {
-    subscription.unsubscribe();
+  private _handleProfitResults(originalData: {}[]): void {
     // Added protection from recursive or lingering query calls.
-    if (this._isKilled) {
+    if (this._basePath !== 'profit-portfolio') {
       return;
     }
     // Unexpectedly ran out of for-loop results.
@@ -581,6 +378,7 @@ export class GdaxDataService {
       }, 300);
       return;
     }
+    const dateTimeAtStartOfYear = Date.UTC((new Date()).getUTCFullYear(), (new Date()).getMonth());
     for (let i = 0; i < originalData.length; i++) {
       const date = originalData[i]['created_at'] || null;
       const id = originalData[i]['id'] || null;
@@ -592,7 +390,7 @@ export class GdaxDataService {
       // Comparative value of the date value.
       const dateTime = new Date(date).getTime();
       // Stop looking. We've exceeded our search
-      if (dateTime < this._startDate.getTime()) {
+      if (dateTime < dateTimeAtStartOfYear) {
         this._organizeProfitData();
         this._chartDataBSubject.next(this._profitChartData.slice());
         this._bookmark = null;
@@ -601,12 +399,9 @@ export class GdaxDataService {
         }, 300);
         return;
       // Found a valid result, add it to the pile.
-      } else if (dateTime < this._endDate.getTime()) {
-        this._bookmark = id;
-        this._validProfitResults.push(originalData[i]);
-      // Result is too early, mark it and move on.
       } else {
         this._bookmark = id;
+        this._validProfitResults.push(originalData[i]);
       }
     }
     // Ran out of results for this pull, but haven't hit an end case.
@@ -619,10 +414,9 @@ export class GdaxDataService {
   * Recursive query maker until desired results are found
   * @param originalData data used to check against to see if current results are sufficient
   */
-  private _handleUSDResults(originalData: {}[], subscription): void {
-    subscription.unsubscribe();
+  private _handleUSDResults(originalData: {}[]): void {
     // Added protection from recursive or lingering query calls.
-    if (this._isKilled) {
+    if (this._basePath !== 'profit-portfolio') {
       return;
     }
     // Unexpectedly ran out of for-loop results. Move on.
@@ -631,6 +425,7 @@ export class GdaxDataService {
       this._getLatestGdaxProfitData();
       return;
     }
+    const dateTimeAtStartOfYear = Date.UTC((new Date()).getUTCFullYear(), (new Date()).getMonth());
     for (let i = 0; i < originalData.length; i++) {
       const date = originalData[i]['created_at'] || null;
       const id = originalData[i]['id'] || null;
@@ -643,17 +438,14 @@ export class GdaxDataService {
       // Comparative value of the date value.
       const dateTime = new Date(date).getTime();
       // Stop looking. We've exceeded our search.
-      if (dateTime < this._startDate.getTime()) {
+      if (dateTime < dateTimeAtStartOfYear) {
         this._bookmark = null;
         this._getLatestGdaxProfitData();
         return;
       // Found a valid result, add it to the pile.
-      } else if (dateTime < this._endDate.getTime()) {
-        this._bookmark = id;
-        this._validUSDResults.push(originalData[i]);
-      // Result is too early, mark it and move on.
       } else {
         this._bookmark = id;
+        this._validUSDResults.push(originalData[i]);
       }
     }
     // Ran out of results for this pull, but haven't hit an end case.
@@ -666,7 +458,7 @@ export class GdaxDataService {
   * Assembles the data into a format suitable for the profit portfolio page.
   */
   private _organizeProfitData(): void {
-    if (this._isKilled) {
+    if (this._basePath !== 'profit-portfolio') {
       return;
     }
     this._profitChartData = [];
@@ -696,7 +488,6 @@ export class GdaxDataService {
       }
     }
     // Fill in blank months that come after last result.
-    this._profitChartData = this._calculateAfterProfitMonths().slice();
     // Now that the profit/loss amount is tied into the transaction,
     // we can sort the data by time category (month).
     let currMonth = -1;
@@ -710,20 +501,6 @@ export class GdaxDataService {
         currMonth = date.getMonth();
         currYear = date.getFullYear();
       }
-      // It's a new month. Tally up the month and send it in before resetting
-      // everything and establishing the new current month and year.
-      if (currMonth !== date.getMonth() || currYear !== date.getFullYear()) {
-        const datapoint = [];
-        datapoint[0] = monthlySpendTally;
-        datapoint[1] = monthlyEarnTally;
-        datapoint[2] = monthlyEarnTally - monthlySpendTally;
-        datapoint[3] = `${MONTH_NAMES[currMonth].substr(0, 3)}-${currYear}`;
-        this._profitChartData.push(datapoint);
-        currMonth = date.getMonth();
-        currYear = date.getFullYear();
-        monthlySpendTally = 0;
-        monthlyEarnTally = 0;
-      }
       // Just a normal iteration. The following if-elseif prevents
       // null or undefined from making its way into the calculation.
       const profit = this._validProfitResults[k]['profit'];
@@ -734,8 +511,6 @@ export class GdaxDataService {
       }
       // Last result. Capture data before leaving the for-loop
       if (k >= this._validProfitResults.length - 1) {
-        currMonth = date.getMonth();
-        currYear = date.getFullYear();
         const datapoint = [];
         datapoint[0] = monthlySpendTally;
         datapoint[1] = monthlyEarnTally;
@@ -745,7 +520,6 @@ export class GdaxDataService {
       }
     }
     // Fill in blank months that come before first result.
-    this._profitChartData = this._profitChartData.concat(this._calculateBeforeProfitMonths().slice());
     // Rest temp variables, though this is handled elsewhere in the code.
     // Better to be safe in case one of those things accidentally changes.
     this._validUSDResults = [];
@@ -753,27 +527,18 @@ export class GdaxDataService {
   }
   /**
   * Determines which data api to use based off of basePath, and calls it.
-  * @param isPageChange flag to make sure currIndex isn't reset on page change.
   */
-  private _refreshData(isPageChange?: boolean): void {
-    this._isKilled = false;
+  private _refreshData(): void {
     if (this._basePath === 'live-view') {
-      this._isRelevantBSubject.next(true);
       this._getLatestGdaxData();
     } else if (this._basePath === 'trading-history') {
-      if (!isPageChange) {
-        this._currIndex = 0;
-      }
-      this._isRelevantBSubject.next(false);
       this._getLatestGdaxHistoryData();
     } else if (this._basePath === 'profit-portfolio') {
       this._chartDataBSubject.next([]);
       this._validUSDResults = [];
       this._validProfitResults = [];
-      this._isRelevantBSubject.next(false);
       this._getLatestGdaxUSDData();
     } else if (this._basePath === 'cryptobot-controls') {
-      this._isRelevantBSubject.next(false);
       this.getLatestCryptoBotData();
     }
   }
@@ -792,7 +557,10 @@ export class GdaxDataService {
     if (refresh) {
       this._firstTime[0] = false;
     }
-    if (refresh && !this._firstTime.some(el => el)) {
+    if (!refresh) {
+      return;
+    }
+    if (!this._firstTime.some(el => el) || this._basePath !== 'live-view') {
       this._refreshData();
     }
   }
@@ -823,7 +591,6 @@ export class GdaxDataService {
     if (page === 1) {
       this._bookmark = null;
     } else if (page < this._pageBSubject.value) {
-      this._currIndex = this._currTypes.indexOf(this._tableDataBSubject.value[0]['product'].toLowerCase());
       this._bookmark = -this._tableDataBSubject.value[0]['id'];
     } else {
       // One extra result is captured, but ignored in table (for isNoNextPage),
@@ -831,7 +598,7 @@ export class GdaxDataService {
       this._bookmark = this._tableDataBSubject.value[this._tableDataBSubject.value.length - 2]['id'];
     }
     this._pageBSubject.next(page);
-    this._refreshData(true);
+    this._refreshData();
   }
   /**
   * Updates the number of rows per page, and refreshes query results.
@@ -846,9 +613,7 @@ export class GdaxDataService {
     if (initChange) {
       this._firstTime[0] = false;
     }
-    if (!this._firstTime.some(el => el)) {
-      this._refreshData();
-    }
+    this._refreshData();
   }
   /**
   * Updates the start datetime being viewed, and refreshes query results.
@@ -907,29 +672,14 @@ export class GdaxDataService {
   * and halts any current queries.
   */
   public kill(isFilter?: boolean) {
-    this._isKilled = true;
     if (isFilter) {
       this._firstTime = [this._firstTime[0], true, true, true];
     } else {
       this._firstTime[0] = true;
     }
     this._pageBSubject.next(1);
-    if (this.profitSubscription) {
-      this.profitSubscription.unsubscribe();
-      this.profitSubscription = null;
-    }
-    if (this.usdSubscription) {
-      this.usdSubscription.unsubscribe();
-      this.usdSubscription = null;
-    }
-    if (this.historySubscription) {
-      this.historySubscription.unsubscribe();
-      this.historySubscription = null;
-    }
-    if (this.usdSubscription) {
-      this.usdSubscription.unsubscribe();
-      this.usdSubscription = null;
-    }
+    this._subs.forEach(s => s && s.unsubscribe());
+    this._subs.length = 0;
     this._chartDataBSubject.next([]);
     this._tableDataBSubject.next([]);
   }

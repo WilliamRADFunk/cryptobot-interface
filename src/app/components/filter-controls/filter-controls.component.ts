@@ -87,11 +87,6 @@ export class FilterControlsComponent implements OnDestroy, OnInit {
   */
   public isBusy: boolean = true;
   /**
-  * Checks with service to see if granularity control is relevant in a query,
-  * and disables control when it isn't.
-  */
-  public isRelevant: boolean = true;
-  /**
   * Flag to determine whether or not to display red for start datetime
   */
   public invalidStartDatetime: boolean = false;
@@ -183,10 +178,6 @@ export class FilterControlsComponent implements OnDestroy, OnInit {
         .subscribe(data => {
           this.isBusy = data;
         }),
-      this.gdaxDataService.isRelevant
-        .subscribe(data => {
-          this.isRelevant = data;
-        }),
       this.activatedRouter.queryParamMap
         .subscribe((params: ParamMap) => {
           this._params = params;
@@ -264,7 +255,7 @@ export class FilterControlsComponent implements OnDestroy, OnInit {
   changedTimeInterval(event, initChange?: boolean): void {
     this._timeInterval = event['value'];
     this.timeIntervalLabel = event['label'];
-    if (this.isRelevant && !initChange) {
+    if (!initChange) {
       this.updateParams({
         ...this.activatedRouter.snapshot.queryParams,
         endDateTime: this._endDate.toISOString(),
@@ -393,6 +384,9 @@ export class FilterControlsComponent implements OnDestroy, OnInit {
   * Closes the datetime warning tooltip if it's open
   */
   closeTooltip(): void {
+    if (!this.tooltip) {
+      return;
+    }
     const isOpen = this.tooltip.isOpen();
     if (isOpen) {
       this.tooltip.close();
@@ -453,7 +447,7 @@ export class FilterControlsComponent implements OnDestroy, OnInit {
   */
   handleGranularityParam(): void {
     // If valid option for rowsPerPage, use it, and signal the service
-    if (this._params.has('granularity') && Number(this._params.get('granularity') && this.isRelevant)) {
+    if (this._params.has('granularity') && Number(this._params.get('granularity'))) {
       // Determine if valid granularity
       this._timeIntervalOptions.forEach(element => {
         if (element['value'] === Number(this._params.get('granularity'))) {
@@ -488,22 +482,12 @@ export class FilterControlsComponent implements OnDestroy, OnInit {
   handleInitialParamUpdate(): void {
     // Update the url params only after they've been checked
     // formatted, and corrected if need be.
-    if (this.isRelevant) {
-      this.updateParams({
-        ...this.activatedRouter.snapshot.queryParams,
-        endDateTime: this._endDate.toISOString(),
-        granularity: this._timeInterval,
-        startDateTime: this._startDate.toISOString()
-      });
-    // If on a component view that can't use granularity, remove it.
-    } else {
-      this.updateParams({
-        ...this.activatedRouter.snapshot.queryParams,
-        endDateTime: this._endDate.toISOString(),
-        granularity: null,
-        startDateTime: this._startDate.toISOString()
-      });
-    }
+    this.updateParams({
+      ...this.activatedRouter.snapshot.queryParams,
+      endDateTime: this._endDate.toISOString(),
+      granularity: this._timeInterval,
+      startDateTime: this._startDate.toISOString()
+    });
   }
   /**
   * @private
@@ -557,6 +541,9 @@ export class FilterControlsComponent implements OnDestroy, OnInit {
   * @return True if the warning tooltip is open } False if not
   */
   isTooltipOpen(): boolean {
+    if (!this.tooltip) {
+      return false;
+    }
     return this.tooltip.isOpen();
   }
   /**
@@ -625,6 +612,9 @@ export class FilterControlsComponent implements OnDestroy, OnInit {
   * Opens the datetime warning tooltip if it's closed
   */
   openTooltip(): void {
+    if (!this.tooltip) {
+      return;
+    }
     const isOpen = this.tooltip.isOpen();
     if (!isOpen) {
       this.tooltip.open(this.warningMessage);
