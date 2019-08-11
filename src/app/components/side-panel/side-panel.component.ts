@@ -20,6 +20,11 @@ export class SidePanelComponent implements OnDestroy, OnInit {
   */
   public isBusy: boolean = true;
   /**
+  * Checks with service to see if all currency option is relevant,
+  * and disables control when it isn't.
+  */
+  public isAllCurrencyOptionRelevant: boolean;
+  /**
   * The initial pathstate passed in by the main view.
   * When these controls trigger a currency view change, and
   * this component is replaced by its counterpart, this bound
@@ -44,8 +49,13 @@ export class SidePanelComponent implements OnDestroy, OnInit {
   * Gets service busy signal to disable buttons when necessary.
   */
   ngOnInit(): void {
-    this._subs.push(this.gdaxDataService.isBusy.subscribe(data => {
-      this.isBusy = data;
-    }));
+    this._subs.push(
+      this.gdaxDataService.isBusy.subscribe(data => {
+        this.isBusy = data;
+      }),
+      this.gdaxDataService.isRelevant.subscribe(data => {
+        this.isAllCurrencyOptionRelevant = data;
+      }),
+      );
   }
 }

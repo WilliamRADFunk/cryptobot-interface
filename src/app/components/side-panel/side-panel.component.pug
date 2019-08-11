@@ -17,9 +17,10 @@
       queryParamsHandling="merge",
       [ngClass]="{'active': pathState === 'ETH-USD', 'disabled': isBusy}",
       style="background-image: url(assets/images/btn-chart-c.png);") ETH-USD
-  .col-3.col-sm-3.col-md-3.col-lg-10.offset-lg-1.no-side-padding
-    div.btn-custom.sub-nav.col(
-      [routerLink]="['../ALL']",
-      queryParamsHandling="merge",
-      [ngClass]="{'active': pathState === 'ALL', 'disabled': isBusy}",
-      style="background-image: url(assets/images/btn-chart-d.png);") ALL
+  ng-container(*ngIf="isAllCurrencyOptionRelevant")
+    .col-3.col-sm-3.col-md-3.col-lg-10.offset-lg-1.no-side-padding
+      div.btn-custom.sub-nav.col(
+        [routerLink]="['../ALL']",
+        queryParamsHandling="merge",
+        [ngClass]="{'active': pathState === 'ALL', 'disabled': isBusy}",
+        style="background-image: url(assets/images/btn-chart-d.png);") ALL

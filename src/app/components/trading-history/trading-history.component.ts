@@ -4,12 +4,17 @@ import { ActivatedRoute, Router, UrlSegment, ParamMap } from '@angular/router';
 import { GdaxDataService } from '../../services/gdax-data.service';
 import { Subscription } from 'rxjs/Subscription';
 
+
 @Component({
   selector: 'app-trading-history',
   templateUrl: './trading-history.component.html',
   styleUrls: ['./trading-history.component.scss']
 })
 export class TradingHistoryComponent implements OnDestroy, OnInit {
+  /**
+  * Contains the types of currency.
+  */
+  private readonly currTypes: string[] = ['btc-usd', 'ltc-usd', 'eth-usd'];
   /**
   * Array of flags to determine if initial param and url pull is done
   * before triggering the service to query for data. First is currencyType.
@@ -97,6 +102,9 @@ export class TradingHistoryComponent implements OnDestroy, OnInit {
       this.activatedRouter.url
         .subscribe((segments: UrlSegment[]) => {
           this.pathState = segments[0]['path'];
+          if (!this.currTypes.some(type => type === this.pathState.toLowerCase())) {
+            this.pathState = 'BTC-USD';
+          }
           if (this.firstTime[1]) {
             this.gdaxDataService.changeCurrencyType(this.pathState, 'trading-history', false);
           } else {
@@ -125,7 +133,7 @@ export class TradingHistoryComponent implements OnDestroy, OnInit {
       this.gdaxDataService.tableData
         .subscribe(this._updateTable.bind(this)));
   }
-  
+
   /**
   * Checks if url params contain rows and use it if valid.
   * If invalid or not present, fallback to the component default.

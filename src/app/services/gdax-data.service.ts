@@ -51,9 +51,9 @@ export class GdaxDataService {
   */
   private readonly _isBusyBSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   /**
-  * The flag to designate component destruction for preventing accidental query calls.
+  * The flag to designate if granularity is relevant for basePath api
   */
-  private _isKilled: boolean = false;
+  private readonly _isRelevantBSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   /**
   * The current number for page in results.
   */
@@ -101,6 +101,10 @@ export class GdaxDataService {
    * Public observable version of _isBusyBSubject
    */
   public readonly isBusy: Observable<boolean> = this._isBusyBSubject.asObservable();
+  /**
+   * Public observable version of _isRelevantBSubject
+   */
+  public readonly isRelevant: Observable<boolean> = this._isRelevantBSubject.asObservable();
   /**
    * Public observable version of _pageBSubject
    */
@@ -530,15 +534,19 @@ export class GdaxDataService {
   */
   private _refreshData(): void {
     if (this._basePath === 'live-view') {
+      this._isRelevantBSubject.next(true);
       this._getLatestGdaxData();
     } else if (this._basePath === 'trading-history') {
+      this._isRelevantBSubject.next(false);
       this._getLatestGdaxHistoryData();
     } else if (this._basePath === 'profit-portfolio') {
+      this._isRelevantBSubject.next(false);
       this._chartDataBSubject.next([]);
       this._validUSDResults = [];
       this._validProfitResults = [];
       this._getLatestGdaxUSDData();
     } else if (this._basePath === 'cryptobot-controls') {
+      this._isRelevantBSubject.next(false);
       this.getLatestCryptoBotData();
     }
   }

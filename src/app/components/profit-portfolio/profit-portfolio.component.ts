@@ -14,6 +14,10 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class ProfitPortfolioComponent implements OnDestroy, OnInit {
   /**
+  * Contains the types of currency.
+  */
+  private readonly currTypes: string[] = ['btc-usd', 'ltc-usd', 'eth-usd'];
+  /**
    * Subscriptions to unsubscribe from on destroy.
    */
   private readonly _subs: Subscription[] = [];
@@ -67,6 +71,9 @@ export class ProfitPortfolioComponent implements OnDestroy, OnInit {
       this.activatedRouter.url
         .subscribe((segments: UrlSegment[]) => {
           this.pathState = segments[0]['path'];
+          if (!this.currTypes.some(type => type === this.pathState.toLowerCase())) {
+            this.pathState = 'BTC-USD';
+          }
           this.gdaxDataService.changeCurrencyType(this.pathState, 'profit-portfolio', true);
         }),
       this.gdaxDataService.chartData
