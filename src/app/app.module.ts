@@ -15,6 +15,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { SidePanelComponent } from './components/side-panel/side-panel.component';
 import { GdaxDataService } from './services/gdax-data.service';
 import { FilterControlsComponent } from './components/filter-controls/filter-controls.component';
+import { AutobotControlsService } from './services/autobot-controls.service';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,7 @@ import { FilterControlsComponent } from './components/filter-controls/filter-con
     AppRoutingModule
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-  providers: [ GdaxDataService ],
+  providers: [ AutobotControlsService, GdaxDataService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
