@@ -71,9 +71,6 @@ export class ProfitPortfolioComponent implements OnDestroy, OnInit {
       this.activatedRouter.url
         .subscribe((segments: UrlSegment[]) => {
           this.pathState = segments[0]['path'];
-          if (!this.currTypes.some(type => type === this.pathState.toLowerCase())) {
-            this.pathState = 'BTC-USD';
-          }
           this.gdaxDataService.changeCurrencyType(this.pathState, 'profit-portfolio', true);
         }),
       this.gdaxDataService.chartData

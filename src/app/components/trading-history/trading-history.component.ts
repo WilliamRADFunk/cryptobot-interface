@@ -102,9 +102,6 @@ export class TradingHistoryComponent implements OnDestroy, OnInit {
       this.activatedRouter.url
         .subscribe((segments: UrlSegment[]) => {
           this.pathState = segments[0]['path'];
-          if (!this.currTypes.some(type => type === this.pathState.toLowerCase())) {
-            this.pathState = 'BTC-USD';
-          }
           if (this.firstTime[1]) {
             this.gdaxDataService.changeCurrencyType(this.pathState, 'trading-history', false);
           } else {
