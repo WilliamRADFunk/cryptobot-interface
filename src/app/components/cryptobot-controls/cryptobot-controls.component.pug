@@ -1,25 +1,26 @@
 .row
   .col-12.col-sm-12.col-md-12.col-lg-12(style="height: 100%;")
-    .row
-      .col-12.col-sm-12.col-md-12.col-lg-12(style="height: 60px;")
-        div maximum buy amount
-    .row
-      .col-12.col-sm-12.col-md-12.col-lg-12(style="height: 60px;")
+    .row.control-height.px-2
+      .col-12.col-sm-12.col-md-4.col-lg-4(*ngFor="let maxBuyPriceControl of maxBuyPrices")
+        label.text-center([for]="maxBuyPriceControl.id", value="{{maxBuyPriceControl.label}}")
+        ng5-slider([id]="maxBuyPriceControl.id", [(value)]="maxBuyPriceControl.value", [options]="maxBuyPriceControl.options")
+    .row.control-height
+      .col-12.col-sm-12.col-md-12.col-lg-12
         div maximum number of simultaneous trades
-    .row
-      .col-12.col-sm-12.col-md-12.col-lg-12(style="height: 60px;")
+    .row.control-height
+      .col-12.col-sm-12.col-md-12.col-lg-12
         div profit threshold
-    .row
-      .col-12.col-sm-12.col-md-12.col-lg-12(style="height: 60px;")
+    .row.control-height
+      .col-12.col-sm-12.col-md-12.col-lg-12
         div max money spent per trade
-    .row
-      .col-12.col-sm-12.col-md-12.col-lg-12(style="height: 60px;")
+    .row.control-height
+      .col-12.col-sm-12.col-md-12.col-lg-12
         div market change sensitivity
-    .row
-      .col-12.col-sm-12.col-md-12.col-lg-12(style="height: 60px;")
+    .row.control-height
+      .col-12.col-sm-12.col-md-12.col-lg-12
         div time between buys
-    .row
-      .col-12.col-sm-12.col-md-12.col-lg-12(style="height: 60px;")
+    .row.control-height
+      .col-12.col-sm-12.col-md-12.col-lg-12
         div currency buys distribution
 
 //- TODO:

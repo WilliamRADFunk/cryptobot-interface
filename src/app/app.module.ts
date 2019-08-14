@@ -4,6 +4,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { Ng5SliderModule } from 'ng5-slider';
 import { ChartModule } from 'angular-highcharts';
 
 import { AppComponent } from './app.component';
@@ -32,6 +33,7 @@ import { AutobotControlsService } from './services/autobot-controls.service';
     FormsModule,
     HttpClientModule,
     NgbModule.forRoot(),
+    Ng5SliderModule,
     ChartModule,
     AppRoutingModule
   ],
