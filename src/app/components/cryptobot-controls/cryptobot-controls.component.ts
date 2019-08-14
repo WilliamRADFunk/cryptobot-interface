@@ -19,7 +19,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   public readonly maxBuyPrices: { id: string; label: string; options: Options; value: number; }[] = [
     {
       id: 'max-buy-price-btc',
-      label: 'Max BTC Buy Price',
+      label: 'BTC',
       options: { 
         floor: 1000,
         ceil: 12000
@@ -28,7 +28,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
     },
     {
       id: 'max-buy-price-ltc',
-      label: 'Max LTC Buy Price',
+      label: 'LTC',
       options: { 
         floor: 1000,
         ceil: 12000
@@ -37,7 +37,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
     },
     {
       id: 'max-buy-price-etc',
-      label: 'Max ETC Buy Price',
+      label: 'ETC',
       options: { 
         floor: 1000,
         ceil: 12000

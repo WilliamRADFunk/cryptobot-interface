@@ -1,26 +1,27 @@
 .row
   .col-12.col-sm-12.col-md-12.col-lg-12(style="height: 100%;")
-    .row.control-height.px-2
-      .col-12.col-sm-12.col-md-4.col-lg-4(*ngFor="let maxBuyPriceControl of maxBuyPrices")
-        label.text-center([for]="maxBuyPriceControl.id", value="{{maxBuyPriceControl.label}}")
-        ng5-slider([id]="maxBuyPriceControl.id", [(value)]="maxBuyPriceControl.value", [options]="maxBuyPriceControl.options")
+    .row.control-height.mb-2-px-2
+      .col-12.col-sm-12.col-md-4.col-lg-4.card(*ngFor="let maxBuyPriceControl of maxBuyPrices")
+        label.text-center.card-title([for]="maxBuyPriceControl.id")
+        |  {{maxBuyPriceControl.label}}
+        ng5-slider.card-body([id]="maxBuyPriceControl.id", [(value)]="maxBuyPriceControl.value", [options]="maxBuyPriceControl.options")
     .row.control-height
-      .col-12.col-sm-12.col-md-12.col-lg-12
+      .col-12.col-sm-12.col-md-12.col-lg-12.card
         div maximum number of simultaneous trades
     .row.control-height
-      .col-12.col-sm-12.col-md-12.col-lg-12
+      .col-12.col-sm-12.col-md-12.col-lg-12.card
         div profit threshold
     .row.control-height
-      .col-12.col-sm-12.col-md-12.col-lg-12
+      .col-12.col-sm-12.col-md-12.col-lg-12.card
         div max money spent per trade
     .row.control-height
-      .col-12.col-sm-12.col-md-12.col-lg-12
+      .col-12.col-sm-12.col-md-12.col-lg-12.card
         div market change sensitivity
     .row.control-height
-      .col-12.col-sm-12.col-md-12.col-lg-12
+      .col-12.col-sm-12.col-md-12.col-lg-12.card
         div time between buys
     .row.control-height
-      .col-12.col-sm-12.col-md-12.col-lg-12
+      .col-12.col-sm-12.col-md-12.col-lg-12.card
         div currency buys distribution
 
 //- TODO:
