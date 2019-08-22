@@ -74,9 +74,45 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         .subscribe((data: { price: number }) => {
           console.log('ltc price', data.price);
         }),
-      this.autobotControlsService.getMarketPriceStream('etc-usd')
+      this.autobotControlsService.getMarketPriceStream('eth-usd')
         .subscribe((data: { price: number }) => {
           console.log('etc price', data.price);
+        }),
+      this.autobotControlsService.getMaxBuyMoneyStream('btc-usd')
+        .subscribe((data: { amount: number }) => {
+          console.log('etc amount', data.amount);
+        }),
+      this.autobotControlsService.getMaxBuyMoneyStream('ltc-usd')
+        .subscribe((data: { amount: number }) => {
+          console.log('etc amount', data.amount);
+        }),
+      this.autobotControlsService.getMaxBuyMoneyStream('eth-usd')
+        .subscribe((data: { amount: number }) => {
+          console.log('etc amount', data.amount);
+        }),
+      this.autobotControlsService.getMaxBuyPriceStream('btc-usd')
+        .subscribe((data: { price: number }) => {
+          console.log('etc price', data.price);
+        }),
+      this.autobotControlsService.getMaxBuyPriceStream('ltc-usd')
+        .subscribe((data: { price: number }) => {
+          console.log('etc price', data.price);
+        }),
+      this.autobotControlsService.getMaxBuyPriceStream('eth-usd')
+        .subscribe((data: { price: number }) => {
+          console.log('etc price', data.price);
+        }),
+      this.autobotControlsService.getMaxNumberOfScrumsStream('btc-usd')
+        .subscribe((data: { scrums: number }) => {
+          console.log('etc scrums', data.scrums);
+        }),
+      this.autobotControlsService.getMaxNumberOfScrumsStream('ltc-usd')
+        .subscribe((data: { scrums: number }) => {
+          console.log('etc scrums', data.scrums);
+        }),
+      this.autobotControlsService.getMaxNumberOfScrumsStream('eth-usd')
+        .subscribe((data: { scrums: number }) => {
+          console.log('etc scrums', data.scrums);
         }));
   }
 }
