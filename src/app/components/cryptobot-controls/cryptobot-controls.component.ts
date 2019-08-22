@@ -66,6 +66,17 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   */
   ngOnInit(): void {
     this.gdaxDataService.changeCurrencyType('BTC-USD', 'cryptobot-controls', false);
+    this._subs.push(this.autobotControlsService.getMarketPriceStream('btc-usd')
+        .subscribe((data: { price: number }) => {
+          console.log('btc price', data.price);
+        }),
+      this.autobotControlsService.getMarketPriceStream('ltc-usd')
+        .subscribe((data: { price: number }) => {
+          console.log('ltc price', data.price);
+        }),
+      this.autobotControlsService.getMarketPriceStream('etc-usd')
+        .subscribe((data: { price: number }) => {
+          console.log('etc price', data.price);
+        }));
   }
-
 }

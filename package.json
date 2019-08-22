@@ -51,7 +51,7 @@
     "highcharts": "^6.0.7",
     "jquery": "^3.3.1",
     "ng5-slider": "^1.2.4",
-    "rxjs": "^5.5.6",
+    "rxjs": "^6.5.2",
     "tether": "^1.4.3",
     "zone.js": "^0.8.19"
   },
@@ -91,7 +91,7 @@
     "tslint": "~5.9.1",
     "typedoc": "^0.11.1",
     "typedoc-plugin-markdown": "^1.0.14",
-    "typescript": "~2.5.3",
+    "typescript": "^2.8.4",
     "watch-run": "^1.2.5"
   }
 }
