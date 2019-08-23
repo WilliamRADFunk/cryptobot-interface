@@ -40,4 +40,8 @@ export class AutobotControlsService {
       );
   }
 
+  startBot(currency: string): void {
+    this.http.get<boolean>(`${DATA_URL}start/${currency}`);
+  }
+
 }

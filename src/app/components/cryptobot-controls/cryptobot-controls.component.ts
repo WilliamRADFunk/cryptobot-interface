@@ -66,53 +66,54 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   */
   ngOnInit(): void {
     this.gdaxDataService.changeCurrencyType('BTC-USD', 'cryptobot-controls', false);
+    this.autobotControlsService.startBot('btc-usd');
     this._subs.push(this.autobotControlsService.getMarketPriceStream('btc-usd')
         .subscribe((data: { price: number }) => {
-          console.log('btc price', data.price);
+          console.log('btc market price', data.price);
         }),
-      this.autobotControlsService.getMarketPriceStream('ltc-usd')
-        .subscribe((data: { price: number }) => {
-          console.log('ltc price', data.price);
-        }),
-      this.autobotControlsService.getMarketPriceStream('eth-usd')
-        .subscribe((data: { price: number }) => {
-          console.log('etc price', data.price);
-        }),
+      // this.autobotControlsService.getMarketPriceStream('ltc-usd')
+      //   .subscribe((data: { price: number }) => {
+      //     console.log('ltc market price', data.price);
+      //   }),
+      // this.autobotControlsService.getMarketPriceStream('eth-usd')
+      //   .subscribe((data: { price: number }) => {
+      //     console.log('eth market price', data.price);
+      //   }),
       this.autobotControlsService.getMaxBuyMoneyStream('btc-usd')
         .subscribe((data: { amount: number }) => {
-          console.log('etc amount', data.amount);
+          console.log('btc max spend amount per scrum', data.amount);
         }),
       this.autobotControlsService.getMaxBuyMoneyStream('ltc-usd')
         .subscribe((data: { amount: number }) => {
-          console.log('etc amount', data.amount);
+          console.log('ltc max spend amount per scrum', data.amount);
         }),
       this.autobotControlsService.getMaxBuyMoneyStream('eth-usd')
         .subscribe((data: { amount: number }) => {
-          console.log('etc amount', data.amount);
+          console.log('eth max spend amount per scrum', data.amount);
         }),
       this.autobotControlsService.getMaxBuyPriceStream('btc-usd')
         .subscribe((data: { price: number }) => {
-          console.log('etc price', data.price);
+          console.log('btc max buy price', data.price);
         }),
       this.autobotControlsService.getMaxBuyPriceStream('ltc-usd')
         .subscribe((data: { price: number }) => {
-          console.log('etc price', data.price);
+          console.log('ltc max buy price', data.price);
         }),
       this.autobotControlsService.getMaxBuyPriceStream('eth-usd')
         .subscribe((data: { price: number }) => {
-          console.log('etc price', data.price);
+          console.log('eth max buy price', data.price);
         }),
       this.autobotControlsService.getMaxNumberOfScrumsStream('btc-usd')
         .subscribe((data: { scrums: number }) => {
-          console.log('etc scrums', data.scrums);
+          console.log('btc max number of scrums', data.scrums);
         }),
       this.autobotControlsService.getMaxNumberOfScrumsStream('ltc-usd')
         .subscribe((data: { scrums: number }) => {
-          console.log('etc scrums', data.scrums);
+          console.log('ltc max number of scrums', data.scrums);
         }),
       this.autobotControlsService.getMaxNumberOfScrumsStream('eth-usd')
         .subscribe((data: { scrums: number }) => {
-          console.log('etc scrums', data.scrums);
+          console.log('eth max number of scrums', data.scrums);
         }));
   }
 }
