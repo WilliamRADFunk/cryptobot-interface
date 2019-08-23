@@ -5,6 +5,7 @@ import { Options } from 'ng5-slider';
 
 import { GdaxDataService } from '../../services/gdax-data.service';
 import { AutobotControlsService } from '../../services/autobot-controls.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-cryptobot-controls',
@@ -16,33 +17,33 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
    * Subscriptions to unsubscribe from onDestroy
    */
   private readonly _subs: Subscription[] = [];
-  public readonly maxBuyPrices: { id: string; label: string; options: Options; value: number; }[] = [
+  public readonly maxBuyPrices: { id: string; label: string; options: Options; value: FormControl; }[] = [
     {
       id: 'max-buy-price-btc',
       label: 'BTC',
-      options: { 
-        floor: 1000,
+      options: {
+        floor: 0,
         ceil: 12000
       },
-      value: 10999,
+      value: new FormControl(10999),
     },
     {
       id: 'max-buy-price-ltc',
       label: 'LTC',
-      options: { 
-        floor: 1000,
-        ceil: 12000
+      options: {
+        floor: 0,
+        ceil: 135
       },
-      value: 10999,
+      value: new FormControl(80),
     },
     {
       id: 'max-buy-price-etc',
       label: 'ETC',
-      options: { 
-        floor: 1000,
-        ceil: 12000
+      options: {
+        floor: 0,
+        ceil: 330
       },
-      value: 10999,
+      value: new FormControl(200),
     }
   ];
   /**
@@ -94,14 +95,17 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       this.autobotControlsService.getMaxBuyPriceStream('btc-usd')
         .subscribe((data: { price: number }) => {
           console.log('btc max buy price', data.price);
+          this.maxBuyPrices[0].value.setValue(data.price);
         }),
       this.autobotControlsService.getMaxBuyPriceStream('ltc-usd')
         .subscribe((data: { price: number }) => {
           console.log('ltc max buy price', data.price);
+          this.maxBuyPrices[1].value.setValue(data.price);
         }),
       this.autobotControlsService.getMaxBuyPriceStream('eth-usd')
         .subscribe((data: { price: number }) => {
           console.log('eth max buy price', data.price);
+          this.maxBuyPrices[2].value.setValue(data.price);
         }),
       this.autobotControlsService.getMaxNumberOfScrumsStream('btc-usd')
         .subscribe((data: { scrums: number }) => {
@@ -115,5 +119,9 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         .subscribe((data: { scrums: number }) => {
           console.log('eth max number of scrums', data.scrums);
         }));
+  }
+
+  public maxBuyPriceChanged(event) {
+    console.log('change', event);
   }
 }

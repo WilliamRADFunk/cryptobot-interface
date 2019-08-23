@@ -20,21 +20,21 @@ export class AutobotControlsService {
   }
 
   getMaxBuyMoneyStream(curr) {
-    return timer(100, 5000)
+    return timer(200, 5000)
       .pipe(
         switchMap(() => this.http.get<any>(`${DATA_URL}maximum-buy-money/${curr}`))
       );
   }
 
   getMaxBuyPriceStream(curr) {
-    return timer(200, 5000)
+    return timer(400, 5000)
       .pipe(
         switchMap(() => this.http.get<any>(`${DATA_URL}maximum-buy-price/${curr}`))
       );
   }
 
   getMaxNumberOfScrumsStream(curr) {
-    return timer(300, 5000)
+    return timer(600, 5000)
       .pipe(
         switchMap(() => this.http.get<any>(`${DATA_URL}maximum-number-of-scrums/${curr}`))
       );
