@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { timer } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 
 const INTERFACE_URL = 'http://www.williamrobertfunk.com';
 const DATA_URL = 'http://167.99.149.6:3000/';
@@ -40,8 +40,34 @@ export class AutobotControlsService {
       );
   }
 
+  setMaxBuyMoney(curr, amount) {
+    this.http.put<any>(`${DATA_URL}maximum-buy-money/${curr}`, { amount })
+      .pipe(take(1))
+      .subscribe(res => {});
+  }
+
+  setMaxBuyPrice(curr, price) {
+    this.http.put<any>(`${DATA_URL}maximum-buy-price/${curr}`, { price })
+      .pipe(take(1))
+      .subscribe(res => {});
+  }
+
+  setMaxNumberOfScrums(curr, scrums) {
+    this.http.put<any>(`${DATA_URL}maximum-number-of-scrums/${curr}`, { scrums })
+      .pipe(take(1))
+      .subscribe(res => {});
+  }
+
   startBot(currency: string): void {
-    this.http.get<boolean>(`${DATA_URL}start/${currency}`);
+    this.http.get<boolean>(`${DATA_URL}start/${currency}`)
+      .pipe(take(1))
+      .subscribe(res => {});
+  }
+
+  stopBot(currency: string): void {
+    this.http.get<boolean>(`${DATA_URL}stop/${currency}`)
+      .pipe(take(1))
+      .subscribe(res => {});
   }
 
 }
