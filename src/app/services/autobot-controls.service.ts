@@ -5,7 +5,8 @@ import { timer, Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 
 const INTERFACE_URL = 'http://www.williamrobertfunk.com';
-const DATA_URL = 'http://167.99.149.6:3000/';
+// const DATA_URL = 'http://167.99.149.6:3000/';
+const DATA_URL = 'http://localhost:3000/';
 
 @Injectable()
 export class AutobotControlsService {
