@@ -1,12 +1,25 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
+import { of } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { catchError, distinctUntilChanged } from 'rxjs/operators';
 import { Options } from 'ng5-slider';
 
 import { GdaxDataService } from '../../services/gdax-data.service';
 import { AutobotControlsService } from '../../services/autobot-controls.service';
 import { FormControl } from '@angular/forms';
+
+export interface CurrencyControl {
+  currencyType: string;
+  id: string;
+  label: string;
+  options: Options;
+  value: FormControl;
+}
+
+export interface MaxBuyPriceControl extends CurrencyControl {
+  marketPrice: string;
+}
 
 @Component({
   selector: 'app-cryptobot-controls',
@@ -18,7 +31,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
    * Subscriptions to unsubscribe from onDestroy
    */
   private readonly _subs: Subscription[] = [];
-  public readonly maxBuyMoney: { currencyType: string; id: string; label: string; options: Options; value: FormControl; }[] = [
+  public readonly maxBuyMoney: CurrencyControl[] = [
     {
       currencyType: 'btc-usd',
       id: 'max-buy-money-btc',
@@ -50,11 +63,12 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       value: new FormControl(20),
     }
   ];
-  public readonly maxBuyPrices: { currencyType: string; id: string; label: string; options: Options; value: FormControl; }[] = [
+  public readonly maxBuyPrices: MaxBuyPriceControl[] = [
     {
       currencyType: 'btc-usd',
       id: 'max-buy-price-btc',
       label: 'BTC',
+      marketPrice: 'N/A',
       options: {
         floor: 0,
         ceil: 12000
@@ -65,6 +79,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       currencyType: 'ltc-usd',
       id: 'max-buy-price-ltc',
       label: 'LTC',
+      marketPrice: 'N/A',
       options: {
         floor: 0,
         ceil: 135
@@ -75,6 +90,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       currencyType: 'eth-usd',
       id: 'max-buy-price-etc',
       label: 'ETC',
+      marketPrice: 'N/A',
       options: {
         floor: 0,
         ceil: 330
@@ -82,7 +98,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       value: new FormControl(200),
     }
   ];
-  public readonly maxNumberOfScrums: { currencyType: string; id: string; label: string; options: Options; value: FormControl; }[] = [
+  public readonly maxNumberOfScrums: CurrencyControl[] = [
     {
       currencyType: 'btc-usd',
       id: 'max-buy-price-btc',
@@ -114,6 +130,12 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       value: new FormControl(0),
     }
   ];
+  public readonly state: { [key: string]: string|boolean[] } = {
+    isBotActive: [ false, false, false ],
+    maxBuyMoneyCurrent: 'btc-usd',
+    maxBuyPriceCurrent: 'btc-usd',
+    maxNumberOfScrumsCurrent: 'btc-usd'
+  };
   /**
   * Constructor for the CryptobotControlsComponent class.
   * @param gdaxDataService Internal service to get queried market data.
@@ -192,18 +214,35 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         }
       }),
       this.autobotControlsService.getMarketPriceStream('btc-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.price === valB.price))
+        .pipe(
+          catchError(err => {
+            return of('N/A');
+          }),
+          distinctUntilChanged((valA, valB) => valA.price === valB.price))
         .subscribe((data: { price: number }) => {
           console.log('btc market price', data.price);
+          this.maxBuyPrices[0].marketPrice = (data.price && data.price.toFixed(2)) || 'N/A';
         }),
-      // this.autobotControlsService.getMarketPriceStream('ltc-usd')
-      //   .subscribe((data: { price: number }) => {
-      //     console.log('ltc market price', data.price);
-      //   }),
-      // this.autobotControlsService.getMarketPriceStream('eth-usd')
-      //   .subscribe((data: { price: number }) => {
-      //     console.log('eth market price', data.price);
-      //   }),
+      this.autobotControlsService.getMarketPriceStream('ltc-usd')
+        .pipe(
+          catchError(err => {
+            return of('N/A');
+          }),
+          distinctUntilChanged((valA, valB) => valA.price === valB.price))
+        .subscribe((data: { price: number }) => {
+          console.log('ltc market price', data.price);
+          this.maxBuyPrices[1].marketPrice = (data.price && data.price.toFixed(2)) || 'N/A';
+        }),
+      this.autobotControlsService.getMarketPriceStream('eth-usd')
+        .pipe(
+          catchError(err => {
+            return of('N/A');
+          }),
+          distinctUntilChanged((valA, valB) => valA.price === valB.price))
+        .subscribe((data: { price: number }) => {
+          console.log('eth market price', data.price);
+          this.maxBuyPrices[2].marketPrice = (data.price && data.price.toFixed(2)) || 'N/A';
+        }),
       this.autobotControlsService.getMaxBuyMoneyStream('btc-usd')
         .pipe(distinctUntilChanged((valA, valB) => valA.amount === valB.amount))
         .subscribe((data: { amount: number }) => {
@@ -258,5 +297,30 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           console.log('eth max number of scrums', data.scrums);
           this.maxNumberOfScrums[2].value.setValue(data.scrums, { emitEvent: false });
         }));
+  }
+
+  public toggleMaxBuyMoney(currency: string) {
+    this.state.maxBuyMoneyCurrent = currency;
+    console.log(currency, this.state.maxBuyMoneyCurrent);
+  }
+
+  public toggleMaxBuyPrice(currency: string) {
+    this.state.maxBuyPriceCurrent = currency;
+    console.log(currency, this.state.maxBuyPriceCurrent);
+  }
+
+  public toggleMaxNumberOfScrums(currency: string) {
+    this.state.maxNumberOfScrumsCurrent = currency;
+    console.log(currency, this.state.maxNumberOfScrumsCurrent);
+  }
+
+  public turnBotOn(currency: string) {
+    console.log(`Turning ${currency} autobot on`);
+    this.autobotControlsService.startBot(currency);
+  }
+
+  public turnBotOff(currency: string) {
+    console.log(`Turning ${currency} autobot off`);
+    this.autobotControlsService.stopBot(currency);
   }
 }

@@ -1,26 +1,74 @@
 .row
   .col-12.col-sm-12.col-md-12.col-lg-12(style="height: 100%;")
-    .row.mb-2.mx-1.py-2.px-2.custom-black.rounded.d-flex.justify-content-center
-      .col-12.h2.text-center.custom-yellow Max Buy Price
-      .w-25.ml-1.card(*ngFor="let maxBuyPriceControl of maxBuyPrices")
-        label.text-center.card-title([for]="maxBuyPriceControl.id") {{ maxBuyPriceControl.label }}
-        .card-body
-          ng5-slider([id]="maxBuyPriceControl.id", [formControl]="maxBuyPriceControl.value", [options]="maxBuyPriceControl.options")
-    .row.mb-2.mx-1.py-2.px-2.custom-black.rounded.d-flex.justify-content-center
-      .col-12.h2.text-center.custom-yellow Max Number of Simultaneous Trades
-      .w-25.ml-1.card(*ngFor="let maxNumberOfScrumsControl of maxNumberOfScrums")
-        label.text-center.card-title([for]="maxNumberOfScrumsControl.id") {{ maxNumberOfScrumsControl.label }}
-        .card-body
-          ng5-slider([id]="maxNumberOfScrumsControl.id", [formControl]="maxNumberOfScrumsControl.value", [options]="maxNumberOfScrumsControl.options")
-    //- .row.control-height
-    //-   .col-12.col-sm-12.col-md-12.col-lg-12.card
-    //-     div profit threshold
-    .row.mb-2.mx-1.py-2.px-2.custom-black.rounded.d-flex.justify-content-center
-      .col-12.h2.text-center.custom-yellow Max Money Spent Per Trade
-      .w-25.ml-1.card(*ngFor="let maxBuyMoneyControl of maxBuyMoney")
-        label.text-center.card-title([for]="maxBuyMoneyControl.id") {{ maxBuyMoneyControl.label }}
-        .card-body
-          ng5-slider([id]="maxBuyMoneyControl.id", [formControl]="maxBuyMoneyControl.value", [options]="maxBuyMoneyControl.options")
+    .row.d-flex.justify-content-center
+      .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
+        .h2.text-center.custom-yellow.d-inline-block(aria-label="Autobot Power") Autobot Power
+        .row
+          .col-2
+            label.text-white.pt-2 BTC
+          .col-10
+            .w-100.btn-group.mb-2(role="group", aria-label="BTC group")
+              button.btn.btn-success.w-100((click)="turnBotOn()", type="button", [class.active]="state.isBotActive[0]") Active
+              button.btn.btn-danger.w-100((click)="turnBotOff()", type="button", [class.active]="!state.isBotActive[0]") Disabled
+        .row
+          .col-2
+            label.text-white.pt-2 LTC
+          .col-10
+            .w-100.btn-group.mb-2(role="group", aria-label="LTC group")
+              button.btn.btn-success.w-100((click)="turnBotOn()", type="button", [class.active]="state.isBotActive[1]") Active
+              button.btn.btn-danger.w-100((click)="turnBotOff()", type="button", [class.active]="!state.isBotActive[1]") Disabled
+        .row
+          .col-2
+            label.text-white.pt-2 ETH
+          .col-10
+            .w-100.btn-group(role="group", aria-label="ETH group")
+              button.btn.btn-success.w-100((click)="turnBotOn()", type="button", [class.active]="state.isBotActive[2]") Active
+              button.btn.btn-danger.w-100((click)="turnBotOff()", type="button", [class.active]="!state.isBotActive[2]") Disabled
+      .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
+        .h2.text-center.custom-yellow.d-inline-block(aria-label="Max Buy Price") Max Buy Price
+        .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="First group")
+          button.btn.btn-secondary((click)="toggleMaxBuyPrice('btc-usd')", type="button", [class.active]="state.maxBuyPriceCurrent === 'btc-usd'") BTC
+          button.btn.btn-secondary((click)="toggleMaxBuyPrice('ltc-usd')", type="button", [class.active]="state.maxBuyPriceCurrent === 'ltc-usd'") LTC
+          button.btn.btn-secondary((click)="toggleMaxBuyPrice('eth-usd')", type="button", [class.active]="state.maxBuyPriceCurrent === 'eth-usd'") ETH
+        span(*ngFor="let maxBuyPriceControl of maxBuyPrices")
+          ng-container(*ngIf="state.maxBuyPriceCurrent === maxBuyPriceControl.currencyType")
+            .w-100.card.bg-secondary.text-white
+              label.text-center.card-title([for]="maxBuyPriceControl.id")
+                .d-inline-block.float-left.ml-1 {{ maxBuyPriceControl.label }}
+                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1 {{ maxBuyPriceControl.marketPrice }}
+              .card-body
+                ng5-slider.text-white([id]="maxBuyPriceControl.id", [formControl]="maxBuyPriceControl.value", [options]="maxBuyPriceControl.options")
+      .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
+        .h2.text-center.custom-yellow.d-inline-block(aria-label="Max Active Trades") Max Active Trades
+        .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="First group")
+          button.btn.btn-secondary((click)="toggleMaxNumberOfScrums('btc-usd')", type="button", [class.active]="state.maxNumberOfScrumsCurrent === 'btc-usd'") BTC
+          button.btn.btn-secondary((click)="toggleMaxNumberOfScrums('ltc-usd')", type="button", [class.active]="state.maxNumberOfScrumsCurrent === 'ltc-usd'") LTC
+          button.btn.btn-secondary((click)="toggleMaxNumberOfScrums('eth-usd')", type="button", [class.active]="state.maxNumberOfScrumsCurrent === 'eth-usd'") ETH
+        span(*ngFor="let maxNumberOfScrumsControl of maxNumberOfScrums")
+          ng-container(*ngIf="state.maxNumberOfScrumsCurrent === maxNumberOfScrumsControl.currencyType")
+            .w-100.card.bg-secondary.text-white
+              label.text-center.card-title([for]="maxNumberOfScrumsControl.id")
+                .d-inline-block.float-left.ml-1 {{ maxNumberOfScrumsControl.label }}
+                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1 {{ 0 }}
+              .card-body
+                ng5-slider.text-white([id]="maxNumberOfScrumsControl.id", [formControl]="maxNumberOfScrumsControl.value", [options]="maxNumberOfScrumsControl.options")
+      //- .row.control-height
+      //-   .col-12.col-sm-12.col-md-12.col-lg-12.card
+      //-     div profit threshold
+      .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
+        .h2.text-center.custom-yellow.d-inline-block(aria-label="Max Buy Money") Max Buy Money
+        .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="First group")
+          button.btn.btn-secondary((click)="toggleMaxBuyMoney('btc-usd')", type="button", [class.active]="state.maxBuyMoneyCurrent === 'btc-usd'") BTC
+          button.btn.btn-secondary((click)="toggleMaxBuyMoney('ltc-usd')", type="button", [class.active]="state.maxBuyMoneyCurrent === 'ltc-usd'") LTC
+          button.btn.btn-secondary((click)="toggleMaxBuyMoney('eth-usd')", type="button", [class.active]="state.maxBuyMoneyCurrent === 'eth-usd'") ETH
+        span(*ngFor="let maxBuyMoneyControl of maxBuyMoney")
+          ng-container(*ngIf="state.maxBuyMoneyCurrent === maxBuyMoneyControl.currencyType")
+            .w-100.card.bg-secondary.text-white
+              label.text-center.card-title([for]="maxBuyMoneyControl.id")
+                .d-inline-block.float-left.ml-1 {{ maxBuyMoneyControl.label }}
+                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1 {{ 0 }}
+              .card-body
+                ng5-slider.text-white([id]="maxBuyMoneyControl.id", [formControl]="maxBuyMoneyControl.value", [options]="maxBuyMoneyControl.options")
     //- .row.control-height
     //-   .col-12.col-sm-12.col-md-12.col-lg-12.card
     //-     div market change sensitivity
