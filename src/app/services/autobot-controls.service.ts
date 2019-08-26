@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { timer } from 'rxjs';
+import { timer, Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 
 const INTERFACE_URL = 'http://www.williamrobertfunk.com';
@@ -12,59 +12,66 @@ export class AutobotControlsService {
 
   constructor(private readonly http: HttpClient) { }
 
-  getMarketPriceStream(curr) {
+  public getMarketPriceStream(curr: string): Observable<{price: number}> {
     return timer(0, 2000)
       .pipe(
         switchMap(() => this.http.get<any>(`${DATA_URL}market/${curr}`))
       );
   }
 
-  getMaxBuyMoneyStream(curr) {
+  public getMaxBuyMoneyStream(curr: string): Observable<{amount: number}> {
     return timer(200, 5000)
       .pipe(
         switchMap(() => this.http.get<any>(`${DATA_URL}maximum-buy-money/${curr}`))
       );
   }
 
-  getMaxBuyPriceStream(curr) {
+  public getMaxBuyPriceStream(curr: string): Observable<{price: number}> {
     return timer(400, 5000)
       .pipe(
         switchMap(() => this.http.get<any>(`${DATA_URL}maximum-buy-price/${curr}`))
       );
   }
 
-  getMaxNumberOfScrumsStream(curr) {
+  public getMaxNumberOfScrumsStream(curr: string): Observable<{scrums: number}> {
     return timer(600, 5000)
       .pipe(
         switchMap(() => this.http.get<any>(`${DATA_URL}maximum-number-of-scrums/${curr}`))
       );
   }
 
-  setMaxBuyMoney(curr, amount) {
+  public isBotActive(curr: string): Observable<{isActive: boolean}> {
+    return timer(800, 5000)
+      .pipe(
+        switchMap(() => this.http.get<any>(`${DATA_URL}bot-activity/${curr}`))
+      );
+  }
+
+  public setMaxBuyMoney(curr: string, amount: number): void {
     this.http.put<any>(`${DATA_URL}maximum-buy-money/${curr}`, { amount })
       .pipe(take(1))
       .subscribe(res => {});
   }
 
-  setMaxBuyPrice(curr, price) {
+  public setMaxBuyPrice(curr: string, price: number): void {
     this.http.put<any>(`${DATA_URL}maximum-buy-price/${curr}`, { price })
       .pipe(take(1))
       .subscribe(res => {});
   }
 
-  setMaxNumberOfScrums(curr, scrums) {
+  public setMaxNumberOfScrums(curr: string, scrums: number): void {
     this.http.put<any>(`${DATA_URL}maximum-number-of-scrums/${curr}`, { scrums })
       .pipe(take(1))
       .subscribe(res => {});
   }
 
-  startBot(currency: string): void {
+  public startBot(currency: string): void {
     this.http.get<boolean>(`${DATA_URL}start/${currency}`)
       .pipe(take(1))
       .subscribe(res => {});
   }
 
-  stopBot(currency: string): void {
+  public stopBot(currency: string): void {
     this.http.get<boolean>(`${DATA_URL}stop/${currency}`)
       .pipe(take(1))
       .subscribe(res => {});

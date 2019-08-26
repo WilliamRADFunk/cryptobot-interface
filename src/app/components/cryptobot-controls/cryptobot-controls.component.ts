@@ -130,7 +130,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       value: new FormControl(0),
     }
   ];
-  public readonly state: { [key: string]: string|boolean[] } = {
+  public state: { [key: string]: any; } = {
     isBotActive: [ false, false, false ],
     maxBuyMoneyCurrent: 'btc-usd',
     maxBuyPriceCurrent: 'btc-usd',
@@ -213,10 +213,40 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           this.autobotControlsService.setMaxNumberOfScrums(this.maxNumberOfScrums[2].currencyType, newVal);
         }
       }),
+      this.autobotControlsService.isBotActive('btc-usd')
+        .pipe(
+          catchError(err => {
+            return of({ isActive: false });
+          }),
+          distinctUntilChanged((valA, valB) => valA.isActive === valB.isActive))
+        .subscribe((data: { isActive: boolean }) => {
+          console.log('btc bot active:', data.isActive);
+          this.state.isBotActive[0] = data.isActive || false;
+        }),
+      this.autobotControlsService.isBotActive('ltc-usd')
+        .pipe(
+          catchError(err => {
+            return of({ isActive: false });
+          }),
+          distinctUntilChanged((valA, valB) => valA.isActive === valB.isActive))
+        .subscribe((data: { isActive: boolean }) => {
+          console.log('ltc bot active:', data.isActive);
+          this.state.isBotActive[1] = data.isActive || false;
+        }),
+      this.autobotControlsService.isBotActive('eth-usd')
+        .pipe(
+          catchError(err => {
+            return of({ isActive: false });
+          }),
+          distinctUntilChanged((valA, valB) => valA.isActive === valB.isActive))
+        .subscribe((data: { isActive: boolean }) => {
+          console.log('eth bot active:', data.isActive);
+          this.state.isBotActive[2] = data.isActive || false;
+        }),
       this.autobotControlsService.getMarketPriceStream('btc-usd')
         .pipe(
           catchError(err => {
-            return of('N/A');
+            return of({price: 0});
           }),
           distinctUntilChanged((valA, valB) => valA.price === valB.price))
         .subscribe((data: { price: number }) => {
@@ -226,7 +256,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       this.autobotControlsService.getMarketPriceStream('ltc-usd')
         .pipe(
           catchError(err => {
-            return of('N/A');
+            return of({price: 0});
           }),
           distinctUntilChanged((valA, valB) => valA.price === valB.price))
         .subscribe((data: { price: number }) => {
@@ -236,7 +266,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       this.autobotControlsService.getMarketPriceStream('eth-usd')
         .pipe(
           catchError(err => {
-            return of('N/A');
+            return of({price: 0});
           }),
           distinctUntilChanged((valA, valB) => valA.price === valB.price))
         .subscribe((data: { price: number }) => {
