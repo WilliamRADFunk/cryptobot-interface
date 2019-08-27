@@ -130,8 +130,24 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       value: new FormControl(0),
     }
   ];
-  public state: { [key: string]: any; } = {
-    isBotActive: [ false, false, false ],
+  public readonly activeBots: {currencyType: string; label: string; state: boolean}[] = [
+    {
+      currencyType: 'btc-usd',
+      label: 'BTC',
+      state: false
+    },
+    {
+      currencyType: 'ltc-usd',
+      label: 'LTC',
+      state: false
+    },
+    {
+      currencyType: 'eth-usd',
+      label: 'ETH',
+      state: false
+    }
+  ];
+  public state: { [key: string]: string; } = {
     maxBuyMoneyCurrent: 'btc-usd',
     maxBuyPriceCurrent: 'btc-usd',
     maxNumberOfScrumsCurrent: 'btc-usd'
@@ -223,7 +239,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           distinctUntilChanged((valA, valB) => valA.isActive === valB.isActive))
         .subscribe((data: { isActive: boolean }) => {
           console.log('btc bot active:', data.isActive);
-          this.state.isBotActive[0] = data.isActive || false;
+          this.activeBots[0].state = data.isActive || false;
         }),
       this.autobotControlsService.isBotActive('ltc-usd')
         .pipe(
@@ -233,7 +249,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           distinctUntilChanged((valA, valB) => valA.isActive === valB.isActive))
         .subscribe((data: { isActive: boolean }) => {
           console.log('ltc bot active:', data.isActive);
-          this.state.isBotActive[1] = data.isActive || false;
+          this.activeBots[1].state = data.isActive || false;
         }),
       this.autobotControlsService.isBotActive('eth-usd')
         .pipe(
@@ -243,7 +259,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           distinctUntilChanged((valA, valB) => valA.isActive === valB.isActive))
         .subscribe((data: { isActive: boolean }) => {
           console.log('eth bot active:', data.isActive);
-          this.state.isBotActive[2] = data.isActive || false;
+          this.activeBots[2].state = data.isActive || false;
         }),
       this.autobotControlsService.getMarketPriceStream('btc-usd')
         .pipe(

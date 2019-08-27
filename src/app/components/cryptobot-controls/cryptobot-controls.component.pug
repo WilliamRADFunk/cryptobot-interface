@@ -2,39 +2,22 @@
   .col-12.col-sm-12.col-md-12.col-lg-12(style="height: 100%;")
     .row.d-flex.justify-content-center
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
-        .h2.text-center.custom-yellow.d-inline-block(aria-label="Autobot Power") Autobot Power
-        .row
+        .h2.text-center.custom-yellow.d-inline-block.pb-1(aria-label="Autobot Power") Autobot Power
+        .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="First group")
+          button.btn.btn-success((click)="turnBotOn('all')", type="button")
+            span.fa.fa-play
+          button.btn.btn-danger((click)="turnBotOff('all')", type="button")
+            span.fa.fa-stop
+        .row(*ngFor="let botActive of activeBots")
           .col-2
-            label.text-white.pt-2 BTC
+            label.text-white.pt-2.pl-1 {{ botActive.label }}
           .col-10
-            .w-100.btn-group.mb-2(role="group", aria-label="BTC group")
-              ng-container(*ngIf="state.isBotActive[0]; else activateBTC")
+            .w-100.btn-group.mb-2(role="group", aria-label="bot activate button group")
+              ng-container(*ngIf="botActive.state; else activate")
                 button.btn.btn-success.active.w-100(type="button") Active
-                button.btn.btn-info.w-100((click)="turnBotOff('btc-usd')", type="button") Disable
-              ng-template(#activateBTC="")
-                button.btn.btn-info.w-100((click)="turnBotOn('btc-usd')", type="button") Activate
-                button.btn.btn-success.active.w-100(type="button") Disabled
-        .row
-          .col-2
-            label.text-white.pt-2 LTC
-          .col-10
-            .w-100.btn-group.mb-2(role="group", aria-label="LTC group")
-              ng-container(*ngIf="state.isBotActive[1]; else activateLTC")
-                button.btn.btn-success.active.w-100(type="button") Active
-                button.btn.btn-info.w-100((click)="turnBotOff('ltc-usd')", type="button") Disable
-              ng-template(#activateLTC="")
-                button.btn.btn-info.w-100((click)="turnBotOn('ltc-usd')", type="button") Activate
-                button.btn.btn-success.active.w-100(type="button") Disabled
-        .row
-          .col-2
-            label.text-white.pt-2 ETH
-          .col-10
-            .w-100.btn-group.mb-2(role="group", aria-label="ETH group")
-              ng-container(*ngIf="state.isBotActive[2]; else activateETH")
-                button.btn.btn-success.active.w-100(type="button") Active
-                button.btn.btn-info.w-100((click)="turnBotOff('eth-usd')", type="button") Disable
-              ng-template(#activateETH="")
-                button.btn.btn-info.w-100((click)="turnBotOn('eth-usd')", type="button") Activate
+                button.btn.btn-info.w-100((click)="turnBotOff(botActive.currencyType)", type="button") Disable
+              ng-template(#activate="")
+                button.btn.btn-info.w-100((click)="turnBotOn(botActive.currencyType)", type="button") Activate
                 button.btn.btn-success.active.w-100(type="button") Disabled
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
         .h2.text-center.custom-yellow.d-inline-block(aria-label="Max Buy Price") Max Buy Price
