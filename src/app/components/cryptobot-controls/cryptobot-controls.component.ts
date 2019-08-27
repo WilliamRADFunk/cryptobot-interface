@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { of } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
-import { catchError, distinctUntilChanged } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, map } from 'rxjs/operators';
 import { Options } from 'ng5-slider';
 
 import { GdaxDataService } from '../../services/gdax-data.service';
@@ -22,6 +22,10 @@ export interface CurrencyControl {
 
 export interface MaxBuyPriceControl extends CurrencyControl {
   marketPrice: string;
+}
+
+export interface MaxNumberOfScrums extends CurrencyControl {
+  currentNumber: number;
 }
 
 @Component({
@@ -125,8 +129,9 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       mainControl: new FormControl(200),
     }
   ];
-  public readonly maxNumberOfScrums: CurrencyControl[] = [
+  public readonly maxNumberOfScrums: MaxNumberOfScrums[] = [
     {
+      currentNumber: 0,
       currencyType: 'btc-usd',
       id: 'max-number-of-scrums-btc',
       label: 'BTC',
@@ -138,6 +143,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       mainControl: new FormControl(0),
     },
     {
+      currentNumber: 0,
       currencyType: 'ltc-usd',
       id: 'max-number-of-scrums-ltc',
       label: 'LTC',
@@ -149,6 +155,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       mainControl: new FormControl(0),
     },
     {
+      currentNumber: 0,
       currencyType: 'eth-usd',
       id: 'max-number-of-scrums-etc',
       label: 'ETC',
@@ -258,7 +265,8 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
     maxBuyMoneyCurrent: 'btc-usd',
     maxBuyPriceCurrent: 'btc-usd',
     maxNumberOfScrumsCurrent: 'btc-usd',
-    profitThresholdCurrent: 'btc-usd'
+    profitThresholdCurrent: 'btc-usd',
+    usdBalanceCurrent: 'N/A'
   };
   /**
   * Constructor for the CryptobotControlsComponent class.
@@ -411,42 +419,42 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       this.autobotControlsService.getMarketPriceStream('btc-usd')
         .pipe(
           catchError(err => {
-            return of({ sequence: "0", bids: [[ 0, 0, 0 ]], asks: [[ 0, 0, 0 ]]});
+            return of({ sequence: '0', bids: [[ 0, 0, 0 ]], asks: [[ 0, 0, 0 ]]});
           }),
           distinctUntilChanged((valA, valB) => (valA.bids[0] === valB.bids[0]) || (valA.asks[0] === valB.asks[0])))
         .subscribe((data: ProductBookResponse) => {
           const currBuyPrice = Number(data.bids[0][0]);
-					const currSellPrice = Number(data.asks[0][0]);
-					const avg = (currSellPrice + currBuyPrice) / 2;
-					const fixedAvg = avg.toFixed(2);
+          const currSellPrice = Number(data.asks[0][0]);
+          const avg = (currSellPrice + currBuyPrice) / 2;
+          const fixedAvg = avg.toFixed(2);
           console.log('btc market price', fixedAvg);
           this.maxBuyPrices[0].marketPrice = avg ? fixedAvg : 'N/A';
         }),
       this.autobotControlsService.getMarketPriceStream('ltc-usd')
         .pipe(
           catchError(err => {
-            return of({ sequence: "0", bids: [[ 0, 0, 0 ]], asks: [[ 0, 0, 0 ]]});
+            return of({ sequence: '0', bids: [[ 0, 0, 0 ]], asks: [[ 0, 0, 0 ]]});
           }),
           distinctUntilChanged((valA, valB) => (valA.bids[0] === valB.bids[0]) || (valA.asks[0] === valB.asks[0])))
         .subscribe((data: ProductBookResponse) => {
           const currBuyPrice = Number(data.bids[0][0]);
-					const currSellPrice = Number(data.asks[0][0]);
-					const avg = (currSellPrice + currBuyPrice) / 2;
-					const fixedAvg = avg.toFixed(2);
+          const currSellPrice = Number(data.asks[0][0]);
+          const avg = (currSellPrice + currBuyPrice) / 2;
+          const fixedAvg = avg.toFixed(2);
           console.log('ltc market price', fixedAvg);
           this.maxBuyPrices[1].marketPrice = avg ? fixedAvg : 'N/A';
         }),
       this.autobotControlsService.getMarketPriceStream('eth-usd')
         .pipe(
           catchError(err => {
-            return of({ sequence: "0", bids: [[ 0, 0, 0 ]], asks: [[ 0, 0, 0 ]]});
+            return of({ sequence: '0', bids: [[ 0, 0, 0 ]], asks: [[ 0, 0, 0 ]]});
           }),
           distinctUntilChanged((valA, valB) => (valA.bids[0] === valB.bids[0]) || (valA.asks[0] === valB.asks[0])))
         .subscribe((data: ProductBookResponse) => {
           const currBuyPrice = Number(data.bids[0][0]);
-					const currSellPrice = Number(data.asks[0][0]);
-					const avg = (currSellPrice + currBuyPrice) / 2;
-					const fixedAvg = avg.toFixed(2);
+          const currSellPrice = Number(data.asks[0][0]);
+          const avg = (currSellPrice + currBuyPrice) / 2;
+          const fixedAvg = avg.toFixed(2);
           console.log('eth market price', fixedAvg);
           this.maxBuyPrices[2].marketPrice = avg ? fixedAvg : 'N/A';
         }),
@@ -486,6 +494,24 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           console.log('eth max buy price', data.price);
           this.maxBuyPrices[2].mainControl.setValue(data.price, { emitEvent: false });
         }),
+      this.autobotControlsService.getCurrentNumberOfScrumsStream('btc-usd')
+        .pipe(distinctUntilChanged((valA, valB) => valA.scrums === valB.scrums))
+        .subscribe((data: { scrums: number }) => {
+          console.log('btc current number of scrums', data.scrums);
+          this.maxNumberOfScrums[0].currentNumber = data.scrums;
+        }),
+      this.autobotControlsService.getCurrentNumberOfScrumsStream('ltc-usd')
+        .pipe(distinctUntilChanged((valA, valB) => valA.scrums === valB.scrums))
+        .subscribe((data: { scrums: number }) => {
+          console.log('ltc current number of scrums', data.scrums);
+          this.maxNumberOfScrums[1].currentNumber = data.scrums;
+        }),
+      this.autobotControlsService.getCurrentNumberOfScrumsStream('eth-usd')
+        .pipe(distinctUntilChanged((valA, valB) => valA.scrums === valB.scrums))
+        .subscribe((data: { scrums: number }) => {
+          console.log('eth current number of scrums', data.scrums);
+          this.maxNumberOfScrums[2].currentNumber = data.scrums;
+        }),
       this.autobotControlsService.getMaxNumberOfScrumsStream('btc-usd')
         .pipe(distinctUntilChanged((valA, valB) => valA.scrums === valB.scrums))
         .subscribe((data: { scrums: number }) => {
@@ -521,6 +547,18 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         .subscribe((data: { price: number }) => {
           console.log('eth profit threshold', data.price);
           this.profitThreshold[2].mainControl.setValue(data.price, { emitEvent: false });
+        }),
+      this.autobotControlsService.getUSDBalanceStream()
+        .pipe(
+          catchError(err => {
+            console.log('getUSDBalanceStream', 'error', err);
+            return of({balance: { amount: NaN } });
+          }),
+          distinctUntilChanged((valA, valB) => valA.balance.amount === valB.balance.amount))
+        .subscribe((data: { balance: { amount: number } }) => {
+          console.log('usd balance', data.balance);
+          const amount = (data && data.balance && data.balance.amount) || NaN;
+          this.state.usdBalanceCurrent = isNaN(amount) ? 'N/A' : `$${amount.toFixed(2)} USD`;
         }));
   }
 

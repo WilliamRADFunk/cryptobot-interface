@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { timer, Observable, of } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { Observable, of, timer } from 'rxjs';
+import { catchError, map, switchMap, take } from 'rxjs/operators';
 
 const INTERFACE_URL = 'http://www.williamrobertfunk.com';
 // const DATA_URL = 'http://167.99.149.6:3000/';
@@ -22,50 +22,39 @@ export class AutobotControlsService {
   constructor(private readonly http: HttpClient) { }
 
   private isSandbox(): Observable<{isSandbox: boolean}> {
-    return this.http.get<any>(`${DATA_URL}version`)
-      .pipe(take(1));
+    return this.http.get<any>(`${DATA_URL}version`).pipe(take(1));
   }
 
   public getMarketPriceStream(curr: string): Observable<ProductBookResponse> {
-    return timer(0, 1000)
-      .pipe(
-        switchMap(() => this.http.get<any>(`${true ? SANDBOX_URL : REAL_URL}products/${curr.toUpperCase()}/book`))
-      );
+    return timer(0, 1000).pipe(switchMap(() => this.http.get<any>(`${true ? SANDBOX_URL : REAL_URL}products/${curr.toUpperCase()}/book`)));
   }
 
   public getMaxBuyMoneyStream(curr: string): Observable<{amount: number}> {
-    return timer(200, 5000)
-      .pipe(
-        switchMap(() => this.http.get<any>(`${DATA_URL}maximum-buy-money/${curr}`))
-      );
+    return timer(200, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}maximum-buy-money/${curr}`)));
   }
 
   public getMaxBuyPriceStream(curr: string): Observable<{price: number}> {
-    return timer(400, 5000)
-      .pipe(
-        switchMap(() => this.http.get<any>(`${DATA_URL}maximum-buy-price/${curr}`))
-      );
+    return timer(400, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}maximum-buy-price/${curr}`)));
+  }
+
+  public getCurrentNumberOfScrumsStream(curr: string): Observable<{scrums: number}> {
+    return timer(500, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}current-number-of-scrums/${curr}`)));
   }
 
   public getMaxNumberOfScrumsStream(curr: string): Observable<{scrums: number}> {
-    return timer(600, 5000)
-      .pipe(
-        switchMap(() => this.http.get<any>(`${DATA_URL}maximum-number-of-scrums/${curr}`))
-      );
+    return timer(600, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}maximum-number-of-scrums/${curr}`)));
   }
 
   public getProfitThresholdStream(curr: string): Observable<{price: number}> {
-    return timer(700, 5000)
-      .pipe(
-        switchMap(() => this.http.get<any>(`${DATA_URL}profit-threshold/${curr}`))
-      );
+    return timer(700, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}profit-threshold/${curr}`)));
+  }
+
+  public getUSDBalanceStream(): Observable<{balance: { amount: number } }> {
+    return timer(800, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}usd`)));
   }
 
   public isBotActive(curr: string): Observable<{isActive: boolean}> {
-    return timer(800, 5000)
-      .pipe(
-        switchMap(() => this.http.get<any>(`${DATA_URL}bot-activity/${curr}`))
-      );
+    return timer(1000, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}bot-activity/${curr}`)));
   }
 
   public setMaxBuyMoney(curr: string, amount: number): void {

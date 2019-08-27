@@ -44,7 +44,7 @@
             .w-100.card.bg-secondary.text-white
               label.text-center.card-title([for]="maxNumberOfScrumsControl.id")
                 .d-inline-block.float-left.ml-1 {{ maxNumberOfScrumsControl.label }}
-                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1 {{ 0 }}
+                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1 {{ maxNumberOfScrumsControl.currentNumber }}
               .card-body
                 ng5-slider.text-white([id]="maxNumberOfScrumsControl.id", [formControl]="maxNumberOfScrumsControl.mainControl", [options]="maxNumberOfScrumsControl.options")
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
@@ -73,7 +73,7 @@
             .w-100.card.bg-secondary.text-white
               label.text-center.card-title([for]="maxBuyMoneyControl.id")
                 .d-inline-block.float-left.ml-1 {{ maxBuyMoneyControl.label }}
-                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1 {{ 0 }}
+                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1 {{ this.state.usdBalanceCurrent }}
               .card-body
                 ng5-slider.text-white([id]="maxBuyMoneyControl.id", [formControl]="maxBuyMoneyControl.mainControl", [options]="maxBuyMoneyControl.options")
     //- .row.control-height
