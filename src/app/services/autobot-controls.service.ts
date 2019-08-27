@@ -1,22 +1,35 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { timer, Observable } from 'rxjs';
+import { timer, Observable, of } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 
 const INTERFACE_URL = 'http://www.williamrobertfunk.com';
 // const DATA_URL = 'http://167.99.149.6:3000/';
 const DATA_URL = 'http://localhost:3000/';
+const REAL_URL = 'https://api.pro.coinbase.com/';
+const SANDBOX_URL = 'https://api-public.sandbox.pro.coinbase.com/';
+
+export interface ProductBookResponse {
+  sequence: string;
+  bids: [string, string, string][]; // [price, size, num-orders][]
+  asks: [string, string, string][]; // [price, size, num-orders][]
+}
 
 @Injectable()
 export class AutobotControlsService {
 
   constructor(private readonly http: HttpClient) { }
 
-  public getMarketPriceStream(curr: string): Observable<{price: number}> {
-    return timer(0, 2000)
+  private isSandbox(): Observable<{isSandbox: boolean}> {
+    return this.http.get<any>(`${DATA_URL}version`)
+      .pipe(take(1));
+  }
+
+  public getMarketPriceStream(curr: string): Observable<ProductBookResponse> {
+    return timer(0, 1000)
       .pipe(
-        switchMap(() => this.http.get<any>(`${DATA_URL}market/${curr}`))
+        switchMap(() => this.http.get<any>(`${true ? SANDBOX_URL : REAL_URL}products/${curr.toUpperCase()}/book`))
       );
   }
 
@@ -41,6 +54,13 @@ export class AutobotControlsService {
       );
   }
 
+  public getProfitThresholdStream(curr: string): Observable<{price: number}> {
+    return timer(700, 5000)
+      .pipe(
+        switchMap(() => this.http.get<any>(`${DATA_URL}profit-threshold/${curr}`))
+      );
+  }
+
   public isBotActive(curr: string): Observable<{isActive: boolean}> {
     return timer(800, 5000)
       .pipe(
@@ -62,6 +82,12 @@ export class AutobotControlsService {
 
   public setMaxNumberOfScrums(curr: string, scrums: number): void {
     this.http.put<any>(`${DATA_URL}maximum-number-of-scrums/${curr}`, { scrums })
+      .pipe(take(1))
+      .subscribe(res => {});
+  }
+
+  public setProfitThreshold(curr: string, price: number): void {
+    this.http.put<any>(`${DATA_URL}profit-threshold/${curr}`, { price })
       .pipe(take(1))
       .subscribe(res => {});
   }
