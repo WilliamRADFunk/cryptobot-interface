@@ -4,9 +4,9 @@
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
         .h2.text-center.custom-yellow.d-inline-block.pb-1(aria-label="Autobot Power") Autobot Power
         .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="First group")
-          button.btn.btn-success((click)="turnBotOn('all')", type="button")
+          button.btn.btn-success((click)="turnBotOn('all')", type="button", [ngbTooltip]="activateAllTooltip")
             span.fa.fa-play
-          button.btn.btn-danger((click)="turnBotOff('all')", type="button")
+          button.btn.btn-danger((click)="turnBotOff('all')", type="button", [ngbTooltip]="deactivateAllTooltip")
             span.fa.fa-stop
         .row(*ngFor="let botActive of activeBots")
           .col-2
@@ -14,11 +14,11 @@
           .col-10
             .w-100.btn-group.mb-2(role="group", aria-label="bot activate button group")
               ng-container(*ngIf="botActive.state; else activate")
-                button.btn.btn-success.active.w-100(type="button") Active
-                button.btn.btn-info.w-100((click)="turnBotOff(botActive.currencyType)", type="button") Disable
+                button.btn.btn-success.active.w-100(type="button", [ngbTooltip]="activatedTooltip") Active
+                button.btn.btn-info.w-100((click)="turnBotOff(botActive.currencyType)", type="button", [ngbTooltip]="deactivateTooltip") Disable
               ng-template(#activate="")
-                button.btn.btn-info.w-100((click)="turnBotOn(botActive.currencyType)", type="button") Activate
-                button.btn.btn-success.active.w-100(type="button") Disabled
+                button.btn.btn-info.w-100((click)="turnBotOn(botActive.currencyType)", type="button", [ngbTooltip]="activateTooltip") Activate
+                button.btn.btn-success.active.w-100(type="button", [ngbTooltip]="deactivatedTooltip") Disabled
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
         .h2.text-center.custom-yellow.d-inline-block(aria-label="Max Buy Price") Max Buy Price
         .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="First group")
@@ -30,7 +30,7 @@
             .w-100.card.bg-secondary.text-white
               label.text-center.card-title([for]="maxBuyPriceControl.id")
                 .d-inline-block.float-left.ml-1 {{ maxBuyPriceControl.label }}
-                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1 {{ ((maxBuyPriceControl.marketPrice === 'N/A') ? '' : '$') + maxBuyPriceControl.marketPrice }}
+                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1([ngbTooltip]="currentPriceTooltip") {{ ((maxBuyPriceControl.marketPrice === 'N/A') ? '' : '$') + maxBuyPriceControl.marketPrice }}
               .card-body
                 ng5-slider.text-white([id]="maxBuyPriceControl.id", [formControl]="maxBuyPriceControl.mainControl", [options]="maxBuyPriceControl.options")
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
@@ -44,7 +44,7 @@
             .w-100.card.bg-secondary.text-white
               label.text-center.card-title([for]="maxNumberOfScrumsControl.id")
                 .d-inline-block.float-left.ml-1 {{ maxNumberOfScrumsControl.label }}
-                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1 {{ maxNumberOfScrumsControl.currentNumber }}
+                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1([ngbTooltip]="numScrumsTooltip") {{ maxNumberOfScrumsControl.currentNumber }}
               .card-body
                 ng5-slider.text-white([id]="maxNumberOfScrumsControl.id", [formControl]="maxNumberOfScrumsControl.mainControl", [options]="maxNumberOfScrumsControl.options")
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
@@ -58,7 +58,7 @@
             .w-100.card.bg-secondary.text-white
               label.text-center.card-title.mb-1.pb-0([for]="profitThresholdControl.id")
                 .d-inline-block.float-left.ml-1 {{ profitThresholdControl.label }}
-                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1 {{ calcSalePriceForProfit(maxBuyPrices[index].marketPrice, maxBuyMoney[index].mainControl.value, profitThresholdControl.mainControl.value + profitThresholdControl.secondaryControl.value) }}
+                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1([ngbTooltip]="minSellPriceTooltip") {{ calcSalePriceForProfit(maxBuyPrices[index].marketPrice, maxBuyMoney[index].mainControl.value, profitThresholdControl.mainControl.value + profitThresholdControl.secondaryControl.value) }}
               .card-body.pt-0.pb-1
                 ng5-slider.text-white(id="{{profitThresholdControl.id}}-dollars", [formControl]="profitThresholdControl.mainControl", [options]="profitThresholdControl.mainOptions")
                 ng5-slider.text-white(id="{{profitThresholdControl.id}}-cents", [formControl]="profitThresholdControl.secondaryControl", [options]="profitThresholdControl.secondaryOptions")
@@ -73,29 +73,40 @@
             .w-100.card.bg-secondary.text-white
               label.text-center.card-title([for]="maxBuyMoneyControl.id")
                 .d-inline-block.float-left.ml-1 {{ maxBuyMoneyControl.label }}
-                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1 {{ this.state.usdBalanceCurrent }}
+                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1([ngbTooltip]="usdBalanceTooltip") {{ this.state.usdBalanceCurrent }}
               .card-body
                 ng5-slider.text-white([id]="maxBuyMoneyControl.id", [formControl]="maxBuyMoneyControl.mainControl", [options]="maxBuyMoneyControl.options")
+ng-template(#currentPriceTooltip="")
+  .div Current Market Price
+ng-template(#numScrumsTooltip="")
+  .div Number of Active Trades
+ng-template(#minSellPriceTooltip="")
+  .div Minimum Sell Price
+ng-template(#usdBalanceTooltip="")
+  .div Total USD Balance
+ng-template(#activateAllTooltip="")
+  .div Activate All Currency Traders
+ng-template(#deactivateAllTooltip="")
+  .div Deactivate All Currency Traders
+ng-template(#activatedTooltip="")
+  .div This bot is active
+ng-template(#activateTooltip="")
+  .div Click to Activate
+ng-template(#deactivatedTooltip="")
+  .div This bot is not active
+ng-template(#deactivateTooltip="")
+  .div Click to Deactivate
     //- .row.control-height
     //-   .col-12.col-sm-12.col-md-12.col-lg-12.card
     //-     div market change sensitivity
     //- .row.control-height
     //-   .col-12.col-sm-12.col-md-12.col-lg-12.card
     //-     div time between buys
-    //- .row.control-height
-    //-   .col-12.col-sm-12.col-md-12.col-lg-12.card
-    //-     div currency buys distribution
 
 //- TODO:
-//- * Need to fetch current price of given currency
-//- * Need to fetch current amount in usd
 //- * Need to fetch current number of pending buy
 //- * Need to fetch current number of pending sells
 //- * Need to fetch current market direction
 //- * Need to add api calls to set the controls labeled in this component
-//- * Need to add kill switch
-//- * Need to add start switch
 
 //- * Need to fetch trading bot logs as stream
-//- * Setup api for the above
-//- * Adjust trading bot to handle the other currencies

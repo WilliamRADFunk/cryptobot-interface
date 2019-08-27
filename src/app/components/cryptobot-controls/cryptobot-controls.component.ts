@@ -552,13 +552,13 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         .pipe(
           catchError(err => {
             console.log('getUSDBalanceStream', 'error', err);
-            return of({balance: { amount: NaN } });
+            return of({ balance: NaN });
           }),
-          distinctUntilChanged((valA, valB) => valA.balance.amount === valB.balance.amount))
-        .subscribe((data: { balance: { amount: number } }) => {
-          console.log('usd balance', data.balance);
-          const amount = (data && data.balance && data.balance.amount) || NaN;
-          this.state.usdBalanceCurrent = isNaN(amount) ? 'N/A' : `$${amount.toFixed(2)} USD`;
+          distinctUntilChanged((valA, valB) => valA.balance === valB.balance))
+        .subscribe((data: { balance: number }) => {
+          const amount = Number(data.balance) || NaN;
+          console.log('usd balance', amount);
+          this.state.usdBalanceCurrent = isNaN(amount) ? 'N/A' : `$${amount.toFixed(2)}`;
         }));
   }
 

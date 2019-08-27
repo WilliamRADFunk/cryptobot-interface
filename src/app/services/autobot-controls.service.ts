@@ -49,7 +49,7 @@ export class AutobotControlsService {
     return timer(700, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}profit-threshold/${curr}`)));
   }
 
-  public getUSDBalanceStream(): Observable<{balance: { amount: number } }> {
+  public getUSDBalanceStream(): Observable<{ balance: number }> {
     return timer(800, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}usd`)));
   }
 
