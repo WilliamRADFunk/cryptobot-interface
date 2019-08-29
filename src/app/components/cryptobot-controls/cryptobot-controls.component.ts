@@ -271,22 +271,25 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       state: false
     }
   ];
-  public readonly marketTrends: {currencyType: string; id: string; label: string; state: string}[] = [
+  public readonly marketTrends: {currencyType: string; id: string; label: string; previousStates: number[]; state: string}[] = [
     {
       currencyType: 'btc-usd',
       id: 'market-trend-btc',
       label: 'BTC',
+      previousStates: [10, 10, 10, 10, 10],
       state: 'Buying'
     },
     {
       currencyType: 'ltc-usd',
       id: 'market-trend-ltc',
       label: 'LTC',
+      previousStates: [10, 10, 10, 10, 10],
       state: 'Buying'
     },
     {
       currencyType: 'eth-usd',
       id: 'market-trend-eth',
+      previousStates: [10, 10, 10, 10, 10],
       label: 'ETH',
       state: 'Buying'
     }
@@ -579,6 +582,43 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           console.log('eth profit threshold', data.price);
           this.profitThreshold[2].mainControl.setValue(data.price, { emitEvent: false });
         }),
+      this.autobotControlsService.getMarketTrend('btc-usd')
+        .pipe(
+          catchError(err => {
+            return of({ trend: 10 });
+          }),
+          distinctUntilChanged((valA, valB) => valA.trend === valB.trend))
+        .subscribe((data: { trend: number }) => {
+          console.log('btc market price', data.trend);
+          this.marketTrends[0].state = this._getState(data.trend);
+          this.marketTrends[0].previousStates.shift();
+          this.marketTrends[0].previousStates.push(data.trend);
+          this._updateChart();
+        }),
+      this.autobotControlsService.getMarketTrend('ltc-usd')
+        .pipe(
+          catchError(err => {
+            return of({ trend: 10 });
+          }),
+          distinctUntilChanged((valA, valB) => valA.trend === valB.trend))
+        .subscribe((data: { trend: number }) => {
+          console.log('ltc market price', data.trend);
+          this.marketTrends[1].state = this._getState(data.trend);
+          this.marketTrends[1].previousStates.shift();
+          this.marketTrends[1].previousStates.push(data.trend);
+        }),
+      this.autobotControlsService.getMarketTrend('eth-usd')
+        .pipe(
+          catchError(err => {
+            return of({ trend: 10 });
+          }),
+          distinctUntilChanged((valA, valB) => valA.trend === valB.trend))
+        .subscribe((data: { trend: number }) => {
+          console.log('eth market price', data.trend);
+          this.marketTrends[2].state = this._getState(data.trend);
+          this.marketTrends[2].previousStates.shift();
+          this.marketTrends[2].previousStates.push(data.trend);
+        }),
       this.autobotControlsService.getUSDBalanceStream()
         .pipe(
           catchError(err => {
@@ -591,17 +631,29 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           console.log('usd balance', amount);
           this.state.usdBalanceCurrent = isNaN(amount) ? 'N/A' : `$${amount.toFixed(2)}`;
         }));
-      this._updateChart([1]);
+      this._updateChart();
+  }
+
+  private _getState(state: number): string {
+    switch(state) {
+      case 0: {
+        return 'Selling';
+      }
+      case 10: {
+        return 'Static';
+      }
+      case 20: {
+        return 'Buying';
+      }
+    }
   }
   /**
   * When new data is received, it's passed to this function.
   * Here the chart details assembled, and the chartReady flag is released.
-  * @param data queried market data passed from the GdaxDataService.
   */
-  private _updateChart(data: number[]): void {
-    if (!data.length) {
-      return;
-    }
+  private _updateChart(): void {
+    this.chartReady = false;
+    this.chart = null;
     const options = {};
     options['chart'] = {
       type: 'line',
@@ -676,10 +728,11 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
     const dps1 = [];
     const dps2 = [];
     const dps3 = [];
-    const data1 = [20, 20, 10, 10, 0];
-    const data2 = [10, 20, 10, 20, 10];
-    const data3 = [10, 10, 10, 10, 10];
-    for (let i = 0; i < data1.length; i++) {
+    const data1 = this.marketTrends[0].previousStates;
+    const data2 = this.marketTrends[1].previousStates;
+    const data3 = this.marketTrends[2].previousStates;
+    let i = 0;
+    for (i; i < data1.length; i++) {
       const dp11 = {
         value: data1[i],
         x: i * 5,
@@ -719,9 +772,10 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       };
       dps3.push(dp32);
     }
-    dps1.reverse();
-    dps2.reverse();
-    dps3.reverse();
+    // dps1.reverse();
+    // dps2.reverse();
+    // dps3.reverse();
+    console.log('Array', dps1, dps2, dps3);
     dps1.forEach(element => { tempChart.addPoint(element, 0); });
     dps2.forEach(element => { tempChart.addPoint(element, 1); });
     dps3.forEach(element => { tempChart.addPoint(element, 2); });

@@ -53,6 +53,10 @@ export class AutobotControlsService {
     return timer(800, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}usd`)));
   }
 
+  public getMarketTrend(curr: string): Observable<{ trend: number }> {
+    return timer(1000, 1000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}market-trend/${curr}`)));
+  }
+
   public isBotActive(curr: string): Observable<{isActive: boolean}> {
     return timer(1000, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}bot-activity/${curr}`)));
   }
