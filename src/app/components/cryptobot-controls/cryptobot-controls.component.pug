@@ -4,9 +4,9 @@
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
         .h2.text-center.custom-yellow.d-inline-block.pb-1(aria-label="Autobot Power") Autobot Power
         .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="First group")
-          button.btn.btn-success((click)="turnBotOn('all')", type="button", [ngbTooltip]="activateAllTooltip")
+          button.btn.btn-success((click)="turnBotOn('all')", type="button", [ngbTooltip]="activateAllTooltip", container="body")
             span.fa.fa-play
-          button.btn.btn-danger((click)="turnBotOff('all')", type="button", [ngbTooltip]="deactivateAllTooltip")
+          button.btn.btn-danger((click)="turnBotOff('all')", type="button", [ngbTooltip]="deactivateAllTooltip", container="body")
             span.fa.fa-stop
         .row(*ngFor="let botActive of activeBots")
           .col-2
@@ -14,11 +14,11 @@
           .col-10
             .w-100.btn-group.mb-2(role="group", aria-label="bot activate button group")
               ng-container(*ngIf="botActive.state; else activate")
-                button.btn.btn-success.active.w-100(type="button", [ngbTooltip]="activatedTooltip") Active
-                button.btn.btn-info.w-100((click)="turnBotOff(botActive.currencyType)", type="button", [ngbTooltip]="deactivateTooltip") Disable
+                button.btn.btn-success.active.w-100(type="button", [ngbTooltip]="activatedTooltip", container="body") Active
+                button.btn.btn-info.w-100((click)="turnBotOff(botActive.currencyType)", type="button", [ngbTooltip]="deactivateTooltip", container="body") Disable
               ng-template(#activate="")
-                button.btn.btn-info.w-100((click)="turnBotOn(botActive.currencyType)", type="button", [ngbTooltip]="activateTooltip") Activate
-                button.btn.btn-success.active.w-100(type="button", [ngbTooltip]="deactivatedTooltip") Disabled
+                button.btn.btn-info.w-100((click)="turnBotOn(botActive.currencyType)", type="button", [ngbTooltip]="activateTooltip", container="body") Activate
+                button.btn.btn-success.active.w-100(type="button", [ngbTooltip]="deactivatedTooltip", container="body") Disabled
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
         .h2.text-center.custom-yellow.d-inline-block(aria-label="Max Buy Price") Max Buy Price
         .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="First group")
@@ -30,7 +30,7 @@
             .w-100.card.bg-secondary.text-white
               label.text-center.card-title([for]="maxBuyPriceControl.id")
                 .d-inline-block.float-left.ml-1 {{ maxBuyPriceControl.label }}
-                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1([ngbTooltip]="currentPriceTooltip") {{ ((maxBuyPriceControl.marketPrice === 'N/A') ? '' : '$') + maxBuyPriceControl.marketPrice }}
+                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1([ngbTooltip]="currentPriceTooltip", container="body") {{ ((maxBuyPriceControl.marketPrice === 'N/A') ? '' : '$') + maxBuyPriceControl.marketPrice }}
               .card-body
                 ng5-slider.text-white([id]="maxBuyPriceControl.id", [formControl]="maxBuyPriceControl.mainControl", [options]="maxBuyPriceControl.options")
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
@@ -44,7 +44,7 @@
             .w-100.card.bg-secondary.text-white
               label.text-center.card-title([for]="maxNumberOfScrumsControl.id")
                 .d-inline-block.float-left.ml-1 {{ maxNumberOfScrumsControl.label }}
-                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1([ngbTooltip]="numScrumsTooltip") {{ maxNumberOfScrumsControl.currentNumber }}
+                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1([ngbTooltip]="numScrumsTooltip", container="body") {{ maxNumberOfScrumsControl.currentNumber }}
               .card-body
                 ng5-slider.text-white([id]="maxNumberOfScrumsControl.id", [formControl]="maxNumberOfScrumsControl.mainControl", [options]="maxNumberOfScrumsControl.options")
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
@@ -58,7 +58,7 @@
             .w-100.card.bg-secondary.text-white
               label.text-center.card-title.mb-1.pb-0([for]="profitThresholdControl.id")
                 .d-inline-block.float-left.ml-1 {{ profitThresholdControl.label }}
-                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1([ngbTooltip]="minSellPriceTooltip") {{ calcSalePriceForProfit(maxBuyPrices[index].marketPrice, maxBuyMoney[index].mainControl.value, profitThresholdControl.mainControl.value + profitThresholdControl.secondaryControl.value) }}
+                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1([ngbTooltip]="minSellPriceTooltip", container="body") {{ calcSalePriceForProfit(maxBuyPrices[index].marketPrice, maxBuyMoney[index].mainControl.value, profitThresholdControl.mainControl.value + profitThresholdControl.secondaryControl.value) }}
               .card-body.pt-0.pb-1
                 ng5-slider.text-white(id="{{profitThresholdControl.id}}-dollars", [formControl]="profitThresholdControl.mainControl", [options]="profitThresholdControl.mainOptions")
                 ng5-slider.text-white(id="{{profitThresholdControl.id}}-cents", [formControl]="profitThresholdControl.secondaryControl", [options]="profitThresholdControl.secondaryOptions")
@@ -73,9 +73,23 @@
             .w-100.card.bg-secondary.text-white
               label.text-center.card-title([for]="maxBuyMoneyControl.id")
                 .d-inline-block.float-left.ml-1 {{ maxBuyMoneyControl.label }}
-                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1([ngbTooltip]="usdBalanceTooltip") {{ this.state.usdBalanceCurrent }}
+                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1([ngbTooltip]="usdBalanceTooltip", container="body") {{ state.usdBalanceCurrent }}
               .card-body
                 ng5-slider.text-white([id]="maxBuyMoneyControl.id", [formControl]="maxBuyMoneyControl.mainControl", [options]="maxBuyMoneyControl.options")
+      .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
+        .h2.text-center.custom-yellow.d-inline-block(aria-label="Mareket Trend Group") Market Trend
+        .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="First group")
+          button.btn.btn-secondary((click)="toggleMarketTrend('btc-usd')", type="button", [class.active]="state.marketTrendCurrent === 'btc-usd'") BTC
+          button.btn.btn-secondary((click)="toggleMarketTrend('ltc-usd')", type="button", [class.active]="state.marketTrendCurrent === 'ltc-usd'") LTC
+          button.btn.btn-secondary((click)="toggleMarketTrend('eth-usd')", type="button", [class.active]="state.marketTrendCurrent === 'eth-usd'") ETH
+        .w-100.card.bg-secondary.text-white
+          span(*ngFor="let marketTrend of marketTrends")
+            ng-container(*ngIf="state.marketTrendCurrent === marketTrend.currencyType")
+              label.w-100.card-title.pb-0.mb-0([for]="marketTrend.id")
+                .d-inline-block.float-left.ml-1 {{ marketTrend.label }}
+                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1([ngbTooltip]="marketTrendTooltip", container="body") {{ marketTrend.state }}
+          .card-body.pt-0.pb-1
+            div.rounded(*ngIf="chartReady", [chart]="chart", style="height: 105px; border: 2px solid #8EBA6A;")
 ng-template(#currentPriceTooltip="")
   .div Current Market Price
 ng-template(#numScrumsTooltip="")
@@ -96,6 +110,8 @@ ng-template(#deactivatedTooltip="")
   .div This bot is not active
 ng-template(#deactivateTooltip="")
   .div Click to Deactivate
+ng-template(#marketTrendTooltip="")
+  .div Current Market Trend
     //- .row.control-height
     //-   .col-12.col-sm-12.col-md-12.col-lg-12.card
     //-     div market change sensitivity

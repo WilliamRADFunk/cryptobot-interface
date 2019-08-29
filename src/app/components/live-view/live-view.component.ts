@@ -83,7 +83,7 @@ export class LiveViewComponent implements OnDestroy, OnInit {
     }
     const options = {};
     options['chart'] = {
-      type: 'line',
+      type: 'spline',
       backgroundColor: 'rgba(255, 255, 255, 0)'
     };
     options['title'] = {

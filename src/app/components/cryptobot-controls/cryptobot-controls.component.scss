@@ -16,3 +16,13 @@
 ::ng-deep .ng5-slider .ng5-slider-bubble {
     color: #ffc000 !important;
 }
+
+::ng-deep .highcharts-axis.highcharts-color-X .highcharts-axis-line {
+  stroke: #8EBA6A33;
+  stroke-width: 0.5px;
+}
+
+::ng-deep .highcharts-axis.highcharts-color-Y .highcharts-axis-line {
+  stroke: #8EBA6A;
+  stroke-width: 0px;
+}

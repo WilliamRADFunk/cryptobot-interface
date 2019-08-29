@@ -1,13 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 import { of } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
 import { catchError, distinctUntilChanged, map } from 'rxjs/operators';
 import { Options } from 'ng5-slider';
+import { Chart } from 'angular-highcharts';
 
 import { GdaxDataService } from '../../services/gdax-data.service';
 import { AutobotControlsService, ProductBookResponse } from '../../services/autobot-controls.service';
-import { FormControl } from '@angular/forms';
 
 export interface CurrencyControl {
   currencyType: string;
@@ -38,6 +39,15 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
    * Subscriptions to unsubscribe from onDestroy
    */
   private readonly _subs: Subscription[] = [];
+  /**
+  * The main chart object to be constructed whenever new
+  * data is returned from the service.
+  */
+  public chart: Chart;
+  /**
+  * Flag to prevent chart compilation until after chart is created.
+  */
+  public chartReady: boolean = false;
   public readonly maxBuyMoney: CurrencyControl[] = [
     {
       currencyType: 'btc-usd',
@@ -261,7 +271,28 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       state: false
     }
   ];
+  public readonly marketTrends: {currencyType: string; id: string; label: string; state: string}[] = [
+    {
+      currencyType: 'btc-usd',
+      id: 'market-trend-btc',
+      label: 'BTC',
+      state: 'Buying'
+    },
+    {
+      currencyType: 'ltc-usd',
+      id: 'market-trend-ltc',
+      label: 'LTC',
+      state: 'Buying'
+    },
+    {
+      currencyType: 'eth-usd',
+      id: 'market-trend-eth',
+      label: 'ETH',
+      state: 'Buying'
+    }
+  ];
   public state: { [key: string]: string; } = {
+    marketTrendCurrent: 'btc-usd',
     maxBuyMoneyCurrent: 'btc-usd',
     maxBuyPriceCurrent: 'btc-usd',
     maxNumberOfScrumsCurrent: 'btc-usd',
@@ -560,6 +591,145 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           console.log('usd balance', amount);
           this.state.usdBalanceCurrent = isNaN(amount) ? 'N/A' : `$${amount.toFixed(2)}`;
         }));
+      this._updateChart([1]);
+  }
+  /**
+  * When new data is received, it's passed to this function.
+  * Here the chart details assembled, and the chartReady flag is released.
+  * @param data queried market data passed from the GdaxDataService.
+  */
+  private _updateChart(data: number[]): void {
+    if (!data.length) {
+      return;
+    }
+    const options = {};
+    options['chart'] = {
+      type: 'line',
+      backgroundColor: 'rgb(22, 41, 22)',
+      height: '100'
+    };
+    options['title'] = {
+      text: null
+    };
+    options['credits'] = {
+      enabled: false
+    };
+    options['series'] = [
+      {
+        animation: false,
+        showInLegend: false,
+        name: null,
+        color: '#8EBA6A',
+        data: [],
+        visible: true
+      },
+      {
+        animation: false,
+        showInLegend: false,
+        name: null,
+        color: '#8EBA6A',
+        data: [],
+        visible: false
+      },
+      {
+        animation: false,
+        showInLegend: false,
+        name: null,
+        color: '#8EBA6A',
+        data: [],
+        visible: false
+      }
+    ];
+    options['tooltip'] = {
+      enabled: false
+    };
+    options['xAxis'] = [{
+      className: 'highcharts-color-X',
+      labels: {
+        enabled: false
+      },
+      min: 0,
+      max: 25,
+      showInLegend: false,
+      tickLength: 1,
+      tickInterval: 5,
+      title: {
+        text: null
+      }
+    }];
+    options['yAxis'] = {
+      className: 'highcharts-color-Y',
+      gridLineWidth: 0.5,
+      labels: {
+        enabled: false
+      },
+      min: 0,
+      max: 20,
+      showInLegend: false,
+      tickLength: 0,
+      tickInterval: 10,
+      title: {
+        text: null
+      }
+    };
+    const tempChart = new Chart(options);
+    const dps1 = [];
+    const dps2 = [];
+    const dps3 = [];
+    const data1 = [20, 20, 10, 10, 0];
+    const data2 = [10, 20, 10, 20, 10];
+    const data3 = [10, 10, 10, 10, 10];
+    for (let i = 0; i < data1.length; i++) {
+      const dp11 = {
+        value: data1[i],
+        x: i * 5,
+        y: data1[i],
+      };
+      dps1.push(dp11);
+      const dp12 = {
+        value: data1[i],
+        x: i * 5 + 5,
+        y: data1[i],
+      };
+      dps1.push(dp12);
+
+      const dp21 = {
+        value: data2[i],
+        x: i * 5,
+        y: data2[i],
+      };
+      dps2.push(dp21);
+      const dp22 = {
+        value: data2[i],
+        x: i * 5 + 5,
+        y: data2[i],
+      };
+      dps2.push(dp22);
+
+      const dp31 = {
+        value: data3[i],
+        x: i * 5,
+        y: data3[i],
+      };
+      dps3.push(dp31);
+      const dp32 = {
+        value: data3[i],
+        x: i * 5 + 5,
+        y: data3[i],
+      };
+      dps3.push(dp32);
+    }
+    dps1.reverse();
+    dps2.reverse();
+    dps3.reverse();
+    dps1.forEach(element => { tempChart.addPoint(element, 0); });
+    dps2.forEach(element => { tempChart.addPoint(element, 1); });
+    dps3.forEach(element => { tempChart.addPoint(element, 2); });
+    this.chart = tempChart;
+    this.chartReady = true;
+    this.chart.ref.series[0].show();
+    this.chart.ref.series[1].hide();
+    this.chart.ref.series[2].hide();
   }
 
   public calcSalePriceForProfit(currentBuy: number, maxMoney: number, profitThreshold: number): string {
@@ -571,6 +741,31 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
 
     const sellBase = (buyBase + feeCalulated + profitThreshold);
     return isNaN(sellBase) ? 'N/A' : '$' + (sellBase / buySize).toFixed(2);
+  }
+
+  public toggleMarketTrend(currency: string) {
+    this.state.marketTrendCurrent = currency;
+    switch(currency) {
+      case 'btc-usd': {
+        this.chart.ref.series[0].show();
+        this.chart.ref.series[1].hide();
+        this.chart.ref.series[2].hide();
+        break;
+      }
+      case 'ltc-usd': {
+        this.chart.ref.series[0].hide();
+        this.chart.ref.series[1].show();
+        this.chart.ref.series[2].hide();
+        break;
+      }
+      case 'eth-usd': {
+        this.chart.ref.series[0].hide();
+        this.chart.ref.series[1].hide();
+        this.chart.ref.series[2].show();
+        break;
+      }
+    }
+    console.log(currency, this.state.marketTrendCurrent);
   }
 
   public toggleMaxBuyMoney(currency: string) {
