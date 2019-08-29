@@ -276,14 +276,14 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       currencyType: 'btc-usd',
       id: 'market-trend-btc',
       label: 'BTC',
-      previousStates: [10, 10, 10, 10, 10],
+      previousStates: [0, 10, 10, 10, 0],
       state: 'Buying'
     },
     {
       currencyType: 'ltc-usd',
       id: 'market-trend-ltc',
       label: 'LTC',
-      previousStates: [10, 10, 10, 10, 10],
+      previousStates: [10, 20, 10, 20, 10],
       state: 'Buying'
     },
     {
@@ -461,7 +461,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           const currSellPrice = Number(data.asks[0][0]);
           const avg = (currSellPrice + currBuyPrice) / 2;
           const fixedAvg = avg.toFixed(2);
-          console.log('btc market price', fixedAvg);
+          // console.log('btc market price', fixedAvg);
           this.maxBuyPrices[0].marketPrice = avg ? fixedAvg : 'N/A';
         }),
       this.autobotControlsService.getMarketPriceStream('ltc-usd')
@@ -475,7 +475,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           const currSellPrice = Number(data.asks[0][0]);
           const avg = (currSellPrice + currBuyPrice) / 2;
           const fixedAvg = avg.toFixed(2);
-          console.log('ltc market price', fixedAvg);
+          // console.log('ltc market price', fixedAvg);
           this.maxBuyPrices[1].marketPrice = avg ? fixedAvg : 'N/A';
         }),
       this.autobotControlsService.getMarketPriceStream('eth-usd')
@@ -489,7 +489,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           const currSellPrice = Number(data.asks[0][0]);
           const avg = (currSellPrice + currBuyPrice) / 2;
           const fixedAvg = avg.toFixed(2);
-          console.log('eth market price', fixedAvg);
+          // console.log('eth market price', fixedAvg);
           this.maxBuyPrices[2].marketPrice = avg ? fixedAvg : 'N/A';
         }),
       this.autobotControlsService.getMaxBuyMoneyStream('btc-usd')
@@ -585,11 +585,10 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       this.autobotControlsService.getMarketTrend('btc-usd')
         .pipe(
           catchError(err => {
-            return of({ trend: 10 });
-          }),
-          distinctUntilChanged((valA, valB) => valA.trend === valB.trend))
+            return of({ trend: -10 });
+          }))
         .subscribe((data: { trend: number }) => {
-          console.log('btc market price', data.trend);
+          console.log('btc market trend', data.trend);
           this.marketTrends[0].state = this._getState(data.trend);
           this.marketTrends[0].previousStates.shift();
           this.marketTrends[0].previousStates.push(data.trend);
@@ -598,26 +597,26 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       this.autobotControlsService.getMarketTrend('ltc-usd')
         .pipe(
           catchError(err => {
-            return of({ trend: 10 });
-          }),
-          distinctUntilChanged((valA, valB) => valA.trend === valB.trend))
+            return of({ trend: -10 });
+          }))
         .subscribe((data: { trend: number }) => {
-          console.log('ltc market price', data.trend);
+          console.log('ltc market trend', data.trend);
           this.marketTrends[1].state = this._getState(data.trend);
           this.marketTrends[1].previousStates.shift();
           this.marketTrends[1].previousStates.push(data.trend);
+          this._updateChart();
         }),
       this.autobotControlsService.getMarketTrend('eth-usd')
         .pipe(
           catchError(err => {
-            return of({ trend: 10 });
-          }),
-          distinctUntilChanged((valA, valB) => valA.trend === valB.trend))
+            return of({ trend: -10 });
+          }))
         .subscribe((data: { trend: number }) => {
-          console.log('eth market price', data.trend);
+          console.log('eth market trend', data.trend);
           this.marketTrends[2].state = this._getState(data.trend);
           this.marketTrends[2].previousStates.shift();
           this.marketTrends[2].previousStates.push(data.trend);
+          this._updateChart();
         }),
       this.autobotControlsService.getUSDBalanceStream()
         .pipe(
@@ -731,8 +730,8 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
     const data1 = this.marketTrends[0].previousStates;
     const data2 = this.marketTrends[1].previousStates;
     const data3 = this.marketTrends[2].previousStates;
-    let i = 0;
-    for (i; i < data1.length; i++) {
+
+    for (let i = 0; i < data1.length; i++) {
       const dp11 = {
         value: data1[i],
         x: i * 5,
@@ -772,18 +771,11 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       };
       dps3.push(dp32);
     }
-    // dps1.reverse();
-    // dps2.reverse();
-    // dps3.reverse();
-    console.log('Array', dps1, dps2, dps3);
     dps1.forEach(element => { tempChart.addPoint(element, 0); });
     dps2.forEach(element => { tempChart.addPoint(element, 1); });
     dps3.forEach(element => { tempChart.addPoint(element, 2); });
     this.chart = tempChart;
     this.chartReady = true;
-    this.chart.ref.series[0].show();
-    this.chart.ref.series[1].hide();
-    this.chart.ref.series[2].hide();
   }
 
   public calcSalePriceForProfit(currentBuy: number, maxMoney: number, profitThreshold: number): string {

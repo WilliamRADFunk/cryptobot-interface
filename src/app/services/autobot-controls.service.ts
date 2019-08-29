@@ -54,7 +54,7 @@ export class AutobotControlsService {
   }
 
   public getMarketTrend(curr: string): Observable<{ trend: number }> {
-    return timer(1000, 1000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}market-trend/${curr}`)));
+    return timer(2000, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}market-trend/${curr}`)));
   }
 
   public isBotActive(curr: string): Observable<{isActive: boolean}> {
