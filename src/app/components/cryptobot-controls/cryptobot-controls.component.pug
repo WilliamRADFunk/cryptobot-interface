@@ -90,6 +90,20 @@
                 .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1([ngbTooltip]="marketTrendTooltip", container="body") {{ marketTrend.state }}
           .card-body.pt-0.pb-1
             div.rounded(*ngIf="chartReady", [chart]="chart", style="height: 105px; border: 2px solid #8EBA6A;")
+      .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
+        .h2.text-center.custom-yellow.d-inline-block(aria-label="Min Trend Data Points Group") Min Trend Data Points
+        .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="First group")
+          button.btn.btn-secondary((click)="toggleMinTrendDataPoints('btc-usd')", type="button", [class.active]="state.minTrendDataPointsCurrent === 'btc-usd'") BTC
+          button.btn.btn-secondary((click)="toggleMinTrendDataPoints('ltc-usd')", type="button", [class.active]="state.minTrendDataPointsCurrent === 'ltc-usd'") LTC
+          button.btn.btn-secondary((click)="toggleMinTrendDataPoints('eth-usd')", type="button", [class.active]="state.minTrendDataPointsCurrent === 'eth-usd'") ETH
+        span(*ngFor="let minTrendDataPointsControl of minTrendDataPoints")
+          ng-container(*ngIf="state.minTrendDataPointsCurrent === minTrendDataPointsControl.currencyType")
+            .w-100.card.bg-secondary.text-white
+              label.text-center.card-title([for]="minTrendDataPointsControl.id")
+                .d-inline-block.float-left.ml-1 {{ minTrendDataPointsControl.label }}
+                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1([ngbTooltip]="usdBalanceTooltip", container="body") {{ state.usdBalanceCurrent }}
+              .card-body
+                ng5-slider.text-white([id]="minTrendDataPointsControl.id", [formControl]="minTrendDataPointsControl.mainControl", [options]="minTrendDataPointsControl.options")
 ng-template(#currentPriceTooltip="")
   .div Current Market Price
 ng-template(#numScrumsTooltip="")
@@ -122,7 +136,6 @@ ng-template(#marketTrendTooltip="")
 //- TODO:
 //- * Need to fetch current number of pending buy
 //- * Need to fetch current number of pending sells
-//- * Need to fetch current market direction
 //- * Need to add api calls to set the controls labeled in this component
 
 //- * Need to fetch trading bot logs as stream
