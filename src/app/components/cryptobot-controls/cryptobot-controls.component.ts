@@ -276,14 +276,14 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       currencyType: 'btc-usd',
       id: 'market-trend-btc',
       label: 'BTC',
-      previousStates: [0, 10, 10, 10, 0],
+      previousStates: [10, 10, 10, 10, 10],
       state: 'Buying'
     },
     {
       currencyType: 'ltc-usd',
       id: 'market-trend-ltc',
       label: 'LTC',
-      previousStates: [10, 20, 10, 20, 10],
+      previousStates: [10, 10, 10, 10, 10],
       state: 'Buying'
     },
     {
@@ -672,7 +672,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         name: null,
         color: '#8EBA6A',
         data: [],
-        visible: true
+        visible: this.state.marketTrendCurrent === 'btc-usd'
       },
       {
         animation: false,
@@ -680,7 +680,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         name: null,
         color: '#8EBA6A',
         data: [],
-        visible: false
+        visible: this.state.marketTrendCurrent === 'ltc-usd'
       },
       {
         animation: false,
@@ -688,7 +688,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         name: null,
         color: '#8EBA6A',
         data: [],
-        visible: false
+        visible: this.state.marketTrendCurrent === 'eth-usd'
       }
     ];
     options['tooltip'] = {
