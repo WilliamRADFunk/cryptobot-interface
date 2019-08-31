@@ -45,6 +45,10 @@ export class AutobotControlsService {
     return timer(600, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}maximum-number-of-scrums/${curr}`)));
   }
 
+  public getMinTrendDataPointsStream(curr: string): Observable<{points: number}> {
+    return timer(900, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}minimum-trend-data-points/${curr}`)));
+  }
+
   public getProfitThresholdStream(curr: string): Observable<{price: number}> {
     return timer(700, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}profit-threshold/${curr}`)));
   }
@@ -75,6 +79,12 @@ export class AutobotControlsService {
 
   public setMaxNumberOfScrums(curr: string, scrums: number): void {
     this.http.put<any>(`${DATA_URL}maximum-number-of-scrums/${curr}`, { scrums })
+      .pipe(take(1))
+      .subscribe(res => {});
+  }
+
+  public setMinTrendDataPoints(curr: string, points: number): void {
+    this.http.put<any>(`${DATA_URL}minimum-trend-data-points/${curr}`, { points })
       .pipe(take(1))
       .subscribe(res => {});
   }

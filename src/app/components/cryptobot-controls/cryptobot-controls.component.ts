@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 
 import { of } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
-import { catchError, distinctUntilChanged, map } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter } from 'rxjs/operators';
 import { Options } from 'ng5-slider';
 import { Chart } from 'angular-highcharts';
 
@@ -25,7 +25,7 @@ export interface MaxBuyPriceControl extends CurrencyControl {
   marketPrice: string;
 }
 
-export interface MaxNumberOfScrums extends CurrencyControl {
+export interface CurrentNumberControl extends CurrencyControl {
   currentNumber: number;
 }
 
@@ -61,7 +61,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           return '$' + value;
         }
       },
-      mainControl: new FormControl(20),
+      mainControl: new FormControl(0),
     },
     {
       currencyType: 'ltc-usd',
@@ -75,7 +75,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           return '$' + value;
         }
       },
-      mainControl: new FormControl(20),
+      mainControl: new FormControl(0),
     },
     {
       currencyType: 'eth-usd',
@@ -89,7 +89,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           return '$' + value;
         }
       },
-      mainControl: new FormControl(20),
+      mainControl: new FormControl(0),
     }
   ];
   public readonly maxBuyPrices: MaxBuyPriceControl[] = [
@@ -139,7 +139,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       mainControl: new FormControl(200),
     }
   ];
-  public readonly maxNumberOfScrums: MaxNumberOfScrums[] = [
+  public readonly maxNumberOfScrums: CurrentNumberControl[] = [
     {
       currentNumber: 0,
       currencyType: 'btc-usd',
@@ -175,6 +175,44 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         showSelectionBar: true
       },
       mainControl: new FormControl(0),
+    }
+  ];
+  public readonly minTrendDataPoints: CurrentNumberControl[] = [
+    {
+      currentNumber: 5,
+      currencyType: 'btc-usd',
+      id: 'min-trend-data-points-btc',
+      label: 'BTC',
+      options: {
+        floor: 5,
+        ceil: 100,
+        showSelectionBar: true
+      },
+      mainControl: new FormControl(5),
+    },
+    {
+      currentNumber: 5,
+      currencyType: 'ltc-usd',
+      id: 'min-trend-data-points-ltc',
+      label: 'LTC',
+      options: {
+        floor: 5,
+        ceil: 100,
+        showSelectionBar: true
+      },
+      mainControl: new FormControl(5),
+    },
+    {
+      currentNumber: 5,
+      currencyType: 'eth-usd',
+      id: 'min-trend-data-points-etc',
+      label: 'ETC',
+      options: {
+        floor: 5,
+        ceil: 100,
+        showSelectionBar: true
+      },
+      mainControl: new FormControl(5),
     }
   ];
   public readonly profitThreshold: CurrencyControl[] = [
@@ -299,6 +337,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
     maxBuyMoneyCurrent: 'btc-usd',
     maxBuyPriceCurrent: 'btc-usd',
     maxNumberOfScrumsCurrent: 'btc-usd',
+    minTrendDataPointsCurrent: 'btc-usd',
     profitThresholdCurrent: 'btc-usd',
     usdBalanceCurrent: 'N/A'
   };
@@ -324,102 +363,120 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   ngOnInit(): void {
     this.gdaxDataService.changeCurrencyType('BTC-USD', 'cryptobot-controls', false);
     this._subs.push(
-      this.maxBuyMoney[0].mainControl.valueChanges.subscribe(newVal => {
-        if (this.maxBuyMoney[0].mainControl.dirty) {
+      this.maxBuyMoney[0].mainControl.valueChanges
+        .pipe(filter(val => this.maxBuyMoney[0].mainControl.touched))
+        .subscribe(newVal => {
           console.log(`Changing ${this.maxBuyMoney[0].currencyType} max buy money to`, newVal);
           this.autobotControlsService.setMaxBuyMoney(this.maxBuyMoney[0].currencyType, newVal);
-        }
-      }),
-      this.maxBuyMoney[1].mainControl.valueChanges.subscribe(newVal => {
-        if (this.maxBuyMoney[1].mainControl.dirty) {
-          console.log(`Changing ${this.maxBuyMoney[1].currencyType} max buy money to`, newVal);
-          this.autobotControlsService.setMaxBuyMoney(this.maxBuyMoney[1].currencyType, newVal);
-        }
-      }),
-      this.maxBuyMoney[2].mainControl.valueChanges.subscribe(newVal => {
-        if (this.maxBuyMoney[2].mainControl.dirty) {
-          console.log(`Changing ${this.maxBuyMoney[2].currencyType} max buy money to`, newVal);
-          this.autobotControlsService.setMaxBuyMoney(this.maxBuyMoney[2].currencyType, newVal);
-        }
-      }),
-      this.maxBuyPrices[0].mainControl.valueChanges.subscribe(newVal => {
-        if (this.maxBuyPrices[0].mainControl.dirty) {
-          console.log(`Changing ${this.maxBuyPrices[0].currencyType} max buy price to`, newVal);
-          this.autobotControlsService.setMaxBuyPrice(this.maxBuyPrices[0].currencyType, newVal);
-        }
-      }),
-      this.maxBuyPrices[1].mainControl.valueChanges.subscribe(newVal => {
-        if (this.maxBuyPrices[1].mainControl.dirty) {
-          console.log(`Changing ${this.maxBuyPrices[1].currencyType} max buy price to`, newVal);
-          this.autobotControlsService.setMaxBuyPrice(this.maxBuyPrices[1].currencyType, newVal);
-        }
-      }),
-      this.maxBuyPrices[2].mainControl.valueChanges.subscribe(newVal => {
-        if (this.maxBuyPrices[2].mainControl.dirty) {
+        }),
+      this.maxBuyMoney[1].mainControl.valueChanges
+        .pipe(filter(val => this.maxBuyMoney[1].mainControl.touched))
+        .subscribe(newVal => {
+            console.log(`Changing ${this.maxBuyMoney[1].currencyType} max buy money to`, newVal);
+            this.autobotControlsService.setMaxBuyMoney(this.maxBuyMoney[1].currencyType, newVal);
+        }),
+      this.maxBuyMoney[2].mainControl.valueChanges
+        .pipe(filter(val => this.maxBuyMoney[2].mainControl.touched))
+        .subscribe(newVal => {
+            console.log(`Changing ${this.maxBuyMoney[2].currencyType} max buy money to`, newVal);
+            this.autobotControlsService.setMaxBuyMoney(this.maxBuyMoney[2].currencyType, newVal);
+        }),
+      this.maxBuyPrices[0].mainControl.valueChanges
+        .pipe(filter(val => this.maxBuyPrices[0].mainControl.touched))
+        .subscribe(newVal => {
+            console.log(`Changing ${this.maxBuyPrices[0].currencyType} max buy price to`, newVal);
+            this.autobotControlsService.setMaxBuyPrice(this.maxBuyPrices[0].currencyType, newVal);
+        }),
+      this.maxBuyPrices[1].mainControl.valueChanges
+        .pipe(filter(val => this.maxBuyPrices[1].mainControl.touched))
+        .subscribe(newVal => {
+            console.log(`Changing ${this.maxBuyPrices[1].currencyType} max buy price to`, newVal);
+            this.autobotControlsService.setMaxBuyPrice(this.maxBuyPrices[1].currencyType, newVal);
+        }),
+      this.maxBuyPrices[2].mainControl.valueChanges
+        .pipe(filter(val => this.maxBuyPrices[2].mainControl.touched))
+        .subscribe(newVal => {
           console.log(`Changing ${this.maxBuyPrices[2].currencyType} max buy price to`, newVal);
           this.autobotControlsService.setMaxBuyPrice(this.maxBuyPrices[2].currencyType, newVal);
-        }
-      }),
-      this.maxNumberOfScrums[0].mainControl.valueChanges.subscribe(newVal => {
-        if (this.maxNumberOfScrums[0].mainControl.dirty) {
+        }),
+      this.maxNumberOfScrums[0].mainControl.valueChanges
+        .pipe(filter(val => this.maxNumberOfScrums[0].mainControl.touched))
+        .subscribe(newVal => {
           console.log(`Changing ${this.maxNumberOfScrums[0].currencyType} max number of scrums to`, newVal);
           this.autobotControlsService.setMaxNumberOfScrums(this.maxNumberOfScrums[0].currencyType, newVal);
-        }
-      }),
-      this.maxNumberOfScrums[1].mainControl.valueChanges.subscribe(newVal => {
-        if (this.maxNumberOfScrums[1].mainControl.dirty) {
-          console.log(`Changing ${this.maxNumberOfScrums[1].currencyType} max number of scrums to`, newVal);
-          this.autobotControlsService.setMaxNumberOfScrums(this.maxNumberOfScrums[1].currencyType, newVal);
-        }
-      }),
-      this.maxNumberOfScrums[2].mainControl.valueChanges.subscribe(newVal => {
-        if (this.maxNumberOfScrums[2].mainControl.dirty) {
-          console.log(`Changing ${this.maxNumberOfScrums[2].currencyType} max number of scrums to`, newVal);
-          this.autobotControlsService.setMaxNumberOfScrums(this.maxNumberOfScrums[2].currencyType, newVal);
-        }
-      }),
-      this.profitThreshold[0].mainControl.valueChanges.subscribe(newVal => {
-        if (this.profitThreshold[0].mainControl.dirty) {
-          const convertToFullVal = Math.floor(newVal) + this.profitThreshold[0].secondaryControl.value;
-          console.log(`Changing ${this.profitThreshold[0].currencyType} profit threshold to`, convertToFullVal);
-          this.autobotControlsService.setProfitThreshold(this.profitThreshold[0].currencyType, convertToFullVal);
-        }
-      }),
-      this.profitThreshold[0].secondaryControl.valueChanges.subscribe(newVal => {
-        if (this.profitThreshold[0].secondaryControl.dirty) {
-          const convertToFullVal = this.profitThreshold[0].mainControl.value + Number((newVal % 1).toFixed(2));
-          console.log(`Changing ${this.profitThreshold[0].currencyType} profit threshold to`, convertToFullVal);
-          this.autobotControlsService.setProfitThreshold(this.profitThreshold[0].currencyType, convertToFullVal);
-        }
-      }),
-      this.profitThreshold[1].mainControl.valueChanges.subscribe(newVal => {
-        if (this.profitThreshold[1].mainControl.dirty) {
-          const convertToFullVal = Math.floor(newVal) + this.profitThreshold[1].secondaryControl.value;
-          console.log(`Changing ${this.profitThreshold[1].currencyType} max number of scrums to`, convertToFullVal);
-          this.autobotControlsService.setProfitThreshold(this.profitThreshold[1].currencyType, convertToFullVal);
-        }
-      }),
-      this.profitThreshold[1].secondaryControl.valueChanges.subscribe(newVal => {
-        if (this.profitThreshold[1].secondaryControl.dirty) {
-          const convertToFullVal = this.profitThreshold[1].mainControl.value + Number((newVal % 1).toFixed(2));
-          console.log(`Changing ${this.profitThreshold[1].currencyType} max number of scrums to`, convertToFullVal);
-          this.autobotControlsService.setProfitThreshold(this.profitThreshold[1].currencyType, convertToFullVal);
-        }
-      }),
-      this.profitThreshold[2].mainControl.valueChanges.subscribe(newVal => {
-        if (this.profitThreshold[2].mainControl.dirty) {
-          const convertToFullVal = Math.floor(newVal) + this.profitThreshold[2].secondaryControl.value;
-          console.log(`Changing ${this.profitThreshold[2].currencyType} max number of scrums to`, convertToFullVal);
-          this.autobotControlsService.setProfitThreshold(this.profitThreshold[2].currencyType, convertToFullVal);
-        }
-      }),
-      this.profitThreshold[2].secondaryControl.valueChanges.subscribe(newVal => {
-        if (this.profitThreshold[2].secondaryControl.dirty) {
-          const convertToFullVal = this.profitThreshold[2].mainControl.value + Number((newVal % 1).toFixed(2));
-          console.log(`Changing ${this.profitThreshold[2].currencyType} max number of scrums to`, convertToFullVal);
-          this.autobotControlsService.setProfitThreshold(this.profitThreshold[2].currencyType, convertToFullVal);
-        }
-      }),
+        }),
+      this.maxNumberOfScrums[1].mainControl.valueChanges
+        .pipe(filter(val => this.maxNumberOfScrums[1].mainControl.touched))
+        .subscribe(newVal => {
+            console.log(`Changing ${this.maxNumberOfScrums[1].currencyType} max number of scrums to`, newVal);
+            this.autobotControlsService.setMaxNumberOfScrums(this.maxNumberOfScrums[1].currencyType, newVal);
+        }),
+      this.maxNumberOfScrums[2].mainControl.valueChanges
+        .pipe(filter(val => this.maxNumberOfScrums[2].mainControl.touched))
+        .subscribe(newVal => {
+            console.log(`Changing ${this.maxNumberOfScrums[2].currencyType} max number of scrums to`, newVal);
+            this.autobotControlsService.setMaxNumberOfScrums(this.maxNumberOfScrums[2].currencyType, newVal);
+        }),
+      this.minTrendDataPoints[0].mainControl.valueChanges
+        .pipe(filter(val => this.minTrendDataPoints[0].mainControl.touched))
+        .subscribe(newVal => {
+            console.log(`Changing ${this.minTrendDataPoints[0].currencyType} min trend data points to`, newVal);
+            this.autobotControlsService.setMinTrendDataPoints(this.minTrendDataPoints[0].currencyType, newVal);
+        }),
+      this.minTrendDataPoints[1].mainControl.valueChanges
+        .pipe(filter(val => this.minTrendDataPoints[1].mainControl.touched))
+        .subscribe(newVal => {
+            console.log(`Changing ${this.minTrendDataPoints[1].currencyType} min trend data points to`, newVal);
+            this.autobotControlsService.setMinTrendDataPoints(this.minTrendDataPoints[1].currencyType, newVal);
+        }),
+      this.minTrendDataPoints[2].mainControl.valueChanges
+        .pipe(filter(val => this.minTrendDataPoints[2].mainControl.touched))
+        .subscribe(newVal => {
+            console.log(`Changing ${this.minTrendDataPoints[2].currencyType} min trend data points to`, newVal);
+            this.autobotControlsService.setMinTrendDataPoints(this.minTrendDataPoints[2].currencyType, newVal);
+        }),
+      this.profitThreshold[0].mainControl.valueChanges
+        .pipe(filter(val => this.profitThreshold[0].mainControl.touched))
+        .subscribe(newVal => {
+            const convertToFullVal = Math.floor(newVal) + this.profitThreshold[0].secondaryControl.value;
+            console.log(`Changing ${this.profitThreshold[0].currencyType} profit threshold to`, convertToFullVal);
+            this.autobotControlsService.setProfitThreshold(this.profitThreshold[0].currencyType, convertToFullVal);
+        }),
+      this.profitThreshold[0].secondaryControl.valueChanges
+        .pipe(filter(val => this.profitThreshold[0].secondaryControl.touched))
+        .subscribe(newVal => {
+            const convertToFullVal = this.profitThreshold[0].mainControl.value + Number((newVal % 1).toFixed(2));
+            console.log(`Changing ${this.profitThreshold[0].currencyType} profit threshold to`, convertToFullVal);
+            this.autobotControlsService.setProfitThreshold(this.profitThreshold[0].currencyType, convertToFullVal);
+        }),
+      this.profitThreshold[1].mainControl.valueChanges
+        .pipe(filter(val => this.profitThreshold[1].mainControl.touched))
+        .subscribe(newVal => {
+            const convertToFullVal = Math.floor(newVal) + this.profitThreshold[1].secondaryControl.value;
+            console.log(`Changing ${this.profitThreshold[1].currencyType} profit threshold to`, convertToFullVal);
+            this.autobotControlsService.setProfitThreshold(this.profitThreshold[1].currencyType, convertToFullVal);
+        }),
+      this.profitThreshold[1].secondaryControl.valueChanges
+        .pipe(filter(val => this.profitThreshold[1].secondaryControl.touched))
+        .subscribe(newVal => {
+            const convertToFullVal = this.profitThreshold[1].mainControl.value + Number((newVal % 1).toFixed(2));
+            console.log(`Changing ${this.profitThreshold[1].currencyType} profit threshold to`, convertToFullVal);
+            this.autobotControlsService.setProfitThreshold(this.profitThreshold[1].currencyType, convertToFullVal);
+        }),
+      this.profitThreshold[2].mainControl.valueChanges
+        .pipe(filter(val => this.profitThreshold[2].mainControl.touched))
+        .subscribe(newVal => {
+            const convertToFullVal = Math.floor(newVal) + this.profitThreshold[2].secondaryControl.value;
+            console.log(`Changing ${this.profitThreshold[2].currencyType} profit threshold to`, convertToFullVal);
+            this.autobotControlsService.setProfitThreshold(this.profitThreshold[2].currencyType, convertToFullVal);
+        }),
+      this.profitThreshold[2].secondaryControl.valueChanges
+        .pipe(filter(val => this.profitThreshold[2].secondaryControl.touched))
+        .subscribe(newVal => {
+            const convertToFullVal = this.profitThreshold[2].mainControl.value + Number((newVal % 1).toFixed(2));
+            console.log(`Changing ${this.profitThreshold[2].currencyType} profit threshold to`, convertToFullVal);
+            this.autobotControlsService.setProfitThreshold(this.profitThreshold[2].currencyType, convertToFullVal);
+        }),
       this.autobotControlsService.isBotActive('btc-usd')
         .pipe(
           catchError(err => {
@@ -461,7 +518,6 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           const currSellPrice = Number(data.asks[0][0]);
           const avg = (currSellPrice + currBuyPrice) / 2;
           const fixedAvg = avg.toFixed(2);
-          // console.log('btc market price', fixedAvg);
           this.maxBuyPrices[0].marketPrice = avg ? fixedAvg : 'N/A';
         }),
       this.autobotControlsService.getMarketPriceStream('ltc-usd')
@@ -475,7 +531,6 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           const currSellPrice = Number(data.asks[0][0]);
           const avg = (currSellPrice + currBuyPrice) / 2;
           const fixedAvg = avg.toFixed(2);
-          // console.log('ltc market price', fixedAvg);
           this.maxBuyPrices[1].marketPrice = avg ? fixedAvg : 'N/A';
         }),
       this.autobotControlsService.getMarketPriceStream('eth-usd')
@@ -489,7 +544,6 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           const currSellPrice = Number(data.asks[0][0]);
           const avg = (currSellPrice + currBuyPrice) / 2;
           const fixedAvg = avg.toFixed(2);
-          // console.log('eth market price', fixedAvg);
           this.maxBuyPrices[2].marketPrice = avg ? fixedAvg : 'N/A';
         }),
       this.autobotControlsService.getMaxBuyMoneyStream('btc-usd')
@@ -564,6 +618,24 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           console.log('eth max number of scrums', data.scrums);
           this.maxNumberOfScrums[2].mainControl.setValue(data.scrums, { emitEvent: false });
         }),
+      this.autobotControlsService.getMinTrendDataPointsStream('btc-usd')
+        .pipe(distinctUntilChanged((valA, valB) => valA.points === valB.points))
+        .subscribe((data: { points: number }) => {
+          console.log('btc min trend data points', data.points);
+          this.minTrendDataPoints[0].mainControl.setValue(data.points, { emitEvent: false });
+        }),
+      this.autobotControlsService.getMinTrendDataPointsStream('ltc-usd')
+        .pipe(distinctUntilChanged((valA, valB) => valA.points === valB.points))
+        .subscribe((data: { points: number }) => {
+          console.log('ltc min trend data points', data.points);
+          this.minTrendDataPoints[1].mainControl.setValue(data.points, { emitEvent: false });
+        }),
+      this.autobotControlsService.getMinTrendDataPointsStream('eth-usd')
+        .pipe(distinctUntilChanged((valA, valB) => valA.points === valB.points))
+        .subscribe((data: { points: number }) => {
+          console.log('eth min trend data points', data.points);
+          this.minTrendDataPoints[2].mainControl.setValue(data.points, { emitEvent: false });
+        }),
       this.autobotControlsService.getProfitThresholdStream('btc-usd')
         .pipe(distinctUntilChanged((valA, valB) => valA.price === valB.price))
         .subscribe((data: { price: number }) => {
@@ -588,7 +660,6 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
             return of({ trend: -10 });
           }))
         .subscribe((data: { trend: number }) => {
-          console.log('btc market trend', data.trend);
           this.marketTrends[0].state = this._getState(data.trend);
           this.marketTrends[0].previousStates.shift();
           this.marketTrends[0].previousStates.push(data.trend);
@@ -600,7 +671,6 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
             return of({ trend: -10 });
           }))
         .subscribe((data: { trend: number }) => {
-          console.log('ltc market trend', data.trend);
           this.marketTrends[1].state = this._getState(data.trend);
           this.marketTrends[1].previousStates.shift();
           this.marketTrends[1].previousStates.push(data.trend);
@@ -612,7 +682,6 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
             return of({ trend: -10 });
           }))
         .subscribe((data: { trend: number }) => {
-          console.log('eth market trend', data.trend);
           this.marketTrends[2].state = this._getState(data.trend);
           this.marketTrends[2].previousStates.shift();
           this.marketTrends[2].previousStates.push(data.trend);
@@ -827,6 +896,11 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   public toggleMaxNumberOfScrums(currency: string) {
     this.state.maxNumberOfScrumsCurrent = currency;
     console.log(currency, this.state.maxNumberOfScrumsCurrent);
+  }
+
+  public toggleMinTrendDataPoints(currency: string) {
+    this.state.minTrendDataPointsCurrent = currency;
+    console.log(currency, this.state.minTrendDataPointsCurrent);
   }
 
   public toggleProfitThreshold(currency: string) {
