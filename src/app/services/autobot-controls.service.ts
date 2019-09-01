@@ -16,6 +16,12 @@ export interface ProductBookResponse {
   asks: [string, string, string][]; // [price, size, num-orders][]
 }
 
+export interface ScrumStateResponse {
+  buys: string;
+  other: string;
+  sells: string;
+}
+
 @Injectable()
 export class AutobotControlsService {
 
@@ -55,6 +61,10 @@ export class AutobotControlsService {
 
   public getUSDBalanceStream(): Observable<{ balance: number }> {
     return timer(800, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}usd`)));
+  }
+
+  public getScrumStatesStream(curr: string): Observable<ScrumStateResponse> {
+    return timer(1500, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}scrum-states/${curr}`)));
   }
 
   public getMarketTrend(curr: string): Observable<{ trend: number }> {

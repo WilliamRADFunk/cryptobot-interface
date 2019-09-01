@@ -8,9 +8,9 @@ import { Options } from 'ng5-slider';
 import { Chart } from 'angular-highcharts';
 
 import { GdaxDataService } from '../../services/gdax-data.service';
-import { AutobotControlsService, ProductBookResponse } from '../../services/autobot-controls.service';
+import { AutobotControlsService, ProductBookResponse, ScrumStateResponse } from '../../services/autobot-controls.service';
 
-export interface CurrencyControl {
+export interface Control {
   currencyType: string;
   id: string;
   label: string;
@@ -21,12 +21,18 @@ export interface CurrencyControl {
   secondaryControl?: FormControl;
 }
 
-export interface MaxBuyPriceControl extends CurrencyControl {
+export interface MaxBuyPriceControl extends Control {
   marketPrice: string;
 }
 
-export interface CurrentNumberControl extends CurrencyControl {
+export interface CurrentNumberControl extends Control {
   currentNumber: number;
+}
+
+export interface ScrumControl extends CurrentNumberControl {
+  currentBuys: string;
+  currentSells: string;
+  currentOthers: string;
 }
 
 @Component({
@@ -48,7 +54,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   * Flag to prevent chart compilation until after chart is created.
   */
   public chartReady: boolean = false;
-  public readonly maxBuyMoney: CurrencyControl[] = [
+  public readonly maxBuyMoney: Control[] = [
     {
       currencyType: 'btc-usd',
       id: 'max-buy-money-btc',
@@ -139,9 +145,12 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       mainControl: new FormControl(200),
     }
   ];
-  public readonly maxNumberOfScrums: CurrentNumberControl[] = [
+  public readonly maxNumberOfScrums: ScrumControl[] = [
     {
       currentNumber: 0,
+      currentBuys: 'N/A',
+      currentSells: 'N/A',
+      currentOthers: 'N/A',
       currencyType: 'btc-usd',
       id: 'max-number-of-scrums-btc',
       label: 'BTC',
@@ -154,6 +163,9 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
     },
     {
       currentNumber: 0,
+      currentBuys: 'N/A',
+      currentSells: 'N/A',
+      currentOthers: 'N/A',
       currencyType: 'ltc-usd',
       id: 'max-number-of-scrums-ltc',
       label: 'LTC',
@@ -166,6 +178,9 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
     },
     {
       currentNumber: 0,
+      currentBuys: 'N/A',
+      currentSells: 'N/A',
+      currentOthers: 'N/A',
       currencyType: 'eth-usd',
       id: 'max-number-of-scrums-etc',
       label: 'ETC',
@@ -215,7 +230,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       mainControl: new FormControl(5),
     }
   ];
-  public readonly profitThreshold: CurrencyControl[] = [
+  public readonly profitThreshold: Control[] = [
     {
       currencyType: 'btc-usd',
       id: 'profit-threshold-btc',
@@ -292,6 +307,83 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       secondaryControl: new FormControl(0.10),
     }
   ];
+  public readonly timeBetweenBuys: Control[] = [
+    {
+      currencyType: 'btc-usd',
+      id: 'time-between-buys-btc',
+      label: 'BTC',
+      mainOptions: {
+        floor: 0,
+        ceil: 5,
+        showSelectionBar: true,
+        step: 1,
+        translate: (value: number): string => {
+          return value + ' minutes';
+        }
+      },
+      secondaryOptions: {
+        floor: 0,
+        ceil: 59,
+        showSelectionBar: true,
+        step: 1,
+        translate: (value: number): string => {
+          return value + ' seconds';
+        }
+      },
+      mainControl: new FormControl(0),
+      secondaryControl: new FormControl(0.10),
+    },
+    {
+      currencyType: 'ltc-usd',
+      id: 'time-between-buys-ltc',
+      label: 'LTC',
+      mainOptions: {
+        floor: 0,
+        ceil: 5,
+        showSelectionBar: true,
+        step: 1,
+        translate: (value: number): string => {
+          return value + ' minutes';
+        }
+      },
+      secondaryOptions: {
+        floor: 0,
+        ceil: 59,
+        showSelectionBar: true,
+        step: 1,
+        translate: (value: number): string => {
+          return value + ' seconds';
+        }
+      },
+      mainControl: new FormControl(0),
+      secondaryControl: new FormControl(0.10),
+    },
+    {
+      currencyType: 'eth-usd',
+      id: 'time-between-buys-etc',
+      label: 'ETC',
+      mainOptions: {
+        floor: 0,
+        ceil: 5,
+        showSelectionBar: true,
+        step: 1,
+        translate: (value: number): string => {
+          return value + ' minutes';
+        }
+      },
+      secondaryOptions: {
+        floor: 0,
+        ceil: 59,
+        showSelectionBar: true,
+        step: 1,
+        translate: (value: number): string => {
+          return value + ' seconds';
+        }
+      },
+      mainControl: new FormControl(0),
+      secondaryControl: new FormControl(0.10),
+    }
+  ];
   public readonly activeBots: {currencyType: string; label: string; state: boolean}[] = [
     {
       currencyType: 'btc-usd',
@@ -339,6 +431,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
     maxNumberOfScrumsCurrent: 'btc-usd',
     minTrendDataPointsCurrent: 'btc-usd',
     profitThresholdCurrent: 'btc-usd',
+    timeBetweenBuysCurrent: 'btc-usd',
     usdBalanceCurrent: 'N/A'
   };
   /**
@@ -546,6 +639,39 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           const fixedAvg = avg.toFixed(2);
           this.maxBuyPrices[2].marketPrice = avg ? fixedAvg : 'N/A';
         }),
+      this.autobotControlsService.getScrumStatesStream('btc-usd')
+        .pipe(
+          catchError(err => {
+            return of({ buys: 'N/A', other: 'N/A', sells: 'N/A' });
+          }),
+          distinctUntilChanged((valA, valB) => (valA.buys === valB.buys) || (valA.sells === valB.sells) || (valA.other === valB.other)))
+        .subscribe((data: ScrumStateResponse) => {
+          this.maxNumberOfScrums[0].currentBuys = data.buys;
+          this.maxNumberOfScrums[0].currentSells = data.sells;
+          this.maxNumberOfScrums[0].currentOthers = data.other;
+        }),
+      this.autobotControlsService.getScrumStatesStream('ltc-usd')
+        .pipe(
+          catchError(err => {
+            return of({ buys: 'N/A', other: 'N/A', sells: 'N/A' });
+          }),
+          distinctUntilChanged((valA, valB) => (valA.buys === valB.buys) || (valA.sells === valB.sells) || (valA.other === valB.other)))
+        .subscribe((data: ScrumStateResponse) => {
+          this.maxNumberOfScrums[1].currentBuys = data.buys;
+          this.maxNumberOfScrums[1].currentSells = data.sells;
+          this.maxNumberOfScrums[1].currentOthers = data.other;
+        }),
+      this.autobotControlsService.getScrumStatesStream('eth-usd')
+      .pipe(
+        catchError(err => {
+          return of({ buys: 'N/A', other: 'N/A', sells: 'N/A' });
+        }),
+        distinctUntilChanged((valA, valB) => (valA.buys === valB.buys) || (valA.sells === valB.sells) || (valA.other === valB.other)))
+      .subscribe((data: ScrumStateResponse) => {
+        this.maxNumberOfScrums[2].currentBuys = data.buys;
+        this.maxNumberOfScrums[2].currentSells = data.sells;
+        this.maxNumberOfScrums[2].currentOthers = data.other;
+      }),
       this.autobotControlsService.getMaxBuyMoneyStream('btc-usd')
         .pipe(distinctUntilChanged((valA, valB) => valA.amount === valB.amount))
         .subscribe((data: { amount: number }) => {
@@ -906,6 +1032,11 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   public toggleProfitThreshold(currency: string) {
     this.state.profitThresholdCurrent = currency;
     console.log(currency, this.state.profitThresholdCurrent);
+  }
+
+  public toggleTimeBetweenBuys(currency: string) {
+    this.state.timeBetweenBuysCurrent = currency;
+    console.log(currency, this.state.timeBetweenBuysCurrent);
   }
 
   public turnBotOn(currency: string) {
