@@ -331,7 +331,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         }
       },
       mainControl: new FormControl(0),
-      secondaryControl: new FormControl(0.10),
+      secondaryControl: new FormControl(0),
     },
     {
       currencyType: 'ltc-usd',
@@ -356,7 +356,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         }
       },
       mainControl: new FormControl(0),
-      secondaryControl: new FormControl(0.10),
+      secondaryControl: new FormControl(0),
     },
     {
       currencyType: 'eth-usd',
@@ -381,7 +381,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         }
       },
       mainControl: new FormControl(0),
-      secondaryControl: new FormControl(0.10),
+      secondaryControl: new FormControl(0),
     }
   ];
   public readonly activeBots: {currencyType: string; label: string; state: boolean}[] = [
@@ -453,8 +453,11 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   /**
   * Triggered when component is loaded, but before it is viewed.
   */
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.gdaxDataService.changeCurrencyType('BTC-USD', 'cryptobot-controls', false);
+    let isSandbox = true;
+    await this.autobotControlsService.isSandbox().toPromise().then(val => { isSandbox = val.isSandbox; });
+    console.log('sand', isSandbox);
     this._subs.push(
       this.maxBuyMoney[0].mainControl.valueChanges
         .pipe(filter(val => this.maxBuyMoney[0].mainControl.touched))
@@ -570,6 +573,48 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
             console.log(`Changing ${this.profitThreshold[2].currencyType} profit threshold to`, convertToFullVal);
             this.autobotControlsService.setProfitThreshold(this.profitThreshold[2].currencyType, convertToFullVal);
         }),
+      this.timeBetweenBuys[0].mainControl.valueChanges
+        .pipe(filter(val => this.timeBetweenBuys[0].mainControl.touched))
+        .subscribe(newVal => {
+            const convertToFullVal = ((newVal * 60) + this.timeBetweenBuys[0].secondaryControl.value) * 1000;
+            console.log(`Changing ${this.timeBetweenBuys[0].currencyType} wait time to`, convertToFullVal);
+            this.autobotControlsService.setWaitTimeBtwnBuys(this.timeBetweenBuys[0].currencyType, convertToFullVal);
+        }),
+      this.timeBetweenBuys[0].secondaryControl.valueChanges
+        .pipe(filter(val => this.timeBetweenBuys[0].secondaryControl.touched))
+        .subscribe(newVal => {
+            const convertToFullVal = ((this.timeBetweenBuys[0].mainControl.value * 60) + newVal) * 1000;
+            console.log(`Changing ${this.timeBetweenBuys[0].currencyType} wait time to`, convertToFullVal);
+            this.autobotControlsService.setWaitTimeBtwnBuys(this.timeBetweenBuys[0].currencyType, convertToFullVal);
+        }),
+      this.timeBetweenBuys[1].mainControl.valueChanges
+        .pipe(filter(val => this.timeBetweenBuys[1].mainControl.touched))
+        .subscribe(newVal => {
+            const convertToFullVal = ((newVal * 60) + this.timeBetweenBuys[1].secondaryControl.value) * 1000;
+            console.log(`Changing ${this.timeBetweenBuys[1].currencyType} wait time to`, convertToFullVal);
+            this.autobotControlsService.setWaitTimeBtwnBuys(this.timeBetweenBuys[1].currencyType, convertToFullVal);
+        }),
+      this.timeBetweenBuys[1].secondaryControl.valueChanges
+        .pipe(filter(val => this.timeBetweenBuys[1].secondaryControl.touched))
+        .subscribe(newVal => {
+            const convertToFullVal = ((this.timeBetweenBuys[1].mainControl.value) + newVal) * 1000;
+            console.log(`Changing ${this.timeBetweenBuys[1].currencyType} wait time to`, convertToFullVal);
+            this.autobotControlsService.setWaitTimeBtwnBuys(this.timeBetweenBuys[1].currencyType, convertToFullVal);
+        }),
+      this.timeBetweenBuys[2].mainControl.valueChanges
+        .pipe(filter(val => this.timeBetweenBuys[2].mainControl.touched))
+        .subscribe(newVal => {
+            const convertToFullVal = ((newVal * 60) + this.timeBetweenBuys[2].secondaryControl.value) * 1000;
+            console.log(`Changing ${this.timeBetweenBuys[2].currencyType} wait time to`, convertToFullVal);
+            this.autobotControlsService.setWaitTimeBtwnBuys(this.timeBetweenBuys[2].currencyType, convertToFullVal);
+        }),
+      this.timeBetweenBuys[2].secondaryControl.valueChanges
+        .pipe(filter(val => this.timeBetweenBuys[2].secondaryControl.touched))
+        .subscribe(newVal => {
+            const convertToFullVal = ((this.timeBetweenBuys[2].mainControl.value) + newVal) * 1000;
+            console.log(`Changing ${this.timeBetweenBuys[2].currencyType} wait time to`, convertToFullVal);
+            this.autobotControlsService.setWaitTimeBtwnBuys(this.timeBetweenBuys[2].currencyType, convertToFullVal);
+        }),
       this.autobotControlsService.isBotActive('btc-usd')
         .pipe(
           catchError(err => {
@@ -600,7 +645,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           console.log('eth bot active:', data.isActive);
           this.activeBots[2].state = data.isActive || false;
         }),
-      this.autobotControlsService.getMarketPriceStream('btc-usd')
+      this.autobotControlsService.getMarketPriceStream('btc-usd', isSandbox)
         .pipe(
           catchError(err => {
             return of({ sequence: '0', bids: [[ 0, 0, 0 ]], asks: [[ 0, 0, 0 ]]});
@@ -613,7 +658,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           const fixedAvg = avg.toFixed(2);
           this.maxBuyPrices[0].marketPrice = avg ? fixedAvg : 'N/A';
         }),
-      this.autobotControlsService.getMarketPriceStream('ltc-usd')
+      this.autobotControlsService.getMarketPriceStream('ltc-usd', isSandbox)
         .pipe(
           catchError(err => {
             return of({ sequence: '0', bids: [[ 0, 0, 0 ]], asks: [[ 0, 0, 0 ]]});
@@ -626,7 +671,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           const fixedAvg = avg.toFixed(2);
           this.maxBuyPrices[1].marketPrice = avg ? fixedAvg : 'N/A';
         }),
-      this.autobotControlsService.getMarketPriceStream('eth-usd')
+      this.autobotControlsService.getMarketPriceStream('eth-usd', isSandbox)
         .pipe(
           catchError(err => {
             return of({ sequence: '0', bids: [[ 0, 0, 0 ]], asks: [[ 0, 0, 0 ]]});
@@ -784,7 +829,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         .pipe(distinctUntilChanged((valA, valB) => valA.time === valB.time))
         .subscribe((data: { time: number }) => {
           const seconds = Math.floor(data.time / 1000);
-          console.log('btc max spend time per scrum', seconds);
+          console.log('btc max wait time time per scrum', seconds);
           this.timeBetweenBuys[0].mainControl.setValue(Math.floor(seconds / 60), { emitEvent: false });
           this.timeBetweenBuys[0].secondaryControl.setValue(seconds % 60, { emitEvent: false });
         }),
@@ -792,7 +837,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         .pipe(distinctUntilChanged((valA, valB) => valA.time === valB.time))
         .subscribe((data: { time: number }) => {
           const seconds = Math.floor(data.time / 1000);
-          console.log('ltc max spend time per scrum', seconds);
+          console.log('ltc max wait time per scrum', seconds);
           this.timeBetweenBuys[1].mainControl.setValue(Math.floor(seconds / 60), { emitEvent: false });
           this.timeBetweenBuys[1].secondaryControl.setValue(seconds % 60, { emitEvent: false });
         }),
@@ -800,7 +845,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         .pipe(distinctUntilChanged((valA, valB) => valA.time === valB.time))
         .subscribe((data: { time: number }) => {
           const seconds = Math.floor(data.time / 1000);
-          console.log('eth max spend time per scrum', seconds);
+          console.log('eth max wait time per scrum', seconds);
           this.timeBetweenBuys[2].mainControl.setValue(Math.floor(seconds / 60), { emitEvent: false });
           this.timeBetweenBuys[2].secondaryControl.setValue(seconds % 60, { emitEvent: false });
         }),

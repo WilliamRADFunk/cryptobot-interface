@@ -27,12 +27,12 @@ export class AutobotControlsService {
 
   constructor(private readonly http: HttpClient) { }
 
-  private isSandbox(): Observable<{isSandbox: boolean}> {
+  public isSandbox(): Observable<{isSandbox: boolean}> {
     return this.http.get<any>(`${DATA_URL}version`).pipe(take(1));
   }
 
-  public getMarketPriceStream(curr: string): Observable<ProductBookResponse> {
-    return timer(0, 1000).pipe(switchMap(() => this.http.get<any>(`${true ? SANDBOX_URL : REAL_URL}products/${curr.toUpperCase()}/book`)));
+  public getMarketPriceStream(curr: string, isSandbox: boolean): Observable<ProductBookResponse> {
+    return timer(0, 1000).pipe(switchMap(() => this.http.get<any>(`${isSandbox ? SANDBOX_URL : REAL_URL}products/${curr.toUpperCase()}/book`)));
   }
 
   public getMaxBuyMoneyStream(curr: string): Observable<{amount: number}> {
