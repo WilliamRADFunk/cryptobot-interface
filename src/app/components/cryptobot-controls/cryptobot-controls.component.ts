@@ -314,7 +314,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       label: 'BTC',
       mainOptions: {
         floor: 0,
-        ceil: 5,
+        ceil: 10,
         showSelectionBar: true,
         step: 1,
         translate: (value: number): string => {
@@ -339,7 +339,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       label: 'LTC',
       mainOptions: {
         floor: 0,
-        ceil: 5,
+        ceil: 10,
         showSelectionBar: true,
         step: 1,
         translate: (value: number): string => {
@@ -364,7 +364,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       label: 'ETC',
       mainOptions: {
         floor: 0,
-        ceil: 5,
+        ceil: 10,
         showSelectionBar: true,
         step: 1,
         translate: (value: number): string => {
@@ -779,6 +779,30 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         .subscribe((data: { price: number }) => {
           console.log('eth profit threshold', data.price);
           this.profitThreshold[2].mainControl.setValue(data.price, { emitEvent: false });
+        }),
+      this.autobotControlsService.getWaitTimeBtwnBuysStream('btc-usd')
+        .pipe(distinctUntilChanged((valA, valB) => valA.time === valB.time))
+        .subscribe((data: { time: number }) => {
+          const seconds = Math.floor(data.time / 1000);
+          console.log('btc max spend time per scrum', seconds);
+          this.timeBetweenBuys[0].mainControl.setValue(Math.floor(seconds / 60), { emitEvent: false });
+          this.timeBetweenBuys[0].secondaryControl.setValue(seconds % 60, { emitEvent: false });
+        }),
+      this.autobotControlsService.getWaitTimeBtwnBuysStream('ltc-usd')
+        .pipe(distinctUntilChanged((valA, valB) => valA.time === valB.time))
+        .subscribe((data: { time: number }) => {
+          const seconds = Math.floor(data.time / 1000);
+          console.log('ltc max spend time per scrum', seconds);
+          this.timeBetweenBuys[1].mainControl.setValue(Math.floor(seconds / 60), { emitEvent: false });
+          this.timeBetweenBuys[1].secondaryControl.setValue(seconds % 60, { emitEvent: false });
+        }),
+      this.autobotControlsService.getWaitTimeBtwnBuysStream('eth-usd')
+        .pipe(distinctUntilChanged((valA, valB) => valA.time === valB.time))
+        .subscribe((data: { time: number }) => {
+          const seconds = Math.floor(data.time / 1000);
+          console.log('eth max spend time per scrum', seconds);
+          this.timeBetweenBuys[2].mainControl.setValue(Math.floor(seconds / 60), { emitEvent: false });
+          this.timeBetweenBuys[2].secondaryControl.setValue(seconds % 60, { emitEvent: false });
         }),
       this.autobotControlsService.getMarketTrend('btc-usd')
         .pipe(

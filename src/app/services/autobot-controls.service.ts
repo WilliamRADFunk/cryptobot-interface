@@ -67,6 +67,10 @@ export class AutobotControlsService {
     return timer(1500, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}scrum-states/${curr}`)));
   }
 
+  public getWaitTimeBtwnBuysStream(curr: string): Observable<{time: number}> {
+    return timer(500, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}wait-time/${curr}`)));
+  }
+
   public getMarketTrend(curr: string): Observable<{ trend: number }> {
     return timer(2000, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}market-trend/${curr}`)));
   }
@@ -101,6 +105,12 @@ export class AutobotControlsService {
 
   public setProfitThreshold(curr: string, price: number): void {
     this.http.put<any>(`${DATA_URL}profit-threshold/${curr}`, { price })
+      .pipe(take(1))
+      .subscribe(res => {});
+  }
+
+  public setWaitTimeBtwnBuys(curr: string, time: number): void {
+    this.http.put<any>(`${DATA_URL}wait-time/${curr}`, { time })
       .pipe(take(1))
       .subscribe(res => {});
   }

@@ -44,7 +44,11 @@
             .w-100.card.bg-secondary.text-white
               label.text-center.card-title([for]="maxNumberOfScrumsControl.id")
                 .d-inline-block.float-left.ml-1 {{ maxNumberOfScrumsControl.label }}
-                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1([ngbTooltip]="numScrumsTooltip", container="body") {{ maxNumberOfScrumsControl.currentNumber }}
+                .d-inline-block.border.border-white.rounded.float-right.mr-1.mt-1
+                  span.px-2.border-right([ngbTooltip]="numScrumsTooltip", container="body") {{ maxNumberOfScrumsControl.currentNumber }}
+                  span.px-2.text-success.border-right([ngbTooltip]="numScrumsBuyTooltip", container="body") {{ maxNumberOfScrumsControl.currentBuys }}
+                  span.px-2.text-warning.border-right([ngbTooltip]="numScrumsSellTooltip", container="body") {{ maxNumberOfScrumsControl.currentSells }}
+                  span.px-2.text-info([ngbTooltip]="numScrumsOtherTooltip", container="body") {{ maxNumberOfScrumsControl.currentOthers }}
               .card-body
                 ng5-slider.text-white([id]="maxNumberOfScrumsControl.id", [formControl]="maxNumberOfScrumsControl.mainControl", [options]="maxNumberOfScrumsControl.options")
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
@@ -104,7 +108,7 @@
               .card-body
                 ng5-slider.text-white([id]="minTrendDataPointsControl.id", [formControl]="minTrendDataPointsControl.mainControl", [options]="minTrendDataPointsControl.options")
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
-        .h2.text-center.custom-yellow.d-inline-block(aria-label="Time Between Buys") Time Between Buys
+        .h2.text-center.custom-yellow.d-inline-block(aria-label="Time Between Buys") Time Btwn Buys
         .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="Time Between Buys group")
           button.btn.btn-secondary((click)="toggleTimeBetweenBuys('btc-usd')", type="button", [class.active]="state.timeBetweenBuysCurrent === 'btc-usd'") BTC
           button.btn.btn-secondary((click)="toggleTimeBetweenBuys('ltc-usd')", type="button", [class.active]="state.timeBetweenBuysCurrent === 'ltc-usd'") LTC
@@ -114,7 +118,6 @@
             .w-100.card.bg-secondary.text-white
               label.text-center.card-title.mb-1.pb-0([for]="timeBetweenBuysControl.id")
                 .d-inline-block.float-left.ml-1 {{ timeBetweenBuysControl.label }}
-                .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1([ngbTooltip]="minSellPriceTooltip", container="body") {{ calcSalePriceForProfit(maxBuyPrices[index].marketPrice, maxBuyMoney[index].mainControl.value, timeBetweenBuysControl.mainControl.value + timeBetweenBuysControl.secondaryControl.value) }}
               .card-body.pt-0.pb-1
                 ng5-slider.text-white(id="{{timeBetweenBuysControl.id}}-minutes", [formControl]="timeBetweenBuysControl.mainControl", [options]="timeBetweenBuysControl.mainOptions")
                 ng5-slider.text-white(id="{{timeBetweenBuysControl.id}}-seconds", [formControl]="timeBetweenBuysControl.secondaryControl", [options]="timeBetweenBuysControl.secondaryOptions")
@@ -122,6 +125,12 @@ ng-template(#currentPriceTooltip="")
   .div Current Market Price
 ng-template(#numScrumsTooltip="")
   .div Number of Active Trades
+ng-template(#numScrumsBuyTooltip="")
+  .div Number of Active Buys
+ng-template(#numScrumsSellTooltip="")
+  .div Number of Active Sells
+ng-template(#numScrumsOtherTooltip="")
+  .div Number of Other Trade States
 ng-template(#minSellPriceTooltip="")
   .div Minimum Sell Price
 ng-template(#usdBalanceTooltip="")
@@ -140,12 +149,7 @@ ng-template(#deactivateTooltip="")
   .div Click to Deactivate
 ng-template(#marketTrendTooltip="")
   .div Current Market Trend
-    //- .row.control-height
-    //-   .col-12.col-sm-12.col-md-12.col-lg-12.card
-    //-     div time between buys
 
 //- TODO:
-//- * Need to fetch current number of pending buy
-//- * Need to fetch current number of pending sells
 
 //- * Need to fetch trading bot logs as stream
