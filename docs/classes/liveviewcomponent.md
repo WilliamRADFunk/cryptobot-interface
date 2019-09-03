@@ -6,6 +6,7 @@
 
 ## Implements
 
+* `OnDestroy`
 * `OnInit`
 
 ## Index
@@ -18,16 +19,20 @@
 ### Properties
 
 * [activatedRouter](liveviewcomponent.md#markdown-header-private-activatedrouter)
+* [busySubscription](liveviewcomponent.md#markdown-header-busysubscription)
 * [chart](liveviewcomponent.md#markdown-header-chart)
+* [chartDataSubscription](liveviewcomponent.md#markdown-header-chartdatasubscription)
 * [chartReady](liveviewcomponent.md#markdown-header-chartready)
 * [gdaxDataService](liveviewcomponent.md#markdown-header-private-gdaxdataservice)
 * [isBusy](liveviewcomponent.md#markdown-header-isbusy)
 * [pathState](liveviewcomponent.md#markdown-header-pathstate)
 * [router](liveviewcomponent.md#markdown-header-private-router)
+* [urlSubscription](liveviewcomponent.md#markdown-header-urlsubscription)
 
 
 ### Methods
 
+* [ngOnDestroy](liveviewcomponent.md#markdown-header-private-ngondestroy)
 * [ngOnInit](liveviewcomponent.md#markdown-header-ngoninit)
 * [updateChart](liveviewcomponent.md#markdown-header-updatechart)
 
@@ -41,7 +46,7 @@
 ### ⊕ **new LiveViewComponent**(activatedRouter: *`ActivatedRoute`*, router: *`Router`*, gdaxDataService: *[GdaxDataService](gdaxdataservice.md)*): [LiveViewComponent](liveviewcomponent.md)
 
 
-*Defined in [app/components/live-view/live-view.component.ts:34](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/live-view/live-view.component.ts#L34)*
+*Defined in [app/components/live-view/live-view.component.ts:47](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/live-view/live-view.component.ts#L47)*
 
 
 
@@ -72,7 +77,7 @@ Constructor for the class. Injects Angular's ActivatedRoute, Router, and GdaxDat
 
 **●  activatedRouter**:  *`ActivatedRoute`* 
 
-*Defined in [app/components/live-view/live-view.component.ts:43](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/live-view/live-view.component.ts#L43)*
+*Defined in [app/components/live-view/live-view.component.ts:56](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/live-view/live-view.component.ts#L56)*
 
 
 
@@ -85,11 +90,28 @@ ___
 
 
 
+###  busySubscription
+
+**●  busySubscription**:  *`Subscription`* 
+
+*Defined in [app/components/live-view/live-view.component.ts:20](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/live-view/live-view.component.ts#L20)*
+
+
+
+Makes unsubscribing from this variable possible in OnDestroy
+
+
+
+
+___
+
+
+
 ###  chart
 
 **●  chart**:  *`Chart`* 
 
-*Defined in [app/components/live-view/live-view.component.ts:20](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/live-view/live-view.component.ts#L20)*
+*Defined in [app/components/live-view/live-view.component.ts:25](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/live-view/live-view.component.ts#L25)*
 
 
 
@@ -102,11 +124,28 @@ ___
 
 
 
+###  chartDataSubscription
+
+**●  chartDataSubscription**:  *`Subscription`* 
+
+*Defined in [app/components/live-view/live-view.component.ts:29](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/live-view/live-view.component.ts#L29)*
+
+
+
+Makes unsubscribing from this variable possible in OnDestroy
+
+
+
+
+___
+
+
+
 ###  chartReady
 
 **●  chartReady**:  *`boolean`*  = false
 
-*Defined in [app/components/live-view/live-view.component.ts:24](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/live-view/live-view.component.ts#L24)*
+*Defined in [app/components/live-view/live-view.component.ts:33](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/live-view/live-view.component.ts#L33)*
 
 
 
@@ -123,7 +162,7 @@ ___
 
 **●  gdaxDataService**:  *[GdaxDataService](gdaxdataservice.md)* 
 
-*Defined in [app/components/live-view/live-view.component.ts:45](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/live-view/live-view.component.ts#L45)*
+*Defined in [app/components/live-view/live-view.component.ts:58](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/live-view/live-view.component.ts#L58)*
 
 
 
@@ -140,7 +179,7 @@ ___
 
 **●  isBusy**:  *`boolean`*  = true
 
-*Defined in [app/components/live-view/live-view.component.ts:29](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/live-view/live-view.component.ts#L29)*
+*Defined in [app/components/live-view/live-view.component.ts:38](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/live-view/live-view.component.ts#L38)*
 
 
 
@@ -157,7 +196,7 @@ ___
 
 **●  pathState**:  *`string`*  = "BTC-USD"
 
-*Defined in [app/components/live-view/live-view.component.ts:34](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/live-view/live-view.component.ts#L34)*
+*Defined in [app/components/live-view/live-view.component.ts:43](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/live-view/live-view.component.ts#L43)*
 
 
 
@@ -174,7 +213,7 @@ ___
 
 **●  router**:  *`Router`* 
 
-*Defined in [app/components/live-view/live-view.component.ts:44](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/live-view/live-view.component.ts#L44)*
+*Defined in [app/components/live-view/live-view.component.ts:57](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/live-view/live-view.component.ts#L57)*
 
 
 
@@ -186,7 +225,47 @@ Angular's Router service for changing route
 ___
 
 
+
+###  urlSubscription
+
+**●  urlSubscription**:  *`Subscription`* 
+
+*Defined in [app/components/live-view/live-view.component.ts:47](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/live-view/live-view.component.ts#L47)*
+
+
+
+Makes unsubscribing from this variable possible in OnDestroy
+
+
+
+
+___
+
+
 ## Methods
+
+
+### «Private» ngOnDestroy
+
+► **ngOnDestroy**(): `void`
+
+
+
+*Defined in [app/components/live-view/live-view.component.ts:64](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/live-view/live-view.component.ts#L64)*
+
+
+
+
+
+
+**Returns:** `void`
+
+
+
+
+
+___
+
 
 
 ###  ngOnInit
@@ -195,7 +274,7 @@ ___
 
 
 
-*Defined in [app/components/live-view/live-view.component.ts:50](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/live-view/live-view.component.ts#L50)*
+*Defined in [app/components/live-view/live-view.component.ts:84](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/live-view/live-view.component.ts#L84)*
 
 
 
@@ -220,7 +299,7 @@ ___
 
 
 
-*Defined in [app/components/live-view/live-view.component.ts:68](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/live-view/live-view.component.ts#L68)*
+*Defined in [app/components/live-view/live-view.component.ts:102](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/live-view/live-view.component.ts#L102)*
 
 
 

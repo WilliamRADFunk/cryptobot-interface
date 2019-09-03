@@ -1,0 +1,28 @@
+.control {
+    height: 200px;
+    max-height: 200px;
+    max-width: 350px;
+    width: 350px;
+}
+.custom-black {
+    background-color: #343a40;
+}
+.custom-yellow {
+    color: #ffc000;
+    font-size: 24px;
+}
+::ng-deep .ng5-slider .ng5-slider-bubble.ng5-slider-limit,
+::ng-deep .ng5-slider-span.ng5-slider-bubble.ng5-slider-limit.ng5-slider-floor,
+::ng-deep .ng5-slider .ng5-slider-bubble {
+    color: #ffc000 !important;
+}
+
+::ng-deep .highcharts-axis.highcharts-color-X .highcharts-axis-line {
+  stroke: #8EBA6A33;
+  stroke-width: 0.5px;
+}
+
+::ng-deep .highcharts-axis.highcharts-color-Y .highcharts-axis-line {
+  stroke: #8EBA6A;
+  stroke-width: 0px;
+}

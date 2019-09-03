@@ -36,7 +36,7 @@
 ### ⊕ **new SidePanelComponent**(gdaxDataService: *[GdaxDataService](gdaxdataservice.md)*): [SidePanelComponent](sidepanelcomponent.md)
 
 
-*Defined in [app/components/side-panel/side-panel.component.ts:22](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/side-panel/side-panel.component.ts#L22)*
+*Defined in [app/components/side-panel/side-panel.component.ts:22](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/side-panel/side-panel.component.ts#L22)*
 
 
 
@@ -65,7 +65,7 @@ Constructor for the class.
 
 **●  gdaxDataService**:  *[GdaxDataService](gdaxdataservice.md)* 
 
-*Defined in [app/components/side-panel/side-panel.component.ts:26](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/side-panel/side-panel.component.ts#L26)*
+*Defined in [app/components/side-panel/side-panel.component.ts:26](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/side-panel/side-panel.component.ts#L26)*
 
 
 
@@ -79,7 +79,7 @@ ___
 
 **●  isBusy**:  *`boolean`*  = true
 
-*Defined in [app/components/side-panel/side-panel.component.ts:22](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/side-panel/side-panel.component.ts#L22)*
+*Defined in [app/components/side-panel/side-panel.component.ts:22](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/side-panel/side-panel.component.ts#L22)*
 
 
 
@@ -96,7 +96,7 @@ ___
 
 **●  pathState**:  *`string`*  = "BTC-USD"
 
-*Defined in [app/components/side-panel/side-panel.component.ts:17](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/side-panel/side-panel.component.ts#L17)*
+*Defined in [app/components/side-panel/side-panel.component.ts:17](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/side-panel/side-panel.component.ts#L17)*
 
 
 
@@ -117,7 +117,7 @@ ___
 
 
 
-*Defined in [app/components/side-panel/side-panel.component.ts:28](https://github.com/WilliamRADFunk/cryptobot-interface/blob/9f10186/src/app/components/side-panel/side-panel.component.ts#L28)*
+*Defined in [app/components/side-panel/side-panel.component.ts:28](https://github.com/WilliamRADFunk/cryptobot-interface/blob/660a506/src/app/components/side-panel/side-panel.component.ts#L28)*
 
 
 
