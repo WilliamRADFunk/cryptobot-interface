@@ -48,15 +48,17 @@ export class AutobotControlsService {
   }
 
   public getMarketPriceStream(curr: string, isSandbox: boolean): Observable<ProductBookResponse> {
-    return timer(0, 1000).pipe(switchMap(() => this.http.get<any>(`${isSandbox ? SANDBOX_URL : REAL_URL}products/${curr.toUpperCase()}/book`)));
+    return timer(0, 1000).pipe(
+      switchMap(() => this.http.get<any>(`${isSandbox ? SANDBOX_URL : REAL_URL}products/${curr.toUpperCase()}/book`))
+    );
   }
 
   public getControlStates(curr: string): Observable<ControlStates> {
-    return timer(100, 1000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}control-states/${curr}`)));
+    return timer(100, 2000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}control-states/${curr}`)));
   }
 
   public getTraderStates(curr: string): Observable<TraderStates> {
-    return timer(300, 1000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}trader-states/${curr}`)));
+    return timer(300, 2000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}trader-states/${curr}`)));
   }
 
   public getMaxBuyMoneyStream(curr: string): Observable<{amount: number}> {

@@ -631,11 +631,11 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           }),
           distinctUntilChanged((valA, valB) => {
             return (
-              valA.maxBuyMoney === valB.maxBuyMoney && 
-              valA.maxBuyPrice === valB.maxBuyPrice && 
-              valA.maxNumberOfScrums === valB.maxNumberOfScrums && 
-              valA.minTrendDataPoints === valB.minTrendDataPoints && 
-              valA.profitThreshold === valB.profitThreshold && 
+              valA.maxBuyMoney === valB.maxBuyMoney &&
+              valA.maxBuyPrice === valB.maxBuyPrice &&
+              valA.maxNumberOfScrums === valB.maxNumberOfScrums &&
+              valA.minTrendDataPoints === valB.minTrendDataPoints &&
+              valA.profitThreshold === valB.profitThreshold &&
               valA.waitTimeBtwnBuys === valB.waitTimeBtwnBuys
             );
           }))
@@ -646,7 +646,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           this.maxNumberOfScrums[0].mainControl.setValue(data.maxNumberOfScrums, { emitEvent: false });
           this.minTrendDataPoints[0].mainControl.setValue(data.minTrendDataPoints, { emitEvent: false });
           const dollars = Math.floor(data.profitThreshold);
-          const cents = Number((data.profitThreshold % 1).toFixed(2))
+          const cents = Number((data.profitThreshold % 1).toFixed(2));
           this.profitThreshold[0].mainControl.setValue(dollars, { emitEvent: false });
           this.profitThreshold[0].secondaryControl.setValue(cents, { emitEvent: false });
           const seconds = Math.floor(data.waitTimeBtwnBuys / 1000);
@@ -667,11 +667,11 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           }),
           distinctUntilChanged((valA, valB) => {
             return (
-              valA.maxBuyMoney === valB.maxBuyMoney && 
-              valA.maxBuyPrice === valB.maxBuyPrice && 
-              valA.maxNumberOfScrums === valB.maxNumberOfScrums && 
-              valA.minTrendDataPoints === valB.minTrendDataPoints && 
-              valA.profitThreshold === valB.profitThreshold && 
+              valA.maxBuyMoney === valB.maxBuyMoney &&
+              valA.maxBuyPrice === valB.maxBuyPrice &&
+              valA.maxNumberOfScrums === valB.maxNumberOfScrums &&
+              valA.minTrendDataPoints === valB.minTrendDataPoints &&
+              valA.profitThreshold === valB.profitThreshold &&
               valA.waitTimeBtwnBuys === valB.waitTimeBtwnBuys
             );
           }))
@@ -682,7 +682,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           this.maxNumberOfScrums[1].mainControl.setValue(data.maxNumberOfScrums, { emitEvent: false });
           this.minTrendDataPoints[1].mainControl.setValue(data.minTrendDataPoints, { emitEvent: false });
           const dollars = Math.floor(data.profitThreshold);
-          const cents = Number((data.profitThreshold % 1).toFixed(2))
+          const cents = Number((data.profitThreshold % 1).toFixed(2));
           this.profitThreshold[1].mainControl.setValue(dollars, { emitEvent: false });
           this.profitThreshold[1].secondaryControl.setValue(cents, { emitEvent: false });
           const seconds = Math.floor(data.waitTimeBtwnBuys / 1000);
@@ -703,11 +703,11 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           }),
           distinctUntilChanged((valA, valB) => {
             return (
-              valA.maxBuyMoney === valB.maxBuyMoney && 
-              valA.maxBuyPrice === valB.maxBuyPrice && 
-              valA.maxNumberOfScrums === valB.maxNumberOfScrums && 
-              valA.minTrendDataPoints === valB.minTrendDataPoints && 
-              valA.profitThreshold === valB.profitThreshold && 
+              valA.maxBuyMoney === valB.maxBuyMoney &&
+              valA.maxBuyPrice === valB.maxBuyPrice &&
+              valA.maxNumberOfScrums === valB.maxNumberOfScrums &&
+              valA.minTrendDataPoints === valB.minTrendDataPoints &&
+              valA.profitThreshold === valB.profitThreshold &&
               valA.waitTimeBtwnBuys === valB.waitTimeBtwnBuys
             );
           }))
@@ -718,7 +718,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           this.maxNumberOfScrums[2].mainControl.setValue(data.maxNumberOfScrums, { emitEvent: false });
           this.minTrendDataPoints[2].mainControl.setValue(data.minTrendDataPoints, { emitEvent: false });
           const dollars = Math.floor(data.profitThreshold);
-          const cents = Number((data.profitThreshold % 1).toFixed(2))
+          const cents = Number((data.profitThreshold % 1).toFixed(2));
           this.profitThreshold[2].mainControl.setValue(dollars, { emitEvent: false });
           this.profitThreshold[2].secondaryControl.setValue(cents, { emitEvent: false });
           const seconds = Math.floor(data.waitTimeBtwnBuys / 1000);
@@ -876,7 +876,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   }
 
   private _getState(state: number): string {
-    switch(state) {
+    switch (state) {
       case 0: {
         return 'Selling';
       }
@@ -1033,7 +1033,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
 
   public toggleMarketTrend(currency: string) {
     this.state.marketTrendCurrent = currency;
-    switch(currency) {
+    switch (currency) {
       case 'btc-usd': {
         this.chart.ref.series[0].show();
         this.chart.ref.series[1].hide();
