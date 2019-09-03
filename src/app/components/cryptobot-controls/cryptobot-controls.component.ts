@@ -8,7 +8,7 @@ import { Options } from 'ng5-slider';
 import { Chart } from 'angular-highcharts';
 
 import { GdaxDataService } from '../../services/gdax-data.service';
-import { AutobotControlsService, ProductBookResponse, ScrumStateResponse } from '../../services/autobot-controls.service';
+import { AutobotControlsService, ProductBookResponse, ScrumStateResponse, ControlStates, TraderStates } from '../../services/autobot-controls.service';
 
 export interface Control {
   currencyType: string;
@@ -41,6 +41,8 @@ export interface ScrumControl extends CurrentNumberControl {
   styleUrls: ['./cryptobot-controls.component.scss']
 })
 export class CryptobotControlsComponent implements OnDestroy, OnInit {
+  private _controlState: ControlStates;
+  private _trendState: TraderStates;
   /**
    * Subscriptions to unsubscribe from onDestroy
    */
@@ -615,35 +617,209 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
             console.log(`Changing ${this.timeBetweenBuys[2].currencyType} wait time to`, convertToFullVal);
             this.autobotControlsService.setWaitTimeBtwnBuys(this.timeBetweenBuys[2].currencyType, convertToFullVal);
         }),
-      this.autobotControlsService.isBotActive('btc-usd')
+      this.autobotControlsService.getControlStates('btc-usd')
         .pipe(
           catchError(err => {
-            return of({ isActive: false });
+            return of({
+              maxBuyMoney: 0,
+              maxBuyPrice: 0,
+              maxNumberOfScrums: 0,
+              minTrendDataPoints: 5,
+              profitThreshold: 0,
+              waitTimeBtwnBuys: 0
+            });
           }),
-          distinctUntilChanged((valA, valB) => valA.isActive === valB.isActive))
-        .subscribe((data: { isActive: boolean }) => {
-          console.log('btc bot active:', data.isActive);
-          this.activeBots[0].state = data.isActive || false;
+          distinctUntilChanged((valA, valB) => {
+            return (
+              valA.maxBuyMoney === valB.maxBuyMoney && 
+              valA.maxBuyPrice === valB.maxBuyPrice && 
+              valA.maxNumberOfScrums === valB.maxNumberOfScrums && 
+              valA.minTrendDataPoints === valB.minTrendDataPoints && 
+              valA.profitThreshold === valB.profitThreshold && 
+              valA.waitTimeBtwnBuys === valB.waitTimeBtwnBuys
+            );
+          }))
+        .subscribe((data: ControlStates) => {
+          console.log('btc-usd control states:', JSON.stringify(data));
+          this.maxBuyMoney[0].mainControl.setValue(data.maxBuyMoney, { emitEvent: false });
+          this.maxBuyPrices[0].mainControl.setValue(data.maxBuyPrice, { emitEvent: false });
+          this.maxNumberOfScrums[0].mainControl.setValue(data.maxNumberOfScrums, { emitEvent: false });
+          this.minTrendDataPoints[0].mainControl.setValue(data.minTrendDataPoints, { emitEvent: false });
+          const dollars = Math.floor(data.profitThreshold);
+          const cents = Number((data.profitThreshold % 1).toFixed(2))
+          this.profitThreshold[0].mainControl.setValue(dollars, { emitEvent: false });
+          this.profitThreshold[0].secondaryControl.setValue(cents, { emitEvent: false });
+          const seconds = Math.floor(data.waitTimeBtwnBuys / 1000);
+          this.timeBetweenBuys[0].mainControl.setValue(Math.floor(seconds / 60), { emitEvent: false });
+          this.timeBetweenBuys[0].secondaryControl.setValue(seconds % 60, { emitEvent: false });
         }),
-      this.autobotControlsService.isBotActive('ltc-usd')
+      this.autobotControlsService.getControlStates('ltc-usd')
         .pipe(
           catchError(err => {
-            return of({ isActive: false });
+            return of({
+              maxBuyMoney: 0,
+              maxBuyPrice: 0,
+              maxNumberOfScrums: 0,
+              minTrendDataPoints: 5,
+              profitThreshold: 0,
+              waitTimeBtwnBuys: 0
+            });
           }),
-          distinctUntilChanged((valA, valB) => valA.isActive === valB.isActive))
-        .subscribe((data: { isActive: boolean }) => {
-          console.log('ltc bot active:', data.isActive);
-          this.activeBots[1].state = data.isActive || false;
+          distinctUntilChanged((valA, valB) => {
+            return (
+              valA.maxBuyMoney === valB.maxBuyMoney && 
+              valA.maxBuyPrice === valB.maxBuyPrice && 
+              valA.maxNumberOfScrums === valB.maxNumberOfScrums && 
+              valA.minTrendDataPoints === valB.minTrendDataPoints && 
+              valA.profitThreshold === valB.profitThreshold && 
+              valA.waitTimeBtwnBuys === valB.waitTimeBtwnBuys
+            );
+          }))
+        .subscribe((data: ControlStates) => {
+          console.log('btc-usd control states:', JSON.stringify(data));
+          this.maxBuyMoney[1].mainControl.setValue(data.maxBuyMoney, { emitEvent: false });
+          this.maxBuyPrices[1].mainControl.setValue(data.maxBuyPrice, { emitEvent: false });
+          this.maxNumberOfScrums[1].mainControl.setValue(data.maxNumberOfScrums, { emitEvent: false });
+          this.minTrendDataPoints[1].mainControl.setValue(data.minTrendDataPoints, { emitEvent: false });
+          const dollars = Math.floor(data.profitThreshold);
+          const cents = Number((data.profitThreshold % 1).toFixed(2))
+          this.profitThreshold[1].mainControl.setValue(dollars, { emitEvent: false });
+          this.profitThreshold[1].secondaryControl.setValue(cents, { emitEvent: false });
+          const seconds = Math.floor(data.waitTimeBtwnBuys / 1000);
+          this.timeBetweenBuys[1].mainControl.setValue(Math.floor(seconds / 60), { emitEvent: false });
+          this.timeBetweenBuys[1].secondaryControl.setValue(seconds % 60, { emitEvent: false });
         }),
-      this.autobotControlsService.isBotActive('eth-usd')
+      this.autobotControlsService.getControlStates('eth-usd')
         .pipe(
           catchError(err => {
-            return of({ isActive: false });
+            return of({
+              maxBuyMoney: 0,
+              maxBuyPrice: 0,
+              maxNumberOfScrums: 0,
+              minTrendDataPoints: 5,
+              profitThreshold: 0,
+              waitTimeBtwnBuys: 0
+            });
           }),
-          distinctUntilChanged((valA, valB) => valA.isActive === valB.isActive))
-        .subscribe((data: { isActive: boolean }) => {
-          console.log('eth bot active:', data.isActive);
-          this.activeBots[2].state = data.isActive || false;
+          distinctUntilChanged((valA, valB) => {
+            return (
+              valA.maxBuyMoney === valB.maxBuyMoney && 
+              valA.maxBuyPrice === valB.maxBuyPrice && 
+              valA.maxNumberOfScrums === valB.maxNumberOfScrums && 
+              valA.minTrendDataPoints === valB.minTrendDataPoints && 
+              valA.profitThreshold === valB.profitThreshold && 
+              valA.waitTimeBtwnBuys === valB.waitTimeBtwnBuys
+            );
+          }))
+        .subscribe((data: ControlStates) => {
+          console.log('btc-usd control states:', JSON.stringify(data));
+          this.maxBuyMoney[2].mainControl.setValue(data.maxBuyMoney, { emitEvent: false });
+          this.maxBuyPrices[2].mainControl.setValue(data.maxBuyPrice, { emitEvent: false });
+          this.maxNumberOfScrums[2].mainControl.setValue(data.maxNumberOfScrums, { emitEvent: false });
+          this.minTrendDataPoints[2].mainControl.setValue(data.minTrendDataPoints, { emitEvent: false });
+          const dollars = Math.floor(data.profitThreshold);
+          const cents = Number((data.profitThreshold % 1).toFixed(2))
+          this.profitThreshold[2].mainControl.setValue(dollars, { emitEvent: false });
+          this.profitThreshold[2].secondaryControl.setValue(cents, { emitEvent: false });
+          const seconds = Math.floor(data.waitTimeBtwnBuys / 1000);
+          this.timeBetweenBuys[2].mainControl.setValue(Math.floor(seconds / 60), { emitEvent: false });
+          this.timeBetweenBuys[2].secondaryControl.setValue(seconds % 60, { emitEvent: false });
+        }),
+      this.autobotControlsService.getTraderStates('btc-usd')
+        .pipe(
+          catchError(err => {
+            return of({
+              botActivity: false,
+              currentNumberOfScrums: 0,
+              marketTrend: 10,
+              scrumsStates: {buys: 0, other: 0, sells: 0 }
+            });
+          }),
+          distinctUntilChanged((valA, valB) => {
+            return (
+              valA.botActivity === valB.botActivity &&
+              valA.currentNumberOfScrums === valB.currentNumberOfScrums &&
+              valA.marketTrend === valB.marketTrend &&
+              valA.scrumsStates.buys === valB.scrumsStates.buys &&
+              valA.scrumsStates.other === valB.scrumsStates.other &&
+              valA.scrumsStates.sells === valB.scrumsStates.sells
+            );
+          }))
+        .subscribe((data: TraderStates) => {
+          console.log('btc-usd trader states:', JSON.stringify(data));
+          this.activeBots[0].state = data.botActivity || false;
+          this.maxNumberOfScrums[0].currentNumber = data.currentNumberOfScrums;
+          this.maxNumberOfScrums[0].currentBuys = data.scrumsStates.buys;
+          this.maxNumberOfScrums[0].currentSells = data.scrumsStates.sells;
+          this.maxNumberOfScrums[0].currentOthers = data.scrumsStates.other;
+          this.marketTrends[0].state = this._getState(data.marketTrend);
+          this.marketTrends[0].previousStates.shift();
+          this.marketTrends[0].previousStates.push(data.marketTrend);
+          this._updateChart();
+        }),
+      this.autobotControlsService.getTraderStates('ltc-usd')
+        .pipe(
+          catchError(err => {
+            return of({
+              botActivity: false,
+              currentNumberOfScrums: 0,
+              marketTrend: 10,
+              scrumsStates: {buys: 0, other: 0, sells: 0 }
+            });
+          }),
+          distinctUntilChanged((valA, valB) => {
+            return (
+              valA.botActivity === valB.botActivity &&
+              valA.currentNumberOfScrums === valB.currentNumberOfScrums &&
+              valA.marketTrend === valB.marketTrend &&
+              valA.scrumsStates.buys === valB.scrumsStates.buys &&
+              valA.scrumsStates.other === valB.scrumsStates.other &&
+              valA.scrumsStates.sells === valB.scrumsStates.sells
+            );
+          }))
+        .subscribe((data: TraderStates) => {
+          console.log('btc-usd trader states:', JSON.stringify(data));
+          this.activeBots[1].state = data.botActivity || false;
+          this.maxNumberOfScrums[1].currentNumber = data.currentNumberOfScrums;
+          this.maxNumberOfScrums[1].currentBuys = data.scrumsStates.buys;
+          this.maxNumberOfScrums[1].currentSells = data.scrumsStates.sells;
+          this.maxNumberOfScrums[1].currentOthers = data.scrumsStates.other;
+          this.marketTrends[1].state = this._getState(data.marketTrend);
+          this.marketTrends[1].previousStates.shift();
+          this.marketTrends[1].previousStates.push(data.marketTrend);
+          this._updateChart();
+        }),
+      this.autobotControlsService.getTraderStates('eth-usd')
+        .pipe(
+          catchError(err => {
+            return of({
+              botActivity: false,
+              currentNumberOfScrums: 0,
+              marketTrend: 10,
+              scrumsStates: {buys: 0, other: 0, sells: 0 }
+            });
+          }),
+          distinctUntilChanged((valA, valB) => {
+            return (
+              valA.botActivity === valB.botActivity &&
+              valA.currentNumberOfScrums === valB.currentNumberOfScrums &&
+              valA.marketTrend === valB.marketTrend &&
+              valA.scrumsStates.buys === valB.scrumsStates.buys &&
+              valA.scrumsStates.other === valB.scrumsStates.other &&
+              valA.scrumsStates.sells === valB.scrumsStates.sells
+            );
+          }))
+        .subscribe((data: TraderStates) => {
+          console.log('btc-usd trader states:', JSON.stringify(data));
+          this.activeBots[2].state = data.botActivity || false;
+          this.maxNumberOfScrums[2].currentNumber = data.currentNumberOfScrums;
+          this.maxNumberOfScrums[2].currentBuys = data.scrumsStates.buys;
+          this.maxNumberOfScrums[2].currentSells = data.scrumsStates.sells;
+          this.maxNumberOfScrums[2].currentOthers = data.scrumsStates.other;
+          this.marketTrends[2].state = this._getState(data.marketTrend);
+          this.marketTrends[2].previousStates.shift();
+          this.marketTrends[2].previousStates.push(data.marketTrend);
+          this._updateChart();
         }),
       this.autobotControlsService.getMarketPriceStream('btc-usd', isSandbox)
         .pipe(
@@ -683,204 +859,6 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           const avg = (currSellPrice + currBuyPrice) / 2;
           const fixedAvg = avg.toFixed(2);
           this.maxBuyPrices[2].marketPrice = avg ? fixedAvg : 'N/A';
-        }),
-      this.autobotControlsService.getScrumStatesStream('btc-usd')
-        .pipe(
-          catchError(err => {
-            return of({ buys: 'N/A', other: 'N/A', sells: 'N/A' });
-          }),
-          distinctUntilChanged((valA, valB) => (valA.buys === valB.buys) || (valA.sells === valB.sells) || (valA.other === valB.other)))
-        .subscribe((data: ScrumStateResponse) => {
-          this.maxNumberOfScrums[0].currentBuys = data.buys;
-          this.maxNumberOfScrums[0].currentSells = data.sells;
-          this.maxNumberOfScrums[0].currentOthers = data.other;
-        }),
-      this.autobotControlsService.getScrumStatesStream('ltc-usd')
-        .pipe(
-          catchError(err => {
-            return of({ buys: 'N/A', other: 'N/A', sells: 'N/A' });
-          }),
-          distinctUntilChanged((valA, valB) => (valA.buys === valB.buys) || (valA.sells === valB.sells) || (valA.other === valB.other)))
-        .subscribe((data: ScrumStateResponse) => {
-          this.maxNumberOfScrums[1].currentBuys = data.buys;
-          this.maxNumberOfScrums[1].currentSells = data.sells;
-          this.maxNumberOfScrums[1].currentOthers = data.other;
-        }),
-      this.autobotControlsService.getScrumStatesStream('eth-usd')
-      .pipe(
-        catchError(err => {
-          return of({ buys: 'N/A', other: 'N/A', sells: 'N/A' });
-        }),
-        distinctUntilChanged((valA, valB) => (valA.buys === valB.buys) || (valA.sells === valB.sells) || (valA.other === valB.other)))
-      .subscribe((data: ScrumStateResponse) => {
-        this.maxNumberOfScrums[2].currentBuys = data.buys;
-        this.maxNumberOfScrums[2].currentSells = data.sells;
-        this.maxNumberOfScrums[2].currentOthers = data.other;
-      }),
-      this.autobotControlsService.getMaxBuyMoneyStream('btc-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.amount === valB.amount))
-        .subscribe((data: { amount: number }) => {
-          console.log('btc max spend amount per scrum', data.amount);
-          this.maxBuyMoney[0].mainControl.setValue(data.amount, { emitEvent: false });
-        }),
-      this.autobotControlsService.getMaxBuyMoneyStream('ltc-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.amount === valB.amount))
-        .subscribe((data: { amount: number }) => {
-          console.log('ltc max spend amount per scrum', data.amount);
-          this.maxBuyMoney[1].mainControl.setValue(data.amount, { emitEvent: false });
-        }),
-      this.autobotControlsService.getMaxBuyMoneyStream('eth-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.amount === valB.amount))
-        .subscribe((data: { amount: number }) => {
-          console.log('eth max spend amount per scrum', data.amount);
-          this.maxBuyMoney[2].mainControl.setValue(data.amount, { emitEvent: false });
-        }),
-      this.autobotControlsService.getMaxBuyPriceStream('btc-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.price === valB.price))
-        .subscribe((data: { price: number }) => {
-          console.log('btc max buy price', data.price);
-          this.maxBuyPrices[0].mainControl.setValue(data.price, { emitEvent: false });
-        }),
-      this.autobotControlsService.getMaxBuyPriceStream('ltc-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.price === valB.price))
-        .subscribe((data: { price: number }) => {
-          console.log('ltc max buy price', data.price);
-          this.maxBuyPrices[1].mainControl.setValue(data.price, { emitEvent: false });
-        }),
-      this.autobotControlsService.getMaxBuyPriceStream('eth-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.price === valB.price))
-        .subscribe((data: { price: number }) => {
-          console.log('eth max buy price', data.price);
-          this.maxBuyPrices[2].mainControl.setValue(data.price, { emitEvent: false });
-        }),
-      this.autobotControlsService.getCurrentNumberOfScrumsStream('btc-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.scrums === valB.scrums))
-        .subscribe((data: { scrums: number }) => {
-          console.log('btc current number of scrums', data.scrums);
-          this.maxNumberOfScrums[0].currentNumber = data.scrums;
-        }),
-      this.autobotControlsService.getCurrentNumberOfScrumsStream('ltc-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.scrums === valB.scrums))
-        .subscribe((data: { scrums: number }) => {
-          console.log('ltc current number of scrums', data.scrums);
-          this.maxNumberOfScrums[1].currentNumber = data.scrums;
-        }),
-      this.autobotControlsService.getCurrentNumberOfScrumsStream('eth-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.scrums === valB.scrums))
-        .subscribe((data: { scrums: number }) => {
-          console.log('eth current number of scrums', data.scrums);
-          this.maxNumberOfScrums[2].currentNumber = data.scrums;
-        }),
-      this.autobotControlsService.getMaxNumberOfScrumsStream('btc-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.scrums === valB.scrums))
-        .subscribe((data: { scrums: number }) => {
-          console.log('btc max number of scrums', data.scrums);
-          this.maxNumberOfScrums[0].mainControl.setValue(data.scrums, { emitEvent: false });
-        }),
-      this.autobotControlsService.getMaxNumberOfScrumsStream('ltc-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.scrums === valB.scrums))
-        .subscribe((data: { scrums: number }) => {
-          console.log('ltc max number of scrums', data.scrums);
-          this.maxNumberOfScrums[1].mainControl.setValue(data.scrums, { emitEvent: false });
-        }),
-      this.autobotControlsService.getMaxNumberOfScrumsStream('eth-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.scrums === valB.scrums))
-        .subscribe((data: { scrums: number }) => {
-          console.log('eth max number of scrums', data.scrums);
-          this.maxNumberOfScrums[2].mainControl.setValue(data.scrums, { emitEvent: false });
-        }),
-      this.autobotControlsService.getMinTrendDataPointsStream('btc-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.points === valB.points))
-        .subscribe((data: { points: number }) => {
-          console.log('btc min trend data points', data.points);
-          this.minTrendDataPoints[0].mainControl.setValue(data.points, { emitEvent: false });
-        }),
-      this.autobotControlsService.getMinTrendDataPointsStream('ltc-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.points === valB.points))
-        .subscribe((data: { points: number }) => {
-          console.log('ltc min trend data points', data.points);
-          this.minTrendDataPoints[1].mainControl.setValue(data.points, { emitEvent: false });
-        }),
-      this.autobotControlsService.getMinTrendDataPointsStream('eth-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.points === valB.points))
-        .subscribe((data: { points: number }) => {
-          console.log('eth min trend data points', data.points);
-          this.minTrendDataPoints[2].mainControl.setValue(data.points, { emitEvent: false });
-        }),
-      this.autobotControlsService.getProfitThresholdStream('btc-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.price === valB.price))
-        .subscribe((data: { price: number }) => {
-          console.log('btc profit threshold', data.price);
-          this.profitThreshold[0].mainControl.setValue(data.price, { emitEvent: false });
-        }),
-      this.autobotControlsService.getProfitThresholdStream('ltc-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.price === valB.price))
-        .subscribe((data: { price: number }) => {
-          console.log('ltc profit threshold', data.price);
-          this.profitThreshold[1].mainControl.setValue(data.price, { emitEvent: false });
-        }),
-      this.autobotControlsService.getProfitThresholdStream('eth-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.price === valB.price))
-        .subscribe((data: { price: number }) => {
-          console.log('eth profit threshold', data.price);
-          this.profitThreshold[2].mainControl.setValue(data.price, { emitEvent: false });
-        }),
-      this.autobotControlsService.getWaitTimeBtwnBuysStream('btc-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.time === valB.time))
-        .subscribe((data: { time: number }) => {
-          const seconds = Math.floor(data.time / 1000);
-          console.log('btc max wait time time per scrum', seconds);
-          this.timeBetweenBuys[0].mainControl.setValue(Math.floor(seconds / 60), { emitEvent: false });
-          this.timeBetweenBuys[0].secondaryControl.setValue(seconds % 60, { emitEvent: false });
-        }),
-      this.autobotControlsService.getWaitTimeBtwnBuysStream('ltc-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.time === valB.time))
-        .subscribe((data: { time: number }) => {
-          const seconds = Math.floor(data.time / 1000);
-          console.log('ltc max wait time per scrum', seconds);
-          this.timeBetweenBuys[1].mainControl.setValue(Math.floor(seconds / 60), { emitEvent: false });
-          this.timeBetweenBuys[1].secondaryControl.setValue(seconds % 60, { emitEvent: false });
-        }),
-      this.autobotControlsService.getWaitTimeBtwnBuysStream('eth-usd')
-        .pipe(distinctUntilChanged((valA, valB) => valA.time === valB.time))
-        .subscribe((data: { time: number }) => {
-          const seconds = Math.floor(data.time / 1000);
-          console.log('eth max wait time per scrum', seconds);
-          this.timeBetweenBuys[2].mainControl.setValue(Math.floor(seconds / 60), { emitEvent: false });
-          this.timeBetweenBuys[2].secondaryControl.setValue(seconds % 60, { emitEvent: false });
-        }),
-      this.autobotControlsService.getMarketTrend('btc-usd')
-        .pipe(
-          catchError(err => {
-            return of({ trend: -10 });
-          }))
-        .subscribe((data: { trend: number }) => {
-          this.marketTrends[0].state = this._getState(data.trend);
-          this.marketTrends[0].previousStates.shift();
-          this.marketTrends[0].previousStates.push(data.trend);
-          this._updateChart();
-        }),
-      this.autobotControlsService.getMarketTrend('ltc-usd')
-        .pipe(
-          catchError(err => {
-            return of({ trend: -10 });
-          }))
-        .subscribe((data: { trend: number }) => {
-          this.marketTrends[1].state = this._getState(data.trend);
-          this.marketTrends[1].previousStates.shift();
-          this.marketTrends[1].previousStates.push(data.trend);
-          this._updateChart();
-        }),
-      this.autobotControlsService.getMarketTrend('eth-usd')
-        .pipe(
-          catchError(err => {
-            return of({ trend: -10 });
-          }))
-        .subscribe((data: { trend: number }) => {
-          this.marketTrends[2].state = this._getState(data.trend);
-          this.marketTrends[2].previousStates.shift();
-          this.marketTrends[2].previousStates.push(data.trend);
-          this._updateChart();
         }),
       this.autobotControlsService.getUSDBalanceStream()
         .pipe(

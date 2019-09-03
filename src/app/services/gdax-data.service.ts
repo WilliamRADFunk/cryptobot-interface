@@ -6,7 +6,8 @@ import { take } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 
 const INTERFACE_URL = 'http://www.williamrobertfunk.com';
-const DATA_URL = 'http://167.99.149.6:3000/';
+// const DATA_URL = 'http://167.99.149.6:3000/';
+const DATA_URL = 'http://localhost:3000/';
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',

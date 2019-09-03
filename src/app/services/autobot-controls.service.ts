@@ -22,6 +22,22 @@ export interface ScrumStateResponse {
   sells: string;
 }
 
+export interface ControlStates {
+  maxBuyMoney: number;
+  maxBuyPrice: number;
+  maxNumberOfScrums: number;
+  minTrendDataPoints: number;
+  profitThreshold: number;
+  waitTimeBtwnBuys: number;
+}
+
+export interface TraderStates {
+  botActivity: boolean;
+  currentNumberOfScrums: number;
+  marketTrend: number;
+  scrumsStates: ScrumStateResponse;
+}
+
 @Injectable()
 export class AutobotControlsService {
 
@@ -35,8 +51,16 @@ export class AutobotControlsService {
     return timer(0, 1000).pipe(switchMap(() => this.http.get<any>(`${isSandbox ? SANDBOX_URL : REAL_URL}products/${curr.toUpperCase()}/book`)));
   }
 
+  public getControlStates(curr: string): Observable<ControlStates> {
+    return timer(100, 1000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}control-states/${curr}`)));
+  }
+
+  public getTraderStates(curr: string): Observable<TraderStates> {
+    return timer(300, 1000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}trader-states/${curr}`)));
+  }
+
   public getMaxBuyMoneyStream(curr: string): Observable<{amount: number}> {
-    return timer(200, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}maximum-buy-money/${curr}`)));
+    return timer(400, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}maximum-buy-money/${curr}`)));
   }
 
   public getMaxBuyPriceStream(curr: string): Observable<{price: number}> {

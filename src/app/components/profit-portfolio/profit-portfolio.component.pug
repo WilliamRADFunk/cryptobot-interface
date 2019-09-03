@@ -8,7 +8,7 @@
           [chart]="chart",
           *ngIf="!isBusy && !isEmpty")
         div.text-center(*ngIf="!isBusy && isEmpty")
-          h3 There is no data within your criteria
+          h3 There is no trading data for this month. 
         div.text-center(*ngIf="isBusy")
           img(
             height=200,
