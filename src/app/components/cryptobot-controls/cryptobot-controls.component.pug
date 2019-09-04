@@ -121,6 +121,17 @@
               .card-body.pt-0.pb-1
                 ng5-slider.text-white(id="{{timeBetweenBuysControl.id}}-minutes", [formControl]="timeBetweenBuysControl.mainControl", [options]="timeBetweenBuysControl.mainOptions")
                 ng5-slider.text-white(id="{{timeBetweenBuysControl.id}}-seconds", [formControl]="timeBetweenBuysControl.secondaryControl", [options]="timeBetweenBuysControl.secondaryOptions")
+      .mb-2.mx-1.py-2.px-2.custom-black.rounded.control-wide
+        .h2.text-center.custom-yellow.d-inline-block(aria-label="Logs") Cryptobot Logs
+        .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="Time Between Buys group")
+          button.btn.btn-secondary((click)="toggleLogDays(1)", type="button", [class.active]="state.logDaysCurrent === 1") 1d
+          button.btn.btn-secondary((click)="toggleLogDays(3)", type="button", [class.active]="state.logDaysCurrent === 3") 3d
+          button.btn.btn-secondary((click)="toggleLogDays(7)", type="button", [class.active]="state.logDaysCurrent === 7") 7d
+        .w-100.card.bg-secondary.text-white.h-75
+          label.text-center.card-title.mb-1.pb-0([for]="logs")
+            .d-inline-block.float-left.ml-1 {{ state.logDaysCurrent }} Day{{state.logDaysCurrent === 1 ? '' : 's'}} of Logs
+          .card-body.pt-0.pb-2
+            textarea.w-100.h-100.pl-2.rounded(id="logs", [value]="logs", style="background-color: #000000; color: #8EBA6A")
 ng-template(#currentPriceTooltip="")
   .div Current Market Price
 ng-template(#numScrumsTooltip="")

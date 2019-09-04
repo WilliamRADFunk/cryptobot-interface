@@ -8,7 +8,11 @@ import { Options } from 'ng5-slider';
 import { Chart } from 'angular-highcharts';
 
 import { GdaxDataService } from '../../services/gdax-data.service';
-import { AutobotControlsService, ProductBookResponse, ScrumStateResponse, ControlStates, TraderStates } from '../../services/autobot-controls.service';
+import {
+  AutobotControlsService,
+  ControlStates,
+  ProductBookResponse,
+  TraderStates } from '../../services/autobot-controls.service';
 
 export interface Control {
   currencyType: string;
@@ -56,6 +60,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   * Flag to prevent chart compilation until after chart is created.
   */
   public chartReady: boolean = false;
+  public logs: string = 'Doug was here.\nDoug was here.\nDoug was here.\nDoug was here.\nDoug was here.\nDoug was here.';
   public readonly maxBuyMoney: Control[] = [
     {
       currencyType: 'btc-usd',
@@ -426,7 +431,8 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       state: 'Buying'
     }
   ];
-  public state: { [key: string]: string; } = {
+  public state: { [key: string]: string|number; } = {
+    logDaysCurrent: 1,
     marketTrendCurrent: 'btc-usd',
     maxBuyMoneyCurrent: 'btc-usd',
     maxBuyPriceCurrent: 'btc-usd',
@@ -1084,6 +1090,11 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   public toggleTimeBetweenBuys(currency: string) {
     this.state.timeBetweenBuysCurrent = currency;
     console.log(currency, this.state.timeBetweenBuysCurrent);
+  }
+
+  public toggleLogDays(days: number) {
+    this.state.logDaysCurrent = days;
+    console.log(days, this.state.logDaysCurrent);
   }
 
   public turnBotOn(currency: string) {
