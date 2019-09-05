@@ -47,6 +47,7 @@ export interface ScrumControl extends CurrentNumberControl {
 export class CryptobotControlsComponent implements OnDestroy, OnInit {
   private _controlState: ControlStates;
   private _trendState: TraderStates;
+  private _logsSub: Subscription;
   /**
    * Subscriptions to unsubscribe from onDestroy
    */
@@ -456,6 +457,10 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     this._subs.forEach(s => s && s.unsubscribe());
     this._subs.length = 0;
+    if (this._logsSub) {
+      this._logsSub.unsubscribe();
+      this._logsSub = null;
+    }
     this.gdaxDataService.kill();
   }
   /**
@@ -878,6 +883,17 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           console.log('usd balance', amount);
           this.state.usdBalanceCurrent = isNaN(amount) ? 'N/A' : `$${amount.toFixed(2)}`;
         }));
+      this._logsSub = this.autobotControlsService.getLogs(Number(this.state.logDaysCurrent))
+        .pipe(
+          catchError(err => {
+            console.log('getLogs', 'error', err);
+            return of({ logs: this.logs });
+          }),
+          distinctUntilChanged((valA, valB) => valA.logs === valB.logs))
+        .subscribe((data: { logs: string }) => {
+          this.logs = data.logs || this.logs;
+          console.log('logs', this.logs);
+        });
       this._updateChart();
   }
 
