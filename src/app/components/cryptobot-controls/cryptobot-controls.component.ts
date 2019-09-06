@@ -61,7 +61,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   * Flag to prevent chart compilation until after chart is created.
   */
   public chartReady: boolean = false;
-  public logs: string = 'Doug was here.\nDoug was here.\nDoug was here.\nDoug was here.\nDoug was here.\nDoug was here.';
+  public logs: string = 'No logs';
   public readonly maxBuyMoney: Control[] = [
     {
       currencyType: 'btc-usd',
