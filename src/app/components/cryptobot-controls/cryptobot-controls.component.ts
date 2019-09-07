@@ -889,7 +889,8 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
             console.log('getLogs', 'error', err);
             return of({ logs: ['No logs'] });
           }),
-          distinctUntilChanged((valA, valB) => valA.logs === valB.logs))
+          distinctUntilChanged((valA, valB) => valA.logs === valB.logs),
+          filter(data => !!data.logs.length))
         .subscribe((data: { logs: string[] }) => {
           this.logs = data.logs.join('\n') || this.logs;
         });
@@ -1109,7 +1110,21 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
 
   public toggleLogDays(days: number) {
     this.state.logDaysCurrent = days;
-    console.log(days, this.state.logDaysCurrent);
+    console.log('days', this.state.logDaysCurrent);
+    if (this._logsSub) {
+      this._logsSub.unsubscribe();
+      this._logsSub = this.autobotControlsService.getLogs(Number(this.state.logDaysCurrent))
+        .pipe(
+          catchError(err => {
+            console.log('getLogs', 'error', err);
+            return of({ logs: ['No logs'] });
+          }),
+          distinctUntilChanged((valA, valB) => valA.logs === valB.logs),
+          filter(data => !!data.logs.length))
+        .subscribe((data: { logs: string[] }) => {
+          this.logs = data.logs.join('\n') || this.logs;
+        });
+    }
   }
 
   public turnBotOn(currency: string) {
