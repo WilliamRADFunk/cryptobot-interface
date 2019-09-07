@@ -61,7 +61,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   * Flag to prevent chart compilation until after chart is created.
   */
   public chartReady: boolean = false;
-  public logs: string = 'No logs';
+  public logs: string = '';
   public readonly maxBuyMoney: Control[] = [
     {
       currencyType: 'btc-usd',
@@ -887,7 +887,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         .pipe(
           catchError(err => {
             console.log('getLogs', 'error', err);
-            return of({ logs: ['No logs'] });
+            return of({ logs: [''] });
           }),
           distinctUntilChanged((valA, valB) => valA.logs === valB.logs),
           filter(data => !!data.logs.length))
@@ -1117,7 +1117,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         .pipe(
           catchError(err => {
             console.log('getLogs', 'error', err);
-            return of({ logs: ['No logs'] });
+            return of({ logs: [''] });
           }),
           distinctUntilChanged((valA, valB) => valA.logs === valB.logs),
           filter(data => !!data.logs.length))

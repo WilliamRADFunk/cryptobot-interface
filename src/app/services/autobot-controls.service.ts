@@ -106,7 +106,7 @@ export class AutobotControlsService {
   }
 
   public getLogs(days: number): Observable<{logs: string[]}> {
-    return timer(3000, 10000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}logs/${days}`)));
+    return timer(1000, 7000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}logs/${days}`)));
   }
 
   public setMaxBuyMoney(curr: string, amount: number): void {
