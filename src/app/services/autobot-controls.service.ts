@@ -105,7 +105,7 @@ export class AutobotControlsService {
     return timer(1000, 5000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}bot-activity/${curr}`)));
   }
 
-  public getLogs(days: number): Observable<{logs: string}> {
+  public getLogs(days: number): Observable<{logs: string[]}> {
     return timer(3000, 10000).pipe(switchMap(() => this.http.get<any>(`${DATA_URL}logs/${days}`)));
   }
 

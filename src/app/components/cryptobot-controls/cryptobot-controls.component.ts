@@ -887,12 +887,11 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         .pipe(
           catchError(err => {
             console.log('getLogs', 'error', err);
-            return of({ logs: this.logs });
+            return of({ logs: ['No logs'] });
           }),
           distinctUntilChanged((valA, valB) => valA.logs === valB.logs))
-        .subscribe((data: { logs: string }) => {
-          this.logs = data.logs || this.logs;
-          console.log('logs', this.logs);
+        .subscribe((data: { logs: string[] }) => {
+          this.logs = data.logs.join('\n') || this.logs;
         });
       this._updateChart();
   }
