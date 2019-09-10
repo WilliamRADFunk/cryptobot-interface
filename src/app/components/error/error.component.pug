@@ -1,0 +1,9 @@
+ng-container(*ngIf="errorCode === '404'")
+    .h1.text-center 404 Error
+    .h3.text-center Couldn't find what you were looking for
+ng-container(*ngIf="errorCode === '500'")
+    .h1.text-center 500 Error
+    .h3.text-center Critical error in the server. Try again later.
+ng-container(*ngIf="errorCode === '12163'")
+    .h1.text-center 12163 Error
+    .h3.text-center Lost internet connection

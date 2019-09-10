@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 
 import { of } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
-import { catchError, distinctUntilChanged, filter } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, retry } from 'rxjs/operators';
 import { Options } from 'ng5-slider';
 import { Chart } from 'angular-highcharts';
 
@@ -13,6 +13,7 @@ import {
   ControlStates,
   ProductBookResponse,
   TraderStates } from '../../services/autobot-controls.service';
+import { Router } from '@angular/router';
 
 export interface Control {
   currencyType: string;
@@ -449,7 +450,8 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   */
   constructor(
     private readonly autobotControlsService: AutobotControlsService,
-    private readonly gdaxDataService: GdaxDataService) { }
+    private readonly gdaxDataService: GdaxDataService,
+    private readonly router: Router) { }
   /**
   * Triggered when component is destroyed, but before it's officially dead
   * this runs cleanup functionality to protect against misfired queries.
@@ -469,8 +471,182 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   async ngOnInit(): Promise<void> {
     this.gdaxDataService.changeCurrencyType('BTC-USD', 'cryptobot-controls', false);
     let isSandbox = true;
-    await this.autobotControlsService.isSandbox().toPromise().then(val => { isSandbox = val.isSandbox; });
+    await this.autobotControlsService.isSandbox()
+    .pipe(
+      retry(1),
+      catchError((err: any) => {
+        this._handleErrorRedirect(err, 'isSandbox');
+        return of(null);
+      }))
+    .toPromise()
+    .then(val => { isSandbox = val && val.isSandbox; });
     console.log('sand', isSandbox);
+    await this.autobotControlsService.getControlStates('btc-usd')
+      .pipe(
+        retry(1),
+        catchError((err: any) => {
+          this._handleErrorRedirect(err, 'getControlStates btc-usd');
+          return of(null);
+        }))
+      .toPromise()
+      .then(data => {
+        console.log('btc-usd control states:', JSON.stringify(data));
+        this.maxBuyMoney[0].mainControl.setValue(data.maxBuyMoney, { emitEvent: false });
+        this.maxBuyPrices[0].mainControl.setValue(data.maxBuyPrice, { emitEvent: false });
+        this.maxNumberOfScrums[0].mainControl.setValue(data.maxNumberOfScrums, { emitEvent: false });
+        this.minTrendDataPoints[0].mainControl.setValue(data.minTrendDataPoints, { emitEvent: false });
+        const dollars = Math.floor(data.profitThreshold);
+        const cents = Number((data.profitThreshold % 1).toFixed(2));
+        this.profitThreshold[0].mainControl.setValue(dollars, { emitEvent: false });
+        this.profitThreshold[0].secondaryControl.setValue(cents, { emitEvent: false });
+        const seconds = Math.floor(data.waitTimeBtwnBuys / 1000);
+        this.timeBetweenBuys[0].mainControl.setValue(Math.floor(seconds / 60), { emitEvent: false });
+        this.timeBetweenBuys[0].secondaryControl.setValue(seconds % 60, { emitEvent: false });
+      });
+    await this.autobotControlsService.getControlStates('ltc-usd')
+      .pipe(
+        retry(1),
+        catchError((err: any) => {
+          this._handleErrorRedirect(err, 'getControlStates ltc-usd');
+          return of(null);
+        }))
+      .toPromise()
+      .then(data => {
+        console.log('ltc-usd control states:', JSON.stringify(data));
+        this.maxBuyMoney[1].mainControl.setValue(data.maxBuyMoney, { emitEvent: false });
+        this.maxBuyPrices[1].mainControl.setValue(data.maxBuyPrice, { emitEvent: false });
+        this.maxNumberOfScrums[1].mainControl.setValue(data.maxNumberOfScrums, { emitEvent: false });
+        this.minTrendDataPoints[1].mainControl.setValue(data.minTrendDataPoints, { emitEvent: false });
+        const dollars = Math.floor(data.profitThreshold);
+        const cents = Number((data.profitThreshold % 1).toFixed(2));
+        this.profitThreshold[1].mainControl.setValue(dollars, { emitEvent: false });
+        this.profitThreshold[1].secondaryControl.setValue(cents, { emitEvent: false });
+        const seconds = Math.floor(data.waitTimeBtwnBuys / 1000);
+        this.timeBetweenBuys[1].mainControl.setValue(Math.floor(seconds / 60), { emitEvent: false });
+        this.timeBetweenBuys[1].secondaryControl.setValue(seconds % 60, { emitEvent: false });
+      });
+    await this.autobotControlsService.getControlStates('eth-usd')
+      .pipe(
+        retry(1),
+        catchError((err: any) => {
+          this._handleErrorRedirect(err, 'getControlStates eth-usd');
+          return of(null);
+        }))
+      .toPromise()
+      .then(data => {
+        console.log('eth-usd control states:', JSON.stringify(data));
+        this.maxBuyMoney[2].mainControl.setValue(data.maxBuyMoney, { emitEvent: false });
+        this.maxBuyPrices[2].mainControl.setValue(data.maxBuyPrice, { emitEvent: false });
+        this.maxNumberOfScrums[2].mainControl.setValue(data.maxNumberOfScrums, { emitEvent: false });
+        this.minTrendDataPoints[2].mainControl.setValue(data.minTrendDataPoints, { emitEvent: false });
+        const dollars = Math.floor(data.profitThreshold);
+        const cents = Number((data.profitThreshold % 1).toFixed(2));
+        this.profitThreshold[2].mainControl.setValue(dollars, { emitEvent: false });
+        this.profitThreshold[2].secondaryControl.setValue(cents, { emitEvent: false });
+        const seconds = Math.floor(data.waitTimeBtwnBuys / 1000);
+        this.timeBetweenBuys[2].mainControl.setValue(Math.floor(seconds / 60), { emitEvent: false });
+        this.timeBetweenBuys[2].secondaryControl.setValue(seconds % 60, { emitEvent: false });
+      });
+    await this.autobotControlsService.getTraderStates('btc-usd')
+      .pipe(
+        retry(1),
+        catchError((err: any) => {
+          this._handleErrorRedirect(err, 'getTraderStates btc-usd');
+          return of(null);
+        }))
+      .toPromise()
+      .then(data => {
+        console.log('btc-usd trader states:', JSON.stringify(data));
+        this.activeBots[0].state = data.botActivity || false;
+        this.maxNumberOfScrums[0].currentNumber = data.currentNumberOfScrums;
+        this.maxNumberOfScrums[0].currentBuys = data.scrumsStates.buys;
+        this.maxNumberOfScrums[0].currentSells = data.scrumsStates.sells;
+        this.maxNumberOfScrums[0].currentOthers = data.scrumsStates.other;
+        this.marketTrends[0].state = this._getState(data.marketTrend);
+        this.marketTrends[0].previousStates.shift();
+        this.marketTrends[0].previousStates.push(data.marketTrend);
+      });
+    await this.autobotControlsService.getTraderStates('ltc-usd')
+      .pipe(
+        retry(1),
+        catchError((err: any) => {
+          this._handleErrorRedirect(err, 'getTraderStates ltc-usd');
+          return of(null);
+        }))
+      .toPromise()
+      .then(data => {
+        console.log('ltc-usd trader states:', JSON.stringify(data));
+        this.activeBots[1].state = data.botActivity || false;
+        this.maxNumberOfScrums[1].currentNumber = data.currentNumberOfScrums;
+        this.maxNumberOfScrums[1].currentBuys = data.scrumsStates.buys;
+        this.maxNumberOfScrums[1].currentSells = data.scrumsStates.sells;
+        this.maxNumberOfScrums[1].currentOthers = data.scrumsStates.other;
+        this.marketTrends[1].state = this._getState(data.marketTrend);
+        this.marketTrends[1].previousStates.shift();
+        this.marketTrends[1].previousStates.push(data.marketTrend);
+      });
+    await this.autobotControlsService.getTraderStates('eth-usd')
+      .pipe(
+        retry(1),
+        catchError((err: any) => {
+          this._handleErrorRedirect(err, 'getTraderStates eth-usd');
+          return of(null);
+        }))
+      .toPromise()
+      .then(data => {
+        console.log('eth-usd trader states:', JSON.stringify(data));
+        this.activeBots[2].state = data.botActivity || false;
+        this.maxNumberOfScrums[2].currentNumber = data.currentNumberOfScrums;
+        this.maxNumberOfScrums[2].currentBuys = data.scrumsStates.buys;
+        this.maxNumberOfScrums[2].currentSells = data.scrumsStates.sells;
+        this.maxNumberOfScrums[2].currentOthers = data.scrumsStates.other;
+        this.marketTrends[2].state = this._getState(data.marketTrend);
+        this.marketTrends[2].previousStates.shift();
+        this.marketTrends[2].previousStates.push(data.marketTrend);
+      });
+
+    this._updateChart();
+
+    this._startPolling(isSandbox);
+    
+    this._logsSub = this.autobotControlsService.getLogs(Number(this.state.logDaysCurrent))
+      .pipe(
+        catchError(err => {
+          this._handleErrorRedirect(err, 'getLogs');
+          return of({ logs: [''] });
+        }),
+        distinctUntilChanged((valA, valB) => valA.logs === valB.logs),
+        filter(data => !!data.logs.length))
+      .subscribe((data: { logs: string[] }) => {
+        this.logs = data.logs.join('\n') || this.logs;
+      });
+  }
+
+  private _getState(state: number): string {
+    switch (state) {
+      case 0: {
+        return 'Selling';
+      }
+      case 10: {
+        return 'Static';
+      }
+      case 20: {
+        return 'Buying';
+      }
+    }
+  }
+
+  private _handleErrorRedirect(err: any, funcName: string): void {
+    if (err && err.status === 0) {
+      this.router.navigateByUrl('/Error/12163');
+    } else if (err && err.status === 500) {
+      this.router.navigateByUrl('/Error/500');
+    } else {
+      console.log(`Error in ${funcName}: ${err && err.status}`);
+    }
+  }
+
+  private _startPolling(isSandbox: boolean) {
     this._subs.push(
       this.maxBuyMoney[0].mainControl.valueChanges
         .pipe(filter(val => this.maxBuyMoney[0].mainControl.touched))
@@ -628,17 +804,12 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
             console.log(`Changing ${this.timeBetweenBuys[2].currencyType} wait time to`, convertToFullVal);
             this.autobotControlsService.setWaitTimeBtwnBuys(this.timeBetweenBuys[2].currencyType, convertToFullVal);
         }),
-      this.autobotControlsService.getControlStates('btc-usd')
+      this.autobotControlsService.getControlStatesStream('btc-usd')
         .pipe(
-          catchError(err => {
-            return of({
-              maxBuyMoney: 0,
-              maxBuyPrice: 0,
-              maxNumberOfScrums: 0,
-              minTrendDataPoints: 5,
-              profitThreshold: 0,
-              waitTimeBtwnBuys: 0
-            });
+          retry(1),
+          catchError((err: any) => {
+            this._handleErrorRedirect(err, 'getControlStatesStream btc-usd');
+            return of(null);
           }),
           distinctUntilChanged((valA, valB) => {
             return (
@@ -664,17 +835,12 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           this.timeBetweenBuys[0].mainControl.setValue(Math.floor(seconds / 60), { emitEvent: false });
           this.timeBetweenBuys[0].secondaryControl.setValue(seconds % 60, { emitEvent: false });
         }),
-      this.autobotControlsService.getControlStates('ltc-usd')
+      this.autobotControlsService.getControlStatesStream('ltc-usd')
         .pipe(
-          catchError(err => {
-            return of({
-              maxBuyMoney: 0,
-              maxBuyPrice: 0,
-              maxNumberOfScrums: 0,
-              minTrendDataPoints: 5,
-              profitThreshold: 0,
-              waitTimeBtwnBuys: 0
-            });
+          retry(1),
+          catchError((err: any) => {
+            this._handleErrorRedirect(err, 'getControlStatesStream ltc-usd');
+            return of(null);
           }),
           distinctUntilChanged((valA, valB) => {
             return (
@@ -687,7 +853,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
             );
           }))
         .subscribe((data: ControlStates) => {
-          console.log('btc-usd control states:', JSON.stringify(data));
+          console.log('ltc-usd control states:', JSON.stringify(data));
           this.maxBuyMoney[1].mainControl.setValue(data.maxBuyMoney, { emitEvent: false });
           this.maxBuyPrices[1].mainControl.setValue(data.maxBuyPrice, { emitEvent: false });
           this.maxNumberOfScrums[1].mainControl.setValue(data.maxNumberOfScrums, { emitEvent: false });
@@ -700,17 +866,12 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           this.timeBetweenBuys[1].mainControl.setValue(Math.floor(seconds / 60), { emitEvent: false });
           this.timeBetweenBuys[1].secondaryControl.setValue(seconds % 60, { emitEvent: false });
         }),
-      this.autobotControlsService.getControlStates('eth-usd')
+      this.autobotControlsService.getControlStatesStream('eth-usd')
         .pipe(
-          catchError(err => {
-            return of({
-              maxBuyMoney: 0,
-              maxBuyPrice: 0,
-              maxNumberOfScrums: 0,
-              minTrendDataPoints: 5,
-              profitThreshold: 0,
-              waitTimeBtwnBuys: 0
-            });
+          retry(1),
+          catchError((err: any) => {
+            this._handleErrorRedirect(err, 'getControlStatesStream eth-usd');
+            return of(null);
           }),
           distinctUntilChanged((valA, valB) => {
             return (
@@ -723,7 +884,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
             );
           }))
         .subscribe((data: ControlStates) => {
-          console.log('btc-usd control states:', JSON.stringify(data));
+          console.log('eth-usd control states:', JSON.stringify(data));
           this.maxBuyMoney[2].mainControl.setValue(data.maxBuyMoney, { emitEvent: false });
           this.maxBuyPrices[2].mainControl.setValue(data.maxBuyPrice, { emitEvent: false });
           this.maxNumberOfScrums[2].mainControl.setValue(data.maxNumberOfScrums, { emitEvent: false });
@@ -736,15 +897,12 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           this.timeBetweenBuys[2].mainControl.setValue(Math.floor(seconds / 60), { emitEvent: false });
           this.timeBetweenBuys[2].secondaryControl.setValue(seconds % 60, { emitEvent: false });
         }),
-      this.autobotControlsService.getTraderStates('btc-usd')
+      this.autobotControlsService.getTraderStatesStream('btc-usd')
         .pipe(
-          catchError(err => {
-            return of({
-              botActivity: false,
-              currentNumberOfScrums: 0,
-              marketTrend: 10,
-              scrumsStates: {buys: 0, other: 0, sells: 0 }
-            });
+          retry(1),
+          catchError((err: any) => {
+            this._handleErrorRedirect(err, 'getTraderStatesStream btc-usd');
+            return of(null);
           }),
           distinctUntilChanged((valA, valB) => {
             return (
@@ -768,15 +926,12 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           this.marketTrends[0].previousStates.push(data.marketTrend);
           this._updateChart();
         }),
-      this.autobotControlsService.getTraderStates('ltc-usd')
+      this.autobotControlsService.getTraderStatesStream('ltc-usd')
         .pipe(
-          catchError(err => {
-            return of({
-              botActivity: false,
-              currentNumberOfScrums: 0,
-              marketTrend: 10,
-              scrumsStates: {buys: 0, other: 0, sells: 0 }
-            });
+          retry(1),
+          catchError((err: any) => {
+            this._handleErrorRedirect(err, 'getTraderStatesStream ltc-usd');
+            return of(null);
           }),
           distinctUntilChanged((valA, valB) => {
             return (
@@ -789,7 +944,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
             );
           }))
         .subscribe((data: TraderStates) => {
-          console.log('btc-usd trader states:', JSON.stringify(data));
+          console.log('ltc-usd trader states:', JSON.stringify(data));
           this.activeBots[1].state = data.botActivity || false;
           this.maxNumberOfScrums[1].currentNumber = data.currentNumberOfScrums;
           this.maxNumberOfScrums[1].currentBuys = data.scrumsStates.buys;
@@ -800,15 +955,12 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           this.marketTrends[1].previousStates.push(data.marketTrend);
           this._updateChart();
         }),
-      this.autobotControlsService.getTraderStates('eth-usd')
+      this.autobotControlsService.getTraderStatesStream('eth-usd')
         .pipe(
-          catchError(err => {
-            return of({
-              botActivity: false,
-              currentNumberOfScrums: 0,
-              marketTrend: 10,
-              scrumsStates: {buys: 0, other: 0, sells: 0 }
-            });
+          retry(1),
+          catchError((err: any) => {
+            this._handleErrorRedirect(err, 'getTraderStatesStream eth-usd');
+            return of(null);
           }),
           distinctUntilChanged((valA, valB) => {
             return (
@@ -821,7 +973,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
             );
           }))
         .subscribe((data: TraderStates) => {
-          console.log('btc-usd trader states:', JSON.stringify(data));
+          console.log('eth-usd trader states:', JSON.stringify(data));
           this.activeBots[2].state = data.botActivity || false;
           this.maxNumberOfScrums[2].currentNumber = data.currentNumberOfScrums;
           this.maxNumberOfScrums[2].currentBuys = data.scrumsStates.buys;
@@ -834,7 +986,9 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         }),
       this.autobotControlsService.getMarketPriceStream('btc-usd', isSandbox)
         .pipe(
-          catchError(err => {
+          retry(1),
+          catchError((err: any) => {
+            this._handleErrorRedirect(err, 'getMarketPriceStream btc-usd');
             return of({ sequence: '0', bids: [[ 0, 0, 0 ]], asks: [[ 0, 0, 0 ]]});
           }),
           distinctUntilChanged((valA, valB) => (valA.bids[0] === valB.bids[0]) || (valA.asks[0] === valB.asks[0])))
@@ -847,7 +1001,9 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         }),
       this.autobotControlsService.getMarketPriceStream('ltc-usd', isSandbox)
         .pipe(
-          catchError(err => {
+          retry(1),
+          catchError((err: any) => {
+            this._handleErrorRedirect(err, 'getMarketPriceStream ltc-usd');
             return of({ sequence: '0', bids: [[ 0, 0, 0 ]], asks: [[ 0, 0, 0 ]]});
           }),
           distinctUntilChanged((valA, valB) => (valA.bids[0] === valB.bids[0]) || (valA.asks[0] === valB.asks[0])))
@@ -860,7 +1016,9 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         }),
       this.autobotControlsService.getMarketPriceStream('eth-usd', isSandbox)
         .pipe(
-          catchError(err => {
+          retry(1),
+          catchError((err: any) => {
+            this._handleErrorRedirect(err, 'getMarketPriceStream eth-usd');
             return of({ sequence: '0', bids: [[ 0, 0, 0 ]], asks: [[ 0, 0, 0 ]]});
           }),
           distinctUntilChanged((valA, valB) => (valA.bids[0] === valB.bids[0]) || (valA.asks[0] === valB.asks[0])))
@@ -873,8 +1031,9 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         }),
       this.autobotControlsService.getUSDBalanceStream()
         .pipe(
-          catchError(err => {
-            console.log('getUSDBalanceStream', 'error', err);
+          retry(1),
+          catchError((err: any) => {
+            this._handleErrorRedirect(err, 'getUSDBalanceStream');
             return of({ balance: NaN });
           }),
           distinctUntilChanged((valA, valB) => valA.balance === valB.balance))
@@ -883,32 +1042,6 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
           console.log('usd balance', amount);
           this.state.usdBalanceCurrent = isNaN(amount) ? 'N/A' : `$${amount.toFixed(2)}`;
         }));
-      this._logsSub = this.autobotControlsService.getLogs(Number(this.state.logDaysCurrent))
-        .pipe(
-          catchError(err => {
-            console.log('getLogs', 'error', err);
-            return of({ logs: [''] });
-          }),
-          distinctUntilChanged((valA, valB) => valA.logs === valB.logs),
-          filter(data => !!data.logs.length))
-        .subscribe((data: { logs: string[] }) => {
-          this.logs = data.logs.join('\n') || this.logs;
-        });
-      this._updateChart();
-  }
-
-  private _getState(state: number): string {
-    switch (state) {
-      case 0: {
-        return 'Selling';
-      }
-      case 10: {
-        return 'Static';
-      }
-      case 20: {
-        return 'Buying';
-      }
-    }
   }
   /**
   * When new data is received, it's passed to this function.

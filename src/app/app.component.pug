@@ -25,7 +25,10 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
         a.nav-link(routerLink="/profit-portfolio") Profit Portfolio
       li.nav-item(routerLinkActive="active")
         a.nav-link(routerLink="/cryptobot-controls") Cryptobot Controls
+  span.d-none.d-sm-inline.text-right.text-white.fa.fa-question-circle.fa-2x([ngbTooltip]="sandboxTooltip", container="body", placement="left")
 div.spacer
 div.page
   router-outlet
+ng-template(#sandboxTooltip="")
+  .div Coinbase Pro Sandbox has no LTC or ETH markets. Only BTC will work in this demo mode.
 

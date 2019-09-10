@@ -17,6 +17,7 @@ import { SidePanelComponent } from './components/side-panel/side-panel.component
 import { GdaxDataService } from './services/gdax-data.service';
 import { FilterControlsComponent } from './components/filter-controls/filter-controls.component';
 import { AutobotControlsService } from './services/autobot-controls.service';
+import { ErrorComponent } from './components/error/error.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { AutobotControlsService } from './services/autobot-controls.service';
     ProfitPortfolioComponent,
     CryptobotControlsComponent,
     SidePanelComponent,
-    FilterControlsComponent
+    FilterControlsComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
