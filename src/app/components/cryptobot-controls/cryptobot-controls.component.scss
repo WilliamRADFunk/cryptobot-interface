@@ -18,6 +18,9 @@
     font-size: 24px;
 }
 textarea {
+  max-height: 100px;
+  overflow-x: auto;
+  overflow-y: scroll;
   resize: none;
 }
 ::ng-deep .ng5-slider .ng5-slider-bubble.ng5-slider-limit,
