@@ -435,13 +435,14 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   ];
   public state: { [key: string]: string|number; } = {
     logDaysCurrent: 1,
-    marketTrendCurrent: 'btc-usd',
-    maxBuyMoneyCurrent: 'btc-usd',
-    maxBuyPriceCurrent: 'btc-usd',
-    maxNumberOfScrumsCurrent: 'btc-usd',
-    minTrendDataPointsCurrent: 'btc-usd',
-    profitThresholdCurrent: 'btc-usd',
-    timeBetweenBuysCurrent: 'btc-usd',
+    activeCurrency: 'btc-usd',
+    // activeCurrency: 'btc-usd',
+    // maxBuyMoneyCurrent: 'btc-usd',
+    // maxBuyPriceCurrent: 'btc-usd',
+    // maxNumberOfScrumsCurrent: 'btc-usd',
+    // minTrendDataPointsCurrent: 'btc-usd',
+    // profitThresholdCurrent: 'btc-usd',
+    // timeBetweenBuysCurrent: 'btc-usd',
     usdBalanceCurrent: 'N/A'
   };
   /**
@@ -1069,7 +1070,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         name: null,
         color: '#8EBA6A',
         data: [],
-        visible: this.state.marketTrendCurrent === 'btc-usd'
+        visible: this.state.activeCurrency === 'btc-usd'
       },
       {
         animation: false,
@@ -1077,7 +1078,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         name: null,
         color: '#8EBA6A',
         data: [],
-        visible: this.state.marketTrendCurrent === 'ltc-usd'
+        visible: this.state.activeCurrency === 'ltc-usd'
       },
       {
         animation: false,
@@ -1085,7 +1086,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         name: null,
         color: '#8EBA6A',
         data: [],
-        visible: this.state.marketTrendCurrent === 'eth-usd'
+        visible: this.state.activeCurrency === 'eth-usd'
       }
     ];
     options['tooltip'] = {
@@ -1176,24 +1177,21 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   }
 
   public calcSalePriceForProfit(currentBuy: number, maxMoney: number, profitThreshold: number): string {
-    const actualBuyPrice = Number(currentBuy) - 0.02;
-    const buySize = Number((maxMoney / actualBuyPrice).toFixed(6)) + 0.000001;
-    let buyBase = Number((buySize * actualBuyPrice).toFixed(2));
-    const feeCalulated = Number((0.005 * buyBase).toFixed(2));
-    buyBase += feeCalulated;
+    let size = maxMoney / currentBuy;
+    let buyBase = maxMoney;
+    buyBase = Number((currentBuy * size * (1 + 0.005)).toFixed(2));
+    buyBase += profitThreshold;
 
-    const sellBase = (buyBase + feeCalulated + profitThreshold);
-    return isNaN(sellBase) ? 'N/A' : '$' + (sellBase / buySize).toFixed(2);
+    const interimSellPrice = Number((buyBase / size).toFixed(2));
+    const sellBase = Number((interimSellPrice * size * (1 + 0.005)).toFixed(2));
+    const sellFee = sellBase - buyBase;
+    const sellPrice = Number((interimSellPrice + sellFee - 0.02).toFixed(2));
+
+    return sellPrice.toFixed(2);
   }
 
   public toggleActiveCurrency(currency: string) {
-    this.state.maxBuyMoneyCurrent = currency;
-    this.state.maxBuyPriceCurrent = currency;
-    this.state.maxNumberOfScrumsCurrent = currency;
-    this.state.minTrendDataPointsCurrent = currency;
-    this.state.profitThresholdCurrent = currency;
-    this.state.timeBetweenBuysCurrent = currency;
-    this.state.marketTrendCurrent = currency;
+    this.state.activeCurrency = currency;
     switch (currency) {
       case 'btc-usd': {
         this.chart.ref.series[0].show();
