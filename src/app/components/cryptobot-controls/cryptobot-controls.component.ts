@@ -1179,14 +1179,20 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
     const actualBuyPrice = Number(currentBuy) - 0.02;
     const buySize = Number((maxMoney / actualBuyPrice).toFixed(6)) + 0.000001;
     let buyBase = Number((buySize * actualBuyPrice).toFixed(2));
-    const feeCalulated = Number((0.0025 * buyBase).toFixed(2));
+    const feeCalulated = Number((0.005 * buyBase).toFixed(2));
     buyBase += feeCalulated;
 
     const sellBase = (buyBase + feeCalulated + profitThreshold);
     return isNaN(sellBase) ? 'N/A' : '$' + (sellBase / buySize).toFixed(2);
   }
 
-  public toggleMarketTrend(currency: string) {
+  public toggleActiveCurrency(currency: string) {
+    this.state.maxBuyMoneyCurrent = currency;
+    this.state.maxBuyPriceCurrent = currency;
+    this.state.maxNumberOfScrumsCurrent = currency;
+    this.state.minTrendDataPointsCurrent = currency;
+    this.state.profitThresholdCurrent = currency;
+    this.state.timeBetweenBuysCurrent = currency;
     this.state.marketTrendCurrent = currency;
     switch (currency) {
       case 'btc-usd': {
@@ -1208,37 +1214,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         break;
       }
     }
-    console.log(currency, this.state.marketTrendCurrent);
-  }
-
-  public toggleMaxBuyMoney(currency: string) {
-    this.state.maxBuyMoneyCurrent = currency;
-    console.log(currency, this.state.maxBuyMoneyCurrent);
-  }
-
-  public toggleMaxBuyPrice(currency: string) {
-    this.state.maxBuyPriceCurrent = currency;
-    console.log(currency, this.state.maxBuyPriceCurrent);
-  }
-
-  public toggleMaxNumberOfScrums(currency: string) {
-    this.state.maxNumberOfScrumsCurrent = currency;
-    console.log(currency, this.state.maxNumberOfScrumsCurrent);
-  }
-
-  public toggleMinTrendDataPoints(currency: string) {
-    this.state.minTrendDataPointsCurrent = currency;
-    console.log(currency, this.state.minTrendDataPointsCurrent);
-  }
-
-  public toggleProfitThreshold(currency: string) {
-    this.state.profitThresholdCurrent = currency;
-    console.log(currency, this.state.profitThresholdCurrent);
-  }
-
-  public toggleTimeBetweenBuys(currency: string) {
-    this.state.timeBetweenBuysCurrent = currency;
-    console.log(currency, this.state.timeBetweenBuysCurrent);
+    console.log(currency, this.state);
   }
 
   public toggleLogDays(days: number) {

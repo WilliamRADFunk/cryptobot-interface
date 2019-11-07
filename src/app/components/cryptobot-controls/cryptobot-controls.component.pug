@@ -22,9 +22,9 @@
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
         .h2.text-center.custom-yellow.d-inline-block(aria-label="Max Buy Price") Max Buy Price
         .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="First group")
-          button.btn.btn-secondary((click)="toggleMaxBuyPrice('btc-usd')", type="button", [class.active]="state.maxBuyPriceCurrent === 'btc-usd'") BTC
-          button.btn.btn-secondary((click)="toggleMaxBuyPrice('ltc-usd')", type="button", [class.active]="state.maxBuyPriceCurrent === 'ltc-usd'") LTC
-          button.btn.btn-secondary((click)="toggleMaxBuyPrice('eth-usd')", type="button", [class.active]="state.maxBuyPriceCurrent === 'eth-usd'") ETH
+          button.btn.btn-secondary((click)="toggleActiveCurrency('btc-usd')", type="button", [class.active]="state.maxBuyPriceCurrent === 'btc-usd'") BTC
+          button.btn.btn-secondary((click)="toggleActiveCurrency('ltc-usd')", type="button", [class.active]="state.maxBuyPriceCurrent === 'ltc-usd'") LTC
+          button.btn.btn-secondary((click)="toggleActiveCurrency('eth-usd')", type="button", [class.active]="state.maxBuyPriceCurrent === 'eth-usd'") ETH
         span(*ngFor="let maxBuyPriceControl of maxBuyPrices")
           ng-container(*ngIf="state.maxBuyPriceCurrent === maxBuyPriceControl.currencyType")
             .w-100.card.bg-secondary.text-white
@@ -36,9 +36,9 @@
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
         .h2.text-center.custom-yellow.d-inline-block(aria-label="Max Active Trades") Max Active Trades
         .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="First group")
-          button.btn.btn-secondary((click)="toggleMaxNumberOfScrums('btc-usd')", type="button", [class.active]="state.maxNumberOfScrumsCurrent === 'btc-usd'") BTC
-          button.btn.btn-secondary((click)="toggleMaxNumberOfScrums('ltc-usd')", type="button", [class.active]="state.maxNumberOfScrumsCurrent === 'ltc-usd'") LTC
-          button.btn.btn-secondary((click)="toggleMaxNumberOfScrums('eth-usd')", type="button", [class.active]="state.maxNumberOfScrumsCurrent === 'eth-usd'") ETH
+          button.btn.btn-secondary((click)="toggleActiveCurrency('btc-usd')", type="button", [class.active]="state.maxNumberOfScrumsCurrent === 'btc-usd'") BTC
+          button.btn.btn-secondary((click)="toggleActiveCurrency('ltc-usd')", type="button", [class.active]="state.maxNumberOfScrumsCurrent === 'ltc-usd'") LTC
+          button.btn.btn-secondary((click)="toggleActiveCurrency('eth-usd')", type="button", [class.active]="state.maxNumberOfScrumsCurrent === 'eth-usd'") ETH
         span(*ngFor="let maxNumberOfScrumsControl of maxNumberOfScrums")
           ng-container(*ngIf="state.maxNumberOfScrumsCurrent === maxNumberOfScrumsControl.currencyType")
             .w-100.card.bg-secondary.text-white
@@ -54,9 +54,9 @@
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
         .h2.text-center.custom-yellow.d-inline-block(aria-label="Profit Threshold") Profit Threshold
         .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="Profit Threshold group")
-          button.btn.btn-secondary((click)="toggleProfitThreshold('btc-usd')", type="button", [class.active]="state.profitThresholdCurrent === 'btc-usd'") BTC
-          button.btn.btn-secondary((click)="toggleProfitThreshold('ltc-usd')", type="button", [class.active]="state.profitThresholdCurrent === 'ltc-usd'") LTC
-          button.btn.btn-secondary((click)="toggleProfitThreshold('eth-usd')", type="button", [class.active]="state.profitThresholdCurrent === 'eth-usd'") ETH
+          button.btn.btn-secondary((click)="toggleActiveCurrency('btc-usd')", type="button", [class.active]="state.profitThresholdCurrent === 'btc-usd'") BTC
+          button.btn.btn-secondary((click)="toggleActiveCurrency('ltc-usd')", type="button", [class.active]="state.profitThresholdCurrent === 'ltc-usd'") LTC
+          button.btn.btn-secondary((click)="toggleActiveCurrency('eth-usd')", type="button", [class.active]="state.profitThresholdCurrent === 'eth-usd'") ETH
         span(*ngFor="let profitThresholdControl of profitThreshold; let index=index;")
           ng-container(*ngIf="state.profitThresholdCurrent === profitThresholdControl.currencyType")
             .w-100.card.bg-secondary.text-white
@@ -69,9 +69,9 @@
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
         .h2.text-center.custom-yellow.d-inline-block(aria-label="Max Buy Money Group") Max Buy Money
         .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="First group")
-          button.btn.btn-secondary((click)="toggleMaxBuyMoney('btc-usd')", type="button", [class.active]="state.maxBuyMoneyCurrent === 'btc-usd'") BTC
-          button.btn.btn-secondary((click)="toggleMaxBuyMoney('ltc-usd')", type="button", [class.active]="state.maxBuyMoneyCurrent === 'ltc-usd'") LTC
-          button.btn.btn-secondary((click)="toggleMaxBuyMoney('eth-usd')", type="button", [class.active]="state.maxBuyMoneyCurrent === 'eth-usd'") ETH
+          button.btn.btn-secondary((click)="toggleActiveCurrency('btc-usd')", type="button", [class.active]="state.maxBuyMoneyCurrent === 'btc-usd'") BTC
+          button.btn.btn-secondary((click)="toggleActiveCurrency('ltc-usd')", type="button", [class.active]="state.maxBuyMoneyCurrent === 'ltc-usd'") LTC
+          button.btn.btn-secondary((click)="toggleActiveCurrency('eth-usd')", type="button", [class.active]="state.maxBuyMoneyCurrent === 'eth-usd'") ETH
         span(*ngFor="let maxBuyMoneyControl of maxBuyMoney")
           ng-container(*ngIf="state.maxBuyMoneyCurrent === maxBuyMoneyControl.currencyType")
             .w-100.card.bg-secondary.text-white
@@ -83,9 +83,9 @@
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
         .h2.text-center.custom-yellow.d-inline-block(aria-label="Mareket Trend Group") Market Trend
         .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="First group")
-          button.btn.btn-secondary((click)="toggleMarketTrend('btc-usd')", type="button", [class.active]="state.marketTrendCurrent === 'btc-usd'") BTC
-          button.btn.btn-secondary((click)="toggleMarketTrend('ltc-usd')", type="button", [class.active]="state.marketTrendCurrent === 'ltc-usd'") LTC
-          button.btn.btn-secondary((click)="toggleMarketTrend('eth-usd')", type="button", [class.active]="state.marketTrendCurrent === 'eth-usd'") ETH
+          button.btn.btn-secondary((click)="toggleActiveCurrency('btc-usd')", type="button", [class.active]="state.marketTrendCurrent === 'btc-usd'") BTC
+          button.btn.btn-secondary((click)="toggleActiveCurrency('ltc-usd')", type="button", [class.active]="state.marketTrendCurrent === 'ltc-usd'") LTC
+          button.btn.btn-secondary((click)="toggleActiveCurrency('eth-usd')", type="button", [class.active]="state.marketTrendCurrent === 'eth-usd'") ETH
         .w-100.card.bg-secondary.text-white
           span(*ngFor="let marketTrend of marketTrends")
             ng-container(*ngIf="state.marketTrendCurrent === marketTrend.currencyType")
@@ -97,9 +97,9 @@
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
         .h2.text-center.custom-yellow.d-inline-block(aria-label="Min Trend Datum Group") Min Trend Datum
         .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="First group")
-          button.btn.btn-secondary((click)="toggleMinTrendDataPoints('btc-usd')", type="button", [class.active]="state.minTrendDataPointsCurrent === 'btc-usd'") BTC
-          button.btn.btn-secondary((click)="toggleMinTrendDataPoints('ltc-usd')", type="button", [class.active]="state.minTrendDataPointsCurrent === 'ltc-usd'") LTC
-          button.btn.btn-secondary((click)="toggleMinTrendDataPoints('eth-usd')", type="button", [class.active]="state.minTrendDataPointsCurrent === 'eth-usd'") ETH
+          button.btn.btn-secondary((click)="toggleActiveCurrency('btc-usd')", type="button", [class.active]="state.minTrendDataPointsCurrent === 'btc-usd'") BTC
+          button.btn.btn-secondary((click)="toggleActiveCurrency('ltc-usd')", type="button", [class.active]="state.minTrendDataPointsCurrent === 'ltc-usd'") LTC
+          button.btn.btn-secondary((click)="toggleActiveCurrency('eth-usd')", type="button", [class.active]="state.minTrendDataPointsCurrent === 'eth-usd'") ETH
         span(*ngFor="let minTrendDataPointsControl of minTrendDataPoints")
           ng-container(*ngIf="state.minTrendDataPointsCurrent === minTrendDataPointsControl.currencyType")
             .w-100.card.bg-secondary.text-white
@@ -110,9 +110,9 @@
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
         .h2.text-center.custom-yellow.d-inline-block(aria-label="Time Between Buys") Time Btwn Buys
         .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="Time Between Buys group")
-          button.btn.btn-secondary((click)="toggleTimeBetweenBuys('btc-usd')", type="button", [class.active]="state.timeBetweenBuysCurrent === 'btc-usd'") BTC
-          button.btn.btn-secondary((click)="toggleTimeBetweenBuys('ltc-usd')", type="button", [class.active]="state.timeBetweenBuysCurrent === 'ltc-usd'") LTC
-          button.btn.btn-secondary((click)="toggleTimeBetweenBuys('eth-usd')", type="button", [class.active]="state.timeBetweenBuysCurrent === 'eth-usd'") ETH
+          button.btn.btn-secondary((click)="toggleActiveCurrency('btc-usd')", type="button", [class.active]="state.timeBetweenBuysCurrent === 'btc-usd'") BTC
+          button.btn.btn-secondary((click)="toggleActiveCurrency('ltc-usd')", type="button", [class.active]="state.timeBetweenBuysCurrent === 'ltc-usd'") LTC
+          button.btn.btn-secondary((click)="toggleActiveCurrency('eth-usd')", type="button", [class.active]="state.timeBetweenBuysCurrent === 'eth-usd'") ETH
         span(*ngFor="let timeBetweenBuysControl of timeBetweenBuys; let index=index;")
           ng-container(*ngIf="state.timeBetweenBuysCurrent === timeBetweenBuysControl.currencyType")
             .w-100.card.bg-secondary.text-white
