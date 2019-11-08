@@ -4,25 +4,59 @@
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
         .h2.text-center.custom-yellow.d-inline-block.pb-1(aria-label="Autobot Power") Autobot Power
         .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="First group")
-          button.btn.btn-success((click)="turnBotOn('all')", type="button", [ngbTooltip]="activateAllTooltip", container="body")
+          button.btn.btn-success(
+            (click)="turnBotOn('all')",
+            [disabled]="this.state.activeUnlock !== 'power'",
+            type="button",
+            [ngbTooltip]="activateAllTooltip",
+            container="body")
             span.fa.fa-play
-          button.btn.btn-danger((click)="turnBotOff('all')", type="button", [ngbTooltip]="deactivateAllTooltip", container="body")
+          button.btn.btn-danger(
+            (click)="turnBotOff('all')",
+            [disabled]="this.state.activeUnlock !== 'power'",
+            type="button",
+            [ngbTooltip]="deactivateAllTooltip",
+            container="body")
             span.fa.fa-stop
+        button.btn.btn-sm.btn-outline-warning.float-right.mr-2((click)="toggleActiveLock('power')", type="button")
+          span.fa.fa-lock(*ngIf="this.state.activeUnlock !== 'power'")
+          span.fa.fa-unlock(*ngIf="this.state.activeUnlock === 'power'")
         .row(*ngFor="let botActive of activeBots")
           .col-2
             label.text-white.pt-2.pl-1 {{ botActive.label }}
           .col-10
             .w-100.btn-group.mb-2(role="group", aria-label="bot activate button group")
               ng-container(*ngIf="botActive.state; else activate")
-                button.btn.btn-success.active.w-100(type="button", [ngbTooltip]="activatedTooltip", container="body") Active
-                button.btn.btn-info.w-100((click)="turnBotOff(botActive.currencyType)", type="button", [ngbTooltip]="deactivateTooltip", container="body") Disable
+                button.btn.btn-success.active.w-100(
+                  [disabled]="this.state.activeUnlock !== 'power'",
+                  type="button",
+                  [ngbTooltip]="activatedTooltip",
+                  container="body") Active
+                button.btn.btn-info.w-100(
+                  (click)="turnBotOff(botActive.currencyType)",
+                  [disabled]="this.state.activeUnlock !== 'power'",
+                  type="button",
+                  [ngbTooltip]="deactivateTooltip",
+                  container="body") Disable
               ng-template(#activate="")
-                button.btn.btn-info.w-100((click)="turnBotOn(botActive.currencyType)", type="button", [ngbTooltip]="activateTooltip", container="body") Activate
-                button.btn.btn-success.active.w-100(type="button", [ngbTooltip]="deactivatedTooltip", container="body") Disabled
+                button.btn.btn-info.w-100(
+                  (click)="turnBotOn(botActive.currencyType)",
+                  [disabled]="this.state.activeUnlock !== 'power'",
+                  type="button",
+                  [ngbTooltip]="activateTooltip",
+                  container="body") Activate
+                button.btn.btn-success.active.w-100(
+                  [disabled]="this.state.activeUnlock !== 'power'",
+                  type="button",
+                  [ngbTooltip]="deactivatedTooltip",
+                  container="body") Disabled
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
         .h2.text-center.custom-yellow.d-inline-block(aria-label="Max Buy Price") Max Buy Price
         .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="First group")
           ng-container(*ngIf="false; else activeCurrencyControls")
+        button.btn.btn-sm.btn-outline-warning.float-right.mr-2((click)="toggleActiveLock('maxBuyPrices')", type="button")
+          span.fa.fa-lock(*ngIf="this.state.activeUnlock !== 'maxBuyPrices'")
+          span.fa.fa-unlock(*ngIf="this.state.activeUnlock === 'maxBuyPrices'")
         span(*ngFor="let maxBuyPriceControl of maxBuyPrices")
           ng-container(*ngIf="state.activeCurrency === maxBuyPriceControl.currencyType")
             .w-100.card.bg-secondary.text-white
@@ -30,11 +64,18 @@
                 .d-inline-block.float-left.ml-1 {{ maxBuyPriceControl.label }}
                 .d-inline-block.border.border-white.rounded.float-right.px-1.mr-1.mt-1([ngbTooltip]="currentPriceTooltip", container="body") {{ ((maxBuyPriceControl.marketPrice === 'N/A') ? '' : '$') + maxBuyPriceControl.marketPrice }}
               .card-body
-                ng5-slider.text-white([id]="maxBuyPriceControl.id", [formControl]="maxBuyPriceControl.mainControl", [options]="maxBuyPriceControl.options")
+                ng5-slider.text-white(
+                  [disabled]="this.state.activeUnlock !== 'maxBuyPrice'",
+                  [id]="maxBuyPriceControl.id",
+                  [formControl]="maxBuyPriceControl.mainControl",
+                  [options]="maxBuyPriceControl.options")
       .mb-2.mx-1.py-2.px-2.custom-black.rounded.control
         .h2.text-center.custom-yellow.d-inline-block(aria-label="Max Active Trades") Max Active Trades
         .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="First group")
           ng-container(*ngIf="false; else activeCurrencyControls")
+        button.btn.btn-sm.btn-outline-warning.float-right.mr-2((click)="toggleActiveLock('maxNumberOfScrums')", type="button")
+          span.fa.fa-lock(*ngIf="this.state.activeUnlock !== 'maxNumberOfScrums'")
+          span.fa.fa-unlock(*ngIf="this.state.activeUnlock === 'maxNumberOfScrums'")
         span(*ngFor="let maxNumberOfScrumsControl of maxNumberOfScrums")
           ng-container(*ngIf="state.activeCurrency === maxNumberOfScrumsControl.currencyType")
             .w-100.card.bg-secondary.text-white
@@ -51,6 +92,9 @@
         .h2.text-center.custom-yellow.d-inline-block(aria-label="Profit Threshold") Profit Threshold
         .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="Profit Threshold group")
           ng-container(*ngIf="false; else activeCurrencyControls")
+        button.btn.btn-sm.btn-outline-warning.float-right.mr-2((click)="toggleActiveLock('profitThreshold')", type="button")
+          span.fa.fa-lock(*ngIf="this.state.activeUnlock !== 'profitThreshold'")
+          span.fa.fa-unlock(*ngIf="this.state.activeUnlock === 'profitThreshold'")
         span(*ngFor="let profitThresholdControl of profitThreshold; let index=index;")
           ng-container(*ngIf="state.activeCurrency === profitThresholdControl.currencyType")
             .w-100.card.bg-secondary.text-white
@@ -64,6 +108,9 @@
         .h2.text-center.custom-yellow.d-inline-block(aria-label="Max Buy Money Group") Max Buy Money
         .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="First group")
           ng-container(*ngIf="false; else activeCurrencyControls")
+        button.btn.btn-sm.btn-outline-warning.float-right.mr-2((click)="toggleActiveLock('maxBuyMoney')", type="button")
+          span.fa.fa-lock(*ngIf="this.state.activeUnlock !== 'maxBuyMoney'")
+          span.fa.fa-unlock(*ngIf="this.state.activeUnlock === 'maxBuyMoney'")
         span(*ngFor="let maxBuyMoneyControl of maxBuyMoney")
           ng-container(*ngIf="state.activeCurrency === maxBuyMoneyControl.currencyType")
             .w-100.card.bg-secondary.text-white
@@ -88,6 +135,9 @@
         .h2.text-center.custom-yellow.d-inline-block(aria-label="Min Trend Datum Group") Min Trend Datum
         .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="First group")
           ng-container(*ngIf="false; else activeCurrencyControls")
+        button.btn.btn-sm.btn-outline-warning.float-right.mr-2((click)="toggleActiveLock('minTrendDataPoints')", type="button")
+          span.fa.fa-lock(*ngIf="this.state.activeUnlock !== 'minTrendDataPoints'")
+          span.fa.fa-unlock(*ngIf="this.state.activeUnlock === 'minTrendDataPoints'")
         span(*ngFor="let minTrendDataPointsControl of minTrendDataPoints")
           ng-container(*ngIf="state.activeCurrency === minTrendDataPointsControl.currencyType")
             .w-100.card.bg-secondary.text-white
@@ -99,6 +149,9 @@
         .h2.text-center.custom-yellow.d-inline-block(aria-label="Time Between Buys") Time Btwn Buys
         .btn-group.btn-group-sm.pb-1.float-right(role="group", aria-label="Time Between Buys group")
           ng-container(*ngIf="false; else activeCurrencyControls")
+        button.btn.btn-sm.btn-outline-warning.float-right.mr-2((click)="toggleActiveLock('timeBetweenBuys')", type="button")
+          span.fa.fa-lock(*ngIf="this.state.activeUnlock !== 'timeBetweenBuys'")
+          span.fa.fa-unlock(*ngIf="this.state.activeUnlock === 'timeBetweenBuys'")
         span(*ngFor="let timeBetweenBuysControl of timeBetweenBuys; let index=index;")
           ng-container(*ngIf="state.activeCurrency === timeBetweenBuysControl.currencyType")
             .w-100.card.bg-secondary.text-white

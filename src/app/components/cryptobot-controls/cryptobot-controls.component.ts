@@ -46,8 +46,6 @@ export interface ScrumControl extends CurrentNumberControl {
   styleUrls: ['./cryptobot-controls.component.scss']
 })
 export class CryptobotControlsComponent implements OnDestroy, OnInit {
-  private _controlState: ControlStates;
-  private _trendState: TraderStates;
   private _logsSub: Subscription;
   /**
    * Subscriptions to unsubscribe from onDestroy
@@ -63,12 +61,14 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   */
   public chartReady: boolean = false;
   public logs: string = '';
+
   public readonly maxBuyMoney: Control[] = [
     {
       currencyType: 'btc-usd',
       id: 'max-buy-money-btc',
       label: 'BTC',
       options: {
+        disabled: true,
         floor: 0,
         ceil: 500,
         showSelectionBar: true,
@@ -83,6 +83,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       id: 'max-buy-money-ltc',
       label: 'LTC',
       options: {
+        disabled: true,
         floor: 0,
         ceil: 500,
         showSelectionBar: true,
@@ -97,6 +98,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       id: 'max-buy-money-etc',
       label: 'ETC',
       options: {
+        disabled: true,
         floor: 0,
         ceil: 500,
         showSelectionBar: true,
@@ -114,6 +116,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       label: 'BTC',
       marketPrice: 'N/A',
       options: {
+        disabled: true,
         floor: 0,
         ceil: 12000,
         showSelectionBar: true,
@@ -129,6 +132,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       label: 'LTC',
       marketPrice: 'N/A',
       options: {
+        disabled: true,
         floor: 0,
         ceil: 135,
         showSelectionBar: true,
@@ -144,6 +148,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       label: 'ETC',
       marketPrice: 'N/A',
       options: {
+        disabled: true,
         floor: 0,
         ceil: 330,
         showSelectionBar: true,
@@ -164,6 +169,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       id: 'max-number-of-scrums-btc',
       label: 'BTC',
       options: {
+        disabled: true,
         floor: 0,
         ceil: 10,
         showSelectionBar: true
@@ -179,6 +185,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       id: 'max-number-of-scrums-ltc',
       label: 'LTC',
       options: {
+        disabled: true,
         floor: 0,
         ceil: 10,
         showSelectionBar: true
@@ -194,6 +201,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       id: 'max-number-of-scrums-etc',
       label: 'ETC',
       options: {
+        disabled: true,
         floor: 0,
         ceil: 10,
         showSelectionBar: true
@@ -208,6 +216,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       id: 'min-trend-data-points-btc',
       label: 'BTC',
       options: {
+        disabled: true,
         floor: 5,
         ceil: 100,
         showSelectionBar: true
@@ -220,6 +229,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       id: 'min-trend-data-points-ltc',
       label: 'LTC',
       options: {
+        disabled: true,
         floor: 5,
         ceil: 100,
         showSelectionBar: true
@@ -232,6 +242,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       id: 'min-trend-data-points-etc',
       label: 'ETC',
       options: {
+        disabled: true,
         floor: 5,
         ceil: 100,
         showSelectionBar: true
@@ -245,6 +256,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       id: 'profit-threshold-btc',
       label: 'BTC',
       mainOptions: {
+        disabled: true,
         floor: 0,
         ceil: 99,
         showSelectionBar: true,
@@ -254,6 +266,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         }
       },
       secondaryOptions: {
+        disabled: true,
         floor: 0.00,
         ceil: 0.99,
         showSelectionBar: true,
@@ -270,6 +283,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       id: 'profit-threshold-ltc',
       label: 'LTC',
       mainOptions: {
+        disabled: true,
         floor: 0,
         ceil: 99,
         showSelectionBar: true,
@@ -279,6 +293,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         }
       },
       secondaryOptions: {
+        disabled: true,
         floor: 0.00,
         ceil: 0.99,
         showSelectionBar: true,
@@ -295,6 +310,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       id: 'profit-threshold-etc',
       label: 'ETC',
       mainOptions: {
+        disabled: true,
         floor: 0,
         ceil: 99,
         showSelectionBar: true,
@@ -304,6 +320,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         }
       },
       secondaryOptions: {
+        disabled: true,
         floor: 0.00,
         ceil: 0.99,
         showSelectionBar: true,
@@ -322,6 +339,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       id: 'time-between-buys-btc',
       label: 'BTC',
       mainOptions: {
+        disabled: true,
         floor: 0,
         ceil: 10,
         showSelectionBar: true,
@@ -331,6 +349,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         }
       },
       secondaryOptions: {
+        disabled: true,
         floor: 0,
         ceil: 59,
         showSelectionBar: true,
@@ -347,6 +366,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       id: 'time-between-buys-ltc',
       label: 'LTC',
       mainOptions: {
+        disabled: true,
         floor: 0,
         ceil: 10,
         showSelectionBar: true,
@@ -356,6 +376,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         }
       },
       secondaryOptions: {
+        disabled: true,
         floor: 0,
         ceil: 59,
         showSelectionBar: true,
@@ -372,6 +393,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       id: 'time-between-buys-etc',
       label: 'ETC',
       mainOptions: {
+        disabled: true,
         floor: 0,
         ceil: 10,
         showSelectionBar: true,
@@ -381,6 +403,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
         }
       },
       secondaryOptions: {
+        disabled: true,
         floor: 0,
         ceil: 59,
         showSelectionBar: true,
@@ -436,13 +459,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   public state: { [key: string]: string|number; } = {
     logDaysCurrent: 1,
     activeCurrency: 'btc-usd',
-    // activeCurrency: 'btc-usd',
-    // maxBuyMoneyCurrent: 'btc-usd',
-    // maxBuyPriceCurrent: 'btc-usd',
-    // maxNumberOfScrumsCurrent: 'btc-usd',
-    // minTrendDataPointsCurrent: 'btc-usd',
-    // profitThresholdCurrent: 'btc-usd',
-    // timeBetweenBuysCurrent: 'btc-usd',
+    activeUnlock: null,
     usdBalanceCurrent: 'N/A'
   };
   /**
@@ -609,7 +626,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
     this._updateChart();
 
     this._startPolling(isSandbox);
-    
+
     this._logsSub = this.autobotControlsService.getLogs(Number(this.state.logDaysCurrent))
       .pipe(
         catchError(err => {
@@ -1177,7 +1194,7 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
   }
 
   public calcSalePriceForProfit(currentBuy: number, maxMoney: number, profitThreshold: number): string {
-    let size = maxMoney / currentBuy;
+    const size = maxMoney / currentBuy;
     let buyBase = maxMoney;
     buyBase = Number((currentBuy * size * (1 + 0.005)).toFixed(2));
     buyBase += profitThreshold;
@@ -1213,6 +1230,46 @@ export class CryptobotControlsComponent implements OnDestroy, OnInit {
       }
     }
     console.log(currency, this.state);
+  }
+
+  public toggleActiveLock(control: string): void {
+    const oldLock = this.state.activeUnlock;
+    this.state.activeUnlock = this.state.activeUnlock === control ? null : control;
+    const newLock = this.state.activeUnlock;
+
+    const oldControl = (<any>this)[oldLock];
+    if (oldLock && oldControl) {
+      const options = oldControl[0] && oldControl[0].options;
+      if (oldControl && options) {
+        oldControl[0].options = Object.assign({}, oldControl[0].options, {disabled: true});
+        oldControl[1].options = Object.assign({}, oldControl[1].options, {disabled: true});
+        oldControl[2].options = Object.assign({}, oldControl[2].options, {disabled: true});
+      } else {
+        oldControl[0].mainOptions = Object.assign({}, oldControl[0].mainOptions, {disabled: true});
+        oldControl[1].mainOptions = Object.assign({}, oldControl[1].mainOptions, {disabled: true});
+        oldControl[2].mainOptions = Object.assign({}, oldControl[2].mainOptions, {disabled: true});
+        oldControl[0].secondaryOptions = Object.assign({}, oldControl[0].secondaryOptions, {disabled: true});
+        oldControl[1].secondaryOptions = Object.assign({}, oldControl[1].secondaryOptions, {disabled: true});
+        oldControl[2].secondaryOptions = Object.assign({}, oldControl[2].secondaryOptions, {disabled: true});
+      }
+    }
+
+    const newControl = (<any>this)[newLock];
+    if (newLock && newControl) {
+      const options = newControl[0] && newControl[0].options;
+      if (newControl && options) {
+        newControl[0].options = Object.assign({}, newControl[0].options, {disabled: false});
+        newControl[1].options = Object.assign({}, newControl[1].options, {disabled: false});
+        newControl[2].options = Object.assign({}, newControl[2].options, {disabled: false});
+      } else {
+        newControl[0].mainOptions = Object.assign({}, newControl[0].mainOptions, {disabled: false});
+        newControl[1].mainOptions = Object.assign({}, newControl[1].mainOptions, {disabled: false});
+        newControl[2].mainOptions = Object.assign({}, newControl[2].mainOptions, {disabled: false});
+        newControl[0].secondaryOptions = Object.assign({}, newControl[0].secondaryOptions, {disabled: false});
+        newControl[1].secondaryOptions = Object.assign({}, newControl[1].secondaryOptions, {disabled: false});
+        newControl[2].secondaryOptions = Object.assign({}, newControl[2].secondaryOptions, {disabled: false});
+      }
+    }
   }
 
   public toggleLogDays(days: number) {
