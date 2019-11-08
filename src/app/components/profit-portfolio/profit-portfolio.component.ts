@@ -99,48 +99,33 @@ export class ProfitPortfolioComponent implements OnDestroy, OnInit {
     options['credits'] = {
       enabled: false
     };
-    if (this.pathState === 'ALL') {
-      options['series'] = [
-        {
-          name: 'BTC-USD',
-          color: '#2d2d31',
-          data: []
-        },
-        {
-          name: 'LTC-USD',
-          color: '#ff0000',
-          data: []
-        },
-        {
-          name: 'ETH-USD',
-          color: '#ffff00',
-          data: []
-        }
-      ];
-    } else {
-      const spend = [];
-      const earn = [];
-      const profit = [];
-      for (let i = 0; i < data.length; i++) {
-        if (!data[i][3]) {
-          continue;
-        }
-        spend.push(data[i][0]);
-        earn.push(data[i][1]);
-        profit.push(data[i][2]);
+
+    const spend = [];
+    const earn = [];
+    const profit = [];
+    for (let i = 0; i < data.length; i++) {
+      if (!data[i][3]) {
+        continue;
       }
-      options['series'] = [
-      {
-        name: 'Spent',
-        data: spend
-      }, {
-        name: 'Earned',
-        data: earn
-      }, {
-        name: 'Profit',
-        data: profit
-      }];
+      spend.push(data[i][0]);
+      earn.push(data[i][1]);
+      profit.push(data[i][2]);
     }
+    options['series'] = [
+    {
+      name: 'Spent',
+      color: '#ECCA00',
+      data: spend
+    }, {
+      name: 'Earned',
+      color: '#90ED7D',
+      data: earn
+    }, {
+      name: 'Profit',
+      color: profit[0] >=0 ? '#228B22' : '#DC143C',
+      data: profit
+    }];
+
     options['xAxis'] = {
       title: {
         text: null

@@ -6,7 +6,7 @@ import { take } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 
 const INTERFACE_URL = 'http://www.williamrobertfunk.com';
-const DATA_URL = 'http://167.99.149.6:3000/';
+const DATA_URL = 'http://167.99.149.6:3010/';
 // const DATA_URL = 'http://localhost:3000/';
 
 const MONTH_NAMES = [
@@ -512,18 +512,12 @@ export class GdaxDataService {
       // null or undefined from making its way into the calculation.
       const profit = this._validProfitResults[k]['profit'];
       if (!profit) {
-        continue;
+        // Do nothing, but don't skip.
       } else if (profit < 0) {
         monthlySpendTally += profit;
       } else if (profit >= 0) {
         monthlyEarnTally += profit;
       }
-      console.log(
-        '_organizeProfitData',
-        `change: ${profit}`,
-        `monthlySpendTally: ${monthlySpendTally}`,
-        `monthlyEarnTally: ${monthlyEarnTally}`,
-        `net: ${monthlyEarnTally + monthlySpendTally}`);
       // Last result. Capture data before leaving the for-loop
       if (k >= this._validProfitResults.length - 1) {
         const datapoint = [];
