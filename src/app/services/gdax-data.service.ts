@@ -6,8 +6,8 @@ import { take } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 
 const INTERFACE_URL = 'http://www.williamrobertfunk.com';
-// const DATA_URL = 'http://167.99.149.6:3000/';
-const DATA_URL = 'http://localhost:3000/';
+const DATA_URL = 'http://167.99.149.6:3000/';
+// const DATA_URL = 'http://localhost:3000/';
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -383,7 +383,8 @@ export class GdaxDataService {
       }, 300);
       return;
     }
-    const dateTimeAtStartOfYear = Date.UTC((new Date()).getUTCFullYear(), (new Date()).getMonth());
+    const now = new Date();
+    const dateTimeAtStartOfMonth = Date.UTC(now.getUTCFullYear(), now.getMonth());
     for (let i = 0; i < originalData.length; i++) {
       const date = originalData[i]['created_at'] || null;
       const id = originalData[i]['id'] || null;
@@ -395,7 +396,7 @@ export class GdaxDataService {
       // Comparative value of the date value.
       const dateTime = new Date(date).getTime();
       // Stop looking. We've exceeded our search
-      if (dateTime < dateTimeAtStartOfYear) {
+      if (dateTime < dateTimeAtStartOfMonth) {
         this._organizeProfitData();
         this._chartDataBSubject.next(this._profitChartData.slice());
         this._bookmark = null;
@@ -430,7 +431,8 @@ export class GdaxDataService {
       this._getLatestGdaxProfitData();
       return;
     }
-    const dateTimeAtStartOfYear = Date.UTC((new Date()).getUTCFullYear(), (new Date()).getMonth());
+    const now = new Date();
+    const dateTimeAtStartOfMonth = Date.UTC(now.getUTCFullYear(), now.getMonth());
     for (let i = 0; i < originalData.length; i++) {
       const date = originalData[i]['created_at'] || null;
       const id = originalData[i]['id'] || null;
@@ -443,7 +445,7 @@ export class GdaxDataService {
       // Comparative value of the date value.
       const dateTime = new Date(date).getTime();
       // Stop looking. We've exceeded our search.
-      if (dateTime < dateTimeAtStartOfYear) {
+      if (dateTime < dateTimeAtStartOfMonth) {
         this._bookmark = null;
         this._getLatestGdaxProfitData();
         return;
@@ -509,17 +511,25 @@ export class GdaxDataService {
       // Just a normal iteration. The following if-elseif prevents
       // null or undefined from making its way into the calculation.
       const profit = this._validProfitResults[k]['profit'];
-      if (profit < 0) {
+      if (!profit) {
+        continue;
+      } else if (profit < 0) {
         monthlySpendTally += profit;
       } else if (profit >= 0) {
         monthlyEarnTally += profit;
       }
+      console.log(
+        '_organizeProfitData',
+        `change: ${profit}`,
+        `monthlySpendTally: ${monthlySpendTally}`,
+        `monthlyEarnTally: ${monthlyEarnTally}`,
+        `net: ${monthlyEarnTally + monthlySpendTally}`);
       // Last result. Capture data before leaving the for-loop
       if (k >= this._validProfitResults.length - 1) {
         const datapoint = [];
         datapoint[0] = monthlySpendTally;
         datapoint[1] = monthlyEarnTally;
-        datapoint[2] = monthlyEarnTally - monthlySpendTally;
+        datapoint[2] = monthlyEarnTally + monthlySpendTally;
         datapoint[3] = `${MONTH_NAMES[currMonth].substr(0, 3)}-${currYear}`;
         this._profitChartData.push(datapoint);
       }

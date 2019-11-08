@@ -5,8 +5,8 @@ import { Observable, timer } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 
 const INTERFACE_URL = 'http://www.williamrobertfunk.com';
-// const DATA_URL = 'http://167.99.149.6:3000/';
-const DATA_URL = 'http://localhost:3000/';
+const DATA_URL = 'http://167.99.149.6:3010/';
+// const DATA_URL = 'http://localhost:3000/';
 const REAL_URL = 'https://api.pro.coinbase.com/';
 const SANDBOX_URL = 'https://api-public.sandbox.pro.coinbase.com/';
 
